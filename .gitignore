@@ -1,0 +1,17 @@
+# Ignorar ambiente virtual do Projeto Hermes
+venv/
+.env
+
+# Ignorar arquivos de cache Python
+__pycache__/
+*.pyc
+*.egg-info/
+.pytest_cache/
+
+# Ignorar arquivos de dados gerados pelo Projeto Hermes (relatórios)
+*.xlsx
+*.csv
+
+# Ignorar chaves de API ou outros segredos (se você os tiver localmente)
+# NUNCA faça commit de chaves de API!
+.api_key

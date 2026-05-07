@@ -1,0 +1,45 @@
+{
+  "top": {
+    "score_min": 75
+  },
+  "top_sudeste": {
+    "ufs": ["SP", "RJ", "MG"],
+    "score_min": 60,
+    "dias_max": 180
+  },
+  "notebooks_sudeste": {
+    "ufs": ["SP", "RJ", "MG"],
+    "keywords": ["notebook", "computador", "desktop", "all in one"],
+    "score_min": 50
+  },
+  "impressoras": {
+    "keywords": ["impressora", "multifuncional", "scanner"],
+    "score_min": 50
+  },
+  "ti_redes": {
+    "keywords": ["roteador", "switch", "servidor", "storage", "nobreak", "no-break", "estabilizador"],
+    "score_min": 50
+  },
+  "eletro": {
+    "keywords": ["televisor", "smart tv", "tv led", "tv", "projetor", "datashow", "caixa de som", "amplificador"],
+    "score_min": 50
+  },
+  "domesticos": {
+    "keywords": ["geladeira", "refrigerador", "freezer", "frigobar", "micro-ondas", "microondas", "fogão", "bebedouro", "purificador de água"],
+    "score_min": 50
+  },
+  "urgentes": {
+    "dias_min": 0,
+    "dias_max": 15,
+    "score_min": 50
+  },
+  "preco_bom": {
+    "alertas_preco": ["Dentro do histórico", "Abaixo do histórico"],
+    "score_min": 50
+  },
+  "sp_alto_valor": {
+    "ufs": ["SP"],
+    "valor_min": 50000,
+    "score_min": 60
+  }
+}
