@@ -15,29 +15,28 @@ O GitHub vai gerar uma URL publica para a demonstracao.
 
 ## Inserir seu logo
 
-No arquivo `index.html`, procure por:
+Salve o arquivo do logo em:
+
+```text
+docs/assets/logo-hermes.png
+```
+
+O `index.html` ja esta preparado para carregar essa imagem automaticamente:
 
 ```html
-<div class="logo-slot">SEU<br>LOGO</div>
+<img class="logo-img" src="assets/logo-hermes.png" alt="Logo Hermes">
 ```
 
-Troque por uma imagem, por exemplo:
+Se o arquivo ainda nao existir, a pagina mostra um fallback escrito `SEU LOGO`.
 
-```html
-<img class="logo-img" src="assets/logo.png" alt="Logo da empresa">
+## Publicar alteracoes
+
+Depois de ajustar a pagina ou trocar o logo:
+
+```powershell
+git add docs
+git commit -m "Atualiza dashboard demo do Hermes"
+git push
 ```
 
-Depois crie a pasta `docs/assets/` e coloque o arquivo `logo.png` dentro dela.
-
-Se usar imagem, adicione este CSS:
-
-```css
-.logo-img {
-    width: 54px;
-    height: 54px;
-    object-fit: contain;
-    border-radius: 8px;
-    background: #ffffff;
-}
-```
-
+O GitHub Pages publica novamente em alguns minutos.

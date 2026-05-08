@@ -64,18 +64,31 @@
             min-height: 54px;
         }
 
-        .logo-slot {
-            width: 54px;
+        .logo-mark {
+            width: 66px;
             height: 54px;
-            border: 1px dashed rgba(255, 255, 255, 0.55);
+            border: 1px solid rgba(255, 255, 255, 0.12);
             border-radius: 8px;
             display: grid;
             place-items: center;
+            overflow: hidden;
+            background: #07101f;
+            flex: 0 0 auto;
+        }
+
+        .logo-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 4px;
+        }
+
+        .logo-fallback {
+            display: none;
             color: rgba(255, 255, 255, 0.72);
             font-size: 11px;
             text-align: center;
             line-height: 1.2;
-            flex: 0 0 auto;
         }
 
         .brand h1 {
@@ -546,7 +559,10 @@
     <div class="app">
         <aside>
             <div class="brand">
-                <div class="logo-slot">SEU<br>LOGO</div>
+                <div class="logo-mark">
+                    <img class="logo-img" src="assets/logo-hermes.png" alt="Logo Hermes" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <span class="logo-fallback">SEU<br>LOGO</span>
+                </div>
                 <div>
                     <h1>Hermes Premium</h1>
                     <span>Inteligencia em licitacoes</span>
