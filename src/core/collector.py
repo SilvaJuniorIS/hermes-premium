@@ -1,4 +1,4 @@
-from src.hermes_api_client import fetch_licitacoes_from_pncp_api
+from src.pncp_api_client import fetch_licitacoes_from_pncp_api
 from src.config import KEYWORDS, STATES
 
 

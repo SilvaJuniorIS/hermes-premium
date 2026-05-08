@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hermes Dashboard</title>
+    <style>
+        :root {
+            color-scheme: dark;
+            --bg: #101418;
+            --panel: #171d22;
+            --line: #2c343c;
+            --text: #eef3f7;
+            --muted: #9fb0bf;
+            --accent: #31c48d;
+            --accent-2: #60a5fa;
+            --danger: #f97373;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 18px 24px;
+            border-bottom: 1px solid var(--line);
+            background: #0f1317;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        main {
+            padding: 22px 24px;
+        }
+
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        input,
+        textarea,
+        select,
+        button {
+            height: 38px;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            background: var(--panel);
+            color: var(--text);
+            padding: 0 12px;
+            font-size: 14px;
+        }
+
+        textarea {
+            min-height: 96px;
+            height: auto;
+            padding: 10px 12px;
+            resize: vertical;
+        }
+
+        button {
+            border-color: #24785d;
+            background: #17694f;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        button.secondary {
+            border-color: var(--line);
+            background: #222a31;
+        }
+
+        button.danger {
+            border-color: #8f3939;
+            background: #6f2d2d;
+        }
+
+        button:disabled {
+            cursor: wait;
+            opacity: 0.7;
+        }
+
+        .status {
+            color: var(--muted);
+            font-size: 14px;
+            min-height: 20px;
+        }
+
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(130px, 1fr));
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .metric {
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--panel);
+            padding: 12px;
+        }
+
+        .metric span {
+            display: block;
+            color: var(--muted);
+            font-size: 12px;
+            margin-bottom: 6px;
+        }
+
+        .metric strong {
+            font-size: 20px;
+        }
+
+        .table-wrap {
+            overflow: auto;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--panel);
+        }
+
+        table {
+            width: 100%;
+            min-width: 920px;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 11px 12px;
+            border-bottom: 1px solid var(--line);
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            position: sticky;
+            top: 0;
+            background: #11171c;
+            color: var(--muted);
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        td {
+            font-size: 14px;
+        }
+
+        .objeto {
+            max-width: 470px;
+            line-height: 1.35;
+        }
+
+        .badge {
+            display: inline-block;
+            min-width: 74px;
+            border-radius: 999px;
+            padding: 4px 8px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .alta {
+            background: rgba(49, 196, 141, 0.16);
+            color: var(--accent);
+        }
+
+        .media {
+            background: rgba(96, 165, 250, 0.16);
+            color: var(--accent-2);
+        }
+
+        .baixa {
+            background: rgba(249, 115, 115, 0.16);
+            color: var(--danger);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 18px;
+        }
+
+        .tab {
+            border-color: var(--line);
+            background: #20272e;
+        }
+
+        .tab.active {
+            border-color: #24785d;
+            background: #17694f;
+        }
+
+        .view {
+            display: none;
+        }
+
+        .view.active {
+            display: block;
+        }
+
+        .profile-layout {
+            display: grid;
+            grid-template-columns: minmax(260px, 360px) 1fr;
+            gap: 18px;
+            align-items: start;
+        }
+
+        .profile-list,
+        .profile-form {
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--panel);
+            padding: 14px;
+        }
+
+        .profile-item {
+            width: 100%;
+            height: auto;
+            margin-bottom: 8px;
+            padding: 10px;
+            border-color: var(--line);
+            background: #20272e;
+            text-align: left;
+        }
+
+        .profile-item.active {
+            border-color: #24785d;
+            background: #16372d;
+        }
+
+        .profile-item strong,
+        label span {
+            display: block;
+        }
+
+        .profile-item small,
+        label span {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(180px, 1fr));
+            gap: 12px;
+        }
+
+        .form-grid label {
+            display: grid;
+            gap: 6px;
+        }
+
+        .form-grid .wide {
+            grid-column: 1 / -1;
+        }
+
+        .form-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 14px;
+        }
+
+        @media (max-width: 760px) {
+            header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            main {
+                padding: 16px;
+            }
+
+            .metrics {
+                grid-template-columns: repeat(2, minmax(120px, 1fr));
+            }
+
+            .profile-layout,
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Hermes Dashboard</h1>
+        <div class="toolbar">
+            <div class="status" id="status">Pronto</div>
+            <form method="post" action="/logout">
+                <button class="secondary" type="submit">Sair</button>
+            </form>
+        </div>
+    </header>
+
+    <main>
+        <div class="tabs">
+            <button class="tab active" id="tab-oportunidades" onclick="showView('oportunidades')">Oportunidades</button>
+            <button class="tab" id="tab-perfis" onclick="showView('perfis')">Perfis</button>
+        </div>
+
+        <section class="view active" id="view-oportunidades">
+            <div class="toolbar">
+                <select id="perfil"></select>
+                <button id="runButton" onclick="rodar()">Rodar coleta</button>
+                <button class="secondary" onclick="carregar()">Atualizar tabela</button>
+            </div>
+
+            <section class="metrics">
+                <div class="metric"><span>Registros</span><strong id="m-total">0</strong></div>
+                <div class="metric"><span>Score medio</span><strong id="m-score">0</strong></div>
+                <div class="metric"><span>Maior valor</span><strong id="m-valor">R$ 0</strong></div>
+                <div class="metric"><span>Alta prioridade</span><strong id="m-alta">0</strong></div>
+            </section>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Objeto</th>
+                            <th>Estado</th>
+                            <th>Municipio</th>
+                            <th>Valor</th>
+                            <th>Score</th>
+                            <th>Classe</th>
+                            <th>Oportunidade</th>
+                            <th>Abertura</th>
+                            <th>Fonte</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="view" id="view-perfis">
+            <div class="profile-layout">
+                <div class="profile-list">
+                    <div class="toolbar">
+                        <button onclick="novoPerfil()">Novo perfil</button>
+                        <button class="secondary" onclick="carregarPerfis()">Atualizar</button>
+                    </div>
+                    <div id="listaPerfis"></div>
+                </div>
+
+                <form class="profile-form" id="perfilForm" onsubmit="salvarPerfil(event)">
+                    <div class="form-grid">
+                        <label>
+                            <span>ID do perfil</span>
+                            <input id="perfilId" required placeholder="ex: material_limpeza">
+                        </label>
+                        <label>
+                            <span>Nome de exibicao</span>
+                            <input id="perfilNome" required placeholder="ex: Material de limpeza">
+                        </label>
+                        <label class="wide">
+                            <span>Descricao</span>
+                            <textarea id="perfilDescricao" placeholder="Descreva o tipo de empresa ou oportunidade"></textarea>
+                        </label>
+                        <label class="wide">
+                            <span>Keywords principais, separadas por virgula ou linha</span>
+                            <textarea id="perfilKeywords"></textarea>
+                        </label>
+                        <label class="wide">
+                            <span>Keywords fortes</span>
+                            <textarea id="perfilKeywordsFortes"></textarea>
+                        </label>
+                        <label class="wide">
+                            <span>Termos positivos</span>
+                            <textarea id="perfilTermosPositivos"></textarea>
+                        </label>
+                        <label class="wide">
+                            <span>Termos negativos</span>
+                            <textarea id="perfilTermosNegativos"></textarea>
+                        </label>
+                        <label>
+                            <span>Valor minimo</span>
+                            <input id="perfilValorMinimo" type="number" min="0" step="1000" value="0">
+                        </label>
+                        <label>
+                            <span>Valor atrativo</span>
+                            <input id="perfilValorAtrativo" type="number" min="0" step="1000" value="50000">
+                        </label>
+                        <label>
+                            <span>Valor muito atrativo</span>
+                            <input id="perfilValorMuitoAtrativo" type="number" min="0" step="1000" value="200000">
+                        </label>
+                        <label>
+                            <span>Score alta</span>
+                            <input id="perfilScoreAlta" type="number" min="0" max="100" step="1" value="75">
+                        </label>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit">Salvar perfil</button>
+                        <button type="button" class="secondary" onclick="novoPerfil()">Limpar</button>
+                        <button type="button" class="danger" onclick="excluirPerfil()">Excluir perfil</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const fmtMoney = new Intl.NumberFormat('pt-BR', {
+            style: 'currency',
+            currency: 'BRL'
+        });
+        let perfis = {};
+        let perfilSelecionado = null;
+        let perfilOriginalId = null;
+
+        function setStatus(message) {
+            document.getElementById('status').textContent = message;
+        }
+
+        async function fetchAuth(url, options = {}) {
+            const res = await fetch(url, options);
+            if (res.status === 401) {
+                window.location.href = '/login';
+                throw new Error('Sessao expirada');
+            }
+            return res;
+        }
+
+        function showView(view) {
+            document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+            document.getElementById(`view-${view}`).classList.add('active');
+            document.getElementById(`tab-${view}`).classList.add('active');
+            if (view === 'perfis') carregarPerfis();
+        }
+
+        function badgeClass(classificacao) {
+            const value = String(classificacao || 'BAIXA').toLowerCase();
+            if (value.includes('alta')) return 'alta';
+            if (value.includes('media')) return 'media';
+            return 'baixa';
+        }
+
+        function fmtDateTime(value) {
+            if (!value) return '-';
+            const date = new Date(value);
+            if (Number.isNaN(date.getTime())) return value;
+
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+
+            return `${day}/${month}/${year} - ${hours}:${minutes}h`;
+        }
+
+        function splitList(value) {
+            return String(value || '')
+                .split(/[\n,;]/)
+                .map(item => item.trim())
+                .filter(Boolean);
+        }
+
+        function joinList(value) {
+            if (Array.isArray(value)) return value.join('\n');
+            if (typeof value === 'string') return value;
+            return '';
+        }
+
+        function normalizeId(value) {
+            return String(value || '')
+                .trim()
+                .toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .replace(/[^a-z0-9_]+/g, '_')
+                .replace(/^_+|_+$/g, '');
+        }
+
+        async function carregarPerfis() {
+            const res = await fetchAuth('/perfis');
+            perfis = await res.json();
+
+            const select = document.getElementById('perfil');
+            const current = select.value;
+            select.innerHTML = '';
+
+            Object.entries(perfis).forEach(([id, perfil]) => {
+                const option = document.createElement('option');
+                option.value = id;
+                option.textContent = perfil.nome_exibicao || id;
+                select.appendChild(option);
+            });
+
+            if (current && perfis[current]) {
+                select.value = current;
+            }
+
+            const lista = document.getElementById('listaPerfis');
+            lista.innerHTML = '';
+
+            Object.entries(perfis).forEach(([id, perfil]) => {
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = `profile-item ${perfilSelecionado === id ? 'active' : ''}`;
+                button.onclick = () => editarPerfil(id);
+                button.innerHTML = `<strong>${perfil.nome_exibicao || id}</strong><small>${id}</small>`;
+                lista.appendChild(button);
+            });
+
+            if (!Object.keys(perfis).length) {
+                lista.innerHTML = '<p>Nenhum perfil cadastrado.</p>';
+            }
+        }
+
+        function novoPerfil() {
+            perfilSelecionado = null;
+            perfilOriginalId = null;
+            document.getElementById('perfilForm').reset();
+            document.getElementById('perfilValorMinimo').value = 0;
+            document.getElementById('perfilValorAtrativo').value = 50000;
+            document.getElementById('perfilValorMuitoAtrativo').value = 200000;
+            document.getElementById('perfilScoreAlta').value = 75;
+            document.querySelectorAll('.profile-item').forEach(el => el.classList.remove('active'));
+        }
+
+        function editarPerfil(id) {
+            const perfil = perfis[id];
+            if (!perfil) return;
+
+            perfilSelecionado = id;
+            perfilOriginalId = id;
+            document.getElementById('perfilId').value = id;
+            document.getElementById('perfilNome').value = perfil.nome_exibicao || id;
+            document.getElementById('perfilDescricao').value = perfil.descricao || '';
+            document.getElementById('perfilKeywords').value = joinList(perfil.keywords);
+            document.getElementById('perfilKeywordsFortes').value = joinList(perfil.keywords_fortes);
+            document.getElementById('perfilTermosPositivos').value = joinList(perfil.termos_positivos);
+            document.getElementById('perfilTermosNegativos').value = joinList(perfil.termos_negativos);
+            document.getElementById('perfilValorMinimo').value = perfil.valor_minimo_interesse || 0;
+            document.getElementById('perfilValorAtrativo').value = perfil.valor_atrativo || 50000;
+            document.getElementById('perfilValorMuitoAtrativo').value = perfil.valor_muito_atrativo || 200000;
+            document.getElementById('perfilScoreAlta').value = perfil.score_relevancia_alta || 75;
+            carregarPerfis();
+        }
+
+        function getPerfilPayload() {
+            const id = normalizeId(document.getElementById('perfilId').value);
+            document.getElementById('perfilId').value = id;
+            return {
+                id,
+                nome_exibicao: document.getElementById('perfilNome').value.trim(),
+                descricao: document.getElementById('perfilDescricao').value.trim(),
+                keywords: splitList(document.getElementById('perfilKeywords').value),
+                keywords_fortes: splitList(document.getElementById('perfilKeywordsFortes').value),
+                termos_positivos: splitList(document.getElementById('perfilTermosPositivos').value),
+                termos_negativos: splitList(document.getElementById('perfilTermosNegativos').value),
+                valor_minimo_interesse: Number(document.getElementById('perfilValorMinimo').value || 0),
+                valor_atrativo: Number(document.getElementById('perfilValorAtrativo').value || 0),
+                valor_muito_atrativo: Number(document.getElementById('perfilValorMuitoAtrativo').value || 0),
+                score_relevancia_media: 50,
+                score_relevancia_alta: Number(document.getElementById('perfilScoreAlta').value || 75)
+            };
+        }
+
+        async function salvarPerfil(event) {
+            event.preventDefault();
+            const payload = getPerfilPayload();
+            if (!payload.id || !payload.nome_exibicao) {
+                setStatus('Informe ID e nome do perfil');
+                return;
+            }
+
+            const isEdit = Boolean(perfilOriginalId);
+            const url = isEdit ? `/perfis/${encodeURIComponent(perfilOriginalId)}` : '/perfis';
+            const method = isEdit ? 'PUT' : 'POST';
+            const res = await fetchAuth(url, {
+                method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (!res.ok) {
+                const err = await res.json().catch(() => ({ detail: `HTTP ${res.status}` }));
+                setStatus(`Erro ao salvar perfil: ${err.detail}`);
+                return;
+            }
+
+            perfilSelecionado = payload.id;
+            perfilOriginalId = payload.id;
+            setStatus('Perfil salvo');
+            await carregarPerfis();
+            document.getElementById('perfil').value = payload.id;
+        }
+
+        async function excluirPerfil() {
+            if (!perfilOriginalId) {
+                setStatus('Selecione um perfil para excluir');
+                return;
+            }
+            const nome = perfis[perfilOriginalId]?.nome_exibicao || perfilOriginalId;
+            if (!confirm(`Excluir o perfil "${nome}"?`)) return;
+
+            const res = await fetchAuth(`/perfis/${encodeURIComponent(perfilOriginalId)}`, {
+                method: 'DELETE'
+            });
+
+            if (!res.ok) {
+                const err = await res.json().catch(() => ({ detail: `HTTP ${res.status}` }));
+                setStatus(`Erro ao excluir perfil: ${err.detail}`);
+                return;
+            }
+
+            novoPerfil();
+            setStatus('Perfil excluido');
+            await carregarPerfis();
+        }
+
+        async function carregar() {
+            setStatus('Carregando dados...');
+            const res = await fetchAuth('/licitacoes?limit=200');
+            const data = await res.json();
+
+            const tabela = document.getElementById('tabela');
+            tabela.innerHTML = '';
+
+            if (!data.length) {
+                const row = document.createElement('tr');
+                row.innerHTML = '<td colspan="9">Nenhum registro encontrado. Rode uma coleta para preencher o dashboard.</td>';
+                tabela.appendChild(row);
+            }
+
+            let totalScore = 0;
+            let maiorValor = 0;
+            let altas = 0;
+
+            data.forEach(item => {
+                const valor = Number(item.valor_estimado_num || 0);
+                const score = Number(item.score || 0);
+                const classe = item.classificacao || 'BAIXA';
+                const fonte = item.link || (item.pncp_id ? `https://pncp.gov.br/app/editais?q=${encodeURIComponent(item.pncp_id)}` : '');
+
+                totalScore += score;
+                maiorValor = Math.max(maiorValor, valor);
+                if (classe === 'ALTA') altas += 1;
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="objeto">${item.objeto || '-'}</td>
+                    <td>${item.estado || '-'}</td>
+                    <td>${item.municipio || '-'}</td>
+                    <td>${fmtMoney.format(valor)}</td>
+                    <td>${score.toFixed(0)}</td>
+                    <td><span class="badge ${badgeClass(classe)}">${classe}</span></td>
+                    <td>${item.oportunidade || '-'}</td>
+                    <td>${fmtDateTime(item.data_abertura)}</td>
+                    <td>${fonte ? `<a href="${fonte}" target="_blank" rel="noopener">Abrir</a>` : '-'}</td>
+                `;
+                tabela.appendChild(row);
+            });
+
+            document.getElementById('m-total').textContent = data.length;
+            document.getElementById('m-score').textContent = data.length ? (totalScore / data.length).toFixed(0) : '0';
+            document.getElementById('m-valor').textContent = fmtMoney.format(maiorValor);
+            document.getElementById('m-alta').textContent = altas;
+            setStatus(`Atualizado: ${new Date().toLocaleTimeString('pt-BR')}`);
+        }
+
+        async function rodar() {
+            const button = document.getElementById('runButton');
+            const perfil = document.getElementById('perfil').value;
+            button.disabled = true;
+            setStatus('Coleta em andamento...');
+
+            try {
+                const res = await fetchAuth('/run', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ perfil })
+                });
+
+                if (!res.ok) {
+                    throw new Error(`HTTP ${res.status}`);
+                }
+
+                const result = await res.json();
+                setStatus(`Coleta finalizada: ${result.stats.salvas} registros salvos`);
+                await carregar();
+            } catch (err) {
+                setStatus(`Erro ao rodar coleta: ${err.message}`);
+            } finally {
+                button.disabled = false;
+            }
+        }
+
+        carregarPerfis().then(carregar);
+    </script>
+</body>
+</html>

@@ -11,6 +11,11 @@ DB_PATH = Path("data/hermes.sqlite3").resolve()
 OUTPUT_DIR = "output"
 
 # =========================
+# IA
+# =========================
+IA_API_KEY_ENV_VAR = "OPENAI_API_KEY"
+
+# =========================
 # KEYWORDS
 # =========================
 KEYWORDS = [

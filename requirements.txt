@@ -3,3 +3,8 @@ pandas
 openpyxl
 fastapi
 uvicorn
+streamlit
+selenium
+beautifulsoup4
+openai
+httpx

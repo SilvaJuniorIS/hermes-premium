@@ -1,9 +1,11 @@
 from src.infra.db import get_conn
 from src.core.collector import run_collection
 from src.infra.logger import log
+from src.hermes_db import init_db
 
 
 def run_pipeline(perfil: str):
+    init_db()
     conn = get_conn()
     cursor = conn.cursor()
 
