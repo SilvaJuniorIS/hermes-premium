@@ -9,8 +9,9 @@ from hmac import compare_digest
 from pathlib import Path
 from typing import Any
 
-from fastapi import Cookie, Depends, FastAPI, Form, HTTPException, Request
+from fastapi import Cookie, Depends, FastAPI, Form, HTTPException
 from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 from src.hermes_db import (
@@ -29,6 +30,9 @@ app = FastAPI(title="Hermes Premium")
 PERFIS_PATH = Path("config/perfis_negocio.json")
 SESSION_COOKIE = "hermes_session"
 SESSION_TOKENS: dict[str, int] = {}
+
+Path("docs/assets").mkdir(parents=True, exist_ok=True)
+app.mount("/assets", StaticFiles(directory="docs/assets"), name="assets")
 
 
 class RunRequest(BaseModel):

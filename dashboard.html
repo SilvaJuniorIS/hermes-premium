@@ -3,18 +3,25 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Hermes Dashboard</title>
+    <title>Hermes Premium</title>
     <style>
         :root {
-            color-scheme: dark;
-            --bg: #101418;
-            --panel: #171d22;
-            --line: #2c343c;
-            --text: #eef3f7;
-            --muted: #9fb0bf;
-            --accent: #31c48d;
-            --accent-2: #60a5fa;
-            --danger: #f97373;
+            color-scheme: light;
+            --bg: #f5f7f9;
+            --surface: #ffffff;
+            --surface-2: #eef3f5;
+            --ink: #172027;
+            --muted: #64717d;
+            --line: #d9e1e7;
+            --green: #18875f;
+            --green-soft: #e4f5ee;
+            --blue: #246fba;
+            --blue-soft: #e6f0fb;
+            --amber: #9b6a12;
+            --amber-soft: #fff3d6;
+            --red: #b42318;
+            --red-soft: #fde8e5;
+            --shadow: 0 14px 36px rgba(22, 32, 39, 0.08);
         }
 
         * {
@@ -23,74 +30,229 @@
 
         body {
             margin: 0;
-            font-family: Arial, Helvetica, sans-serif;
             background: var(--bg);
-            color: var(--text);
+            color: var(--ink);
+            font-family: Arial, Helvetica, sans-serif;
         }
 
-        header {
+        a {
+            color: var(--blue);
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        button,
+        input,
+        select,
+        textarea {
+            font: inherit;
+        }
+
+        .app {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 250px minmax(0, 1fr);
+        }
+
+        aside {
+            background: #142028;
+            color: #f7fafc;
+            padding: 22px 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+        }
+
+        .brand {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            gap: 16px;
-            padding: 18px 24px;
-            border-bottom: 1px solid var(--line);
-            background: #0f1317;
+            gap: 12px;
+            min-height: 54px;
         }
 
-        h1 {
+        .logo-mark {
+            width: 66px;
+            height: 54px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 8px;
+            display: grid;
+            place-items: center;
+            overflow: hidden;
+            background: #07101f;
+            flex: 0 0 auto;
+        }
+
+        .logo-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 4px;
+        }
+
+        .logo-fallback {
+            display: none;
+            color: rgba(255, 255, 255, 0.72);
+            font-size: 11px;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .brand h1 {
             margin: 0;
-            font-size: 22px;
-            font-weight: 700;
+            font-size: 19px;
+            line-height: 1.1;
         }
 
-        main {
-            padding: 22px 24px;
+        .brand span {
+            display: block;
+            margin-top: 4px;
+            color: #9fb0bf;
+            font-size: 12px;
         }
 
-        .toolbar {
+        nav {
+            display: grid;
+            gap: 7px;
+        }
+
+        .tab {
+            width: 100%;
+            min-height: 38px;
+            border: 0;
+            border-radius: 7px;
             display: flex;
-            flex-wrap: wrap;
             align-items: center;
             gap: 10px;
-            margin-bottom: 18px;
-        }
-
-        input,
-        textarea,
-        select,
-        button {
-            height: 38px;
-            border: 1px solid var(--line);
-            border-radius: 6px;
-            background: var(--panel);
-            color: var(--text);
-            padding: 0 12px;
+            padding: 0 10px;
+            background: transparent;
+            color: #c7d2da;
+            cursor: pointer;
+            text-align: left;
             font-size: 14px;
         }
 
+        .tab.active {
+            background: #1f8a63;
+            color: #ffffff;
+            font-weight: 700;
+        }
+
+        .nav-icon {
+            width: 18px;
+            text-align: center;
+        }
+
+        .side-note {
+            margin-top: auto;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 8px;
+            padding: 12px;
+            color: #c7d2da;
+            font-size: 12px;
+            line-height: 1.45;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .logout {
+            margin: 0;
+        }
+
+        main {
+            min-width: 0;
+            padding: 22px;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 18px;
+            margin-bottom: 18px;
+        }
+
+        .eyebrow {
+            margin: 0 0 5px;
+            color: var(--green);
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        h2 {
+            margin: 0;
+            font-size: 28px;
+            line-height: 1.15;
+        }
+
+        .topbar p {
+            margin: 7px 0 0;
+            max-width: 760px;
+            color: var(--muted);
+            line-height: 1.45;
+        }
+
+        .actions,
+        .toolbar,
+        .form-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .actions {
+            justify-content: flex-end;
+        }
+
+        .status {
+            min-height: 38px;
+            border: 1px solid var(--line);
+            border-radius: 7px;
+            display: inline-flex;
+            align-items: center;
+            padding: 0 12px;
+            background: var(--surface);
+            color: var(--muted);
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        button,
+        select,
+        input,
         textarea {
-            min-height: 96px;
-            height: auto;
-            padding: 10px 12px;
-            resize: vertical;
+            border: 1px solid var(--line);
+            border-radius: 7px;
+            background: var(--surface);
+            color: var(--ink);
+        }
+
+        button,
+        select,
+        input {
+            min-height: 38px;
+            padding: 0 12px;
         }
 
         button {
-            border-color: #24785d;
-            background: #17694f;
             cursor: pointer;
             font-weight: 700;
         }
 
+        button.primary {
+            border-color: #147653;
+            background: var(--green);
+            color: #ffffff;
+        }
+
         button.secondary {
-            border-color: var(--line);
-            background: #222a31;
+            background: var(--surface);
         }
 
         button.danger {
-            border-color: #8f3939;
-            background: #6f2d2d;
+            border-color: #d9a4a0;
+            background: var(--red-soft);
+            color: var(--red);
         }
 
         button:disabled {
@@ -98,115 +260,10 @@
             opacity: 0.7;
         }
 
-        .status {
-            color: var(--muted);
-            font-size: 14px;
-            min-height: 20px;
-        }
-
-        .metrics {
-            display: grid;
-            grid-template-columns: repeat(4, minmax(130px, 1fr));
-            gap: 10px;
-            margin-bottom: 18px;
-        }
-
-        .metric {
-            border: 1px solid var(--line);
-            border-radius: 8px;
-            background: var(--panel);
-            padding: 12px;
-        }
-
-        .metric span {
-            display: block;
-            color: var(--muted);
-            font-size: 12px;
-            margin-bottom: 6px;
-        }
-
-        .metric strong {
-            font-size: 20px;
-        }
-
-        .table-wrap {
-            overflow: auto;
-            border: 1px solid var(--line);
-            border-radius: 8px;
-            background: var(--panel);
-        }
-
-        table {
-            width: 100%;
-            min-width: 920px;
-            border-collapse: collapse;
-        }
-
-        th,
-        td {
-            padding: 11px 12px;
-            border-bottom: 1px solid var(--line);
-            text-align: left;
-            vertical-align: top;
-        }
-
-        th {
-            position: sticky;
-            top: 0;
-            background: #11171c;
-            color: var(--muted);
-            font-size: 12px;
-            text-transform: uppercase;
-        }
-
-        td {
-            font-size: 14px;
-        }
-
-        .objeto {
-            max-width: 470px;
-            line-height: 1.35;
-        }
-
-        .badge {
-            display: inline-block;
-            min-width: 74px;
-            border-radius: 999px;
-            padding: 4px 8px;
-            text-align: center;
-            font-size: 12px;
-            font-weight: 700;
-        }
-
-        .alta {
-            background: rgba(49, 196, 141, 0.16);
-            color: var(--accent);
-        }
-
-        .media {
-            background: rgba(96, 165, 250, 0.16);
-            color: var(--accent-2);
-        }
-
-        .baixa {
-            background: rgba(249, 115, 115, 0.16);
-            color: var(--danger);
-        }
-
-        .tabs {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 18px;
-        }
-
-        .tab {
-            border-color: var(--line);
-            background: #20272e;
-        }
-
-        .tab.active {
-            border-color: #24785d;
-            background: #17694f;
+        textarea {
+            min-height: 96px;
+            padding: 10px 12px;
+            resize: vertical;
         }
 
         .view {
@@ -217,19 +274,189 @@
             display: block;
         }
 
+        .status-strip {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .status-box,
+        .metric,
+        .panel,
+        .profile-list,
+        .profile-form {
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--surface);
+            box-shadow: var(--shadow);
+        }
+
+        .status-box {
+            min-height: 86px;
+            padding: 14px;
+            display: grid;
+            align-content: center;
+            gap: 6px;
+        }
+
+        .status-box span,
+        .metric span,
+        .panel-title span,
+        label span {
+            color: var(--muted);
+            font-size: 12px;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .status-box strong {
+            font-size: 19px;
+        }
+
+        .status-box p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.35;
+        }
+
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .metric {
+            min-height: 112px;
+            padding: 14px;
+        }
+
+        .metric strong {
+            display: block;
+            margin-top: 8px;
+            font-size: 27px;
+        }
+
+        .metric small {
+            display: block;
+            margin-top: 8px;
+            color: var(--muted);
+            line-height: 1.35;
+        }
+
+        .panel {
+            overflow: hidden;
+        }
+
+        .panel-title {
+            min-height: 58px;
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--line);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .panel-title h3 {
+            margin: 3px 0 0;
+            font-size: 18px;
+        }
+
+        .filters {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--line);
+            background: #fbfcfd;
+        }
+
+        .filter {
+            min-height: 34px;
+            border: 1px solid var(--line);
+            border-radius: 7px;
+            background: var(--surface);
+            color: var(--muted);
+            padding: 7px 10px;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        .table-wrap {
+            overflow: auto;
+        }
+
+        table {
+            width: 100%;
+            min-width: 920px;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--line);
+            text-align: left;
+            vertical-align: top;
+            font-size: 14px;
+        }
+
+        th {
+            color: var(--muted);
+            background: #f7fafb;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        .objeto {
+            max-width: 430px;
+            line-height: 1.35;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 78px;
+            min-height: 25px;
+            border-radius: 999px;
+            padding: 0 9px;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .alta {
+            background: var(--green-soft);
+            color: var(--green);
+        }
+
+        .media {
+            background: var(--blue-soft);
+            color: var(--blue);
+        }
+
+        .baixa {
+            background: var(--amber-soft);
+            color: var(--amber);
+        }
+
         .profile-layout {
             display: grid;
             grid-template-columns: minmax(260px, 360px) 1fr;
-            gap: 18px;
+            gap: 14px;
             align-items: start;
         }
 
         .profile-list,
         .profile-form {
-            border: 1px solid var(--line);
-            border-radius: 8px;
-            background: var(--panel);
             padding: 14px;
+        }
+
+        .profile-list .toolbar {
+            margin-bottom: 12px;
         }
 
         .profile-item {
@@ -237,14 +464,13 @@
             height: auto;
             margin-bottom: 8px;
             padding: 10px;
-            border-color: var(--line);
-            background: #20272e;
+            background: #f7fafb;
             text-align: left;
         }
 
         .profile-item.active {
-            border-color: #24785d;
-            background: #16372d;
+            border-color: #147653;
+            background: var(--green-soft);
         }
 
         .profile-item strong,
@@ -252,8 +478,9 @@
             display: block;
         }
 
-        .profile-item small,
-        label span {
+        .profile-item small {
+            display: block;
+            margin-top: 3px;
             color: var(--muted);
             font-size: 12px;
         }
@@ -274,150 +501,246 @@
         }
 
         .form-actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
             margin-top: 14px;
         }
 
-        @media (max-width: 760px) {
-            header {
-                align-items: flex-start;
-                flex-direction: column;
+        @media (max-width: 1040px) {
+            .app {
+                grid-template-columns: 1fr;
             }
 
+            nav {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .status-strip,
+            .profile-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 760px) {
             main {
                 padding: 16px;
             }
 
-            .metrics {
-                grid-template-columns: repeat(2, minmax(120px, 1fr));
+            .topbar {
+                display: grid;
             }
 
-            .profile-layout,
-            .form-grid {
+            .actions {
+                justify-content: start;
+            }
+
+            .metrics {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .form-grid,
+            nav {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .metrics {
                 grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>Hermes Dashboard</h1>
-        <div class="toolbar">
-            <div class="status" id="status">Pronto</div>
-            <form method="post" action="/logout">
+    <div class="app">
+        <aside>
+            <div class="brand">
+                <div class="logo-mark">
+                    <img class="logo-img" src="/assets/logo-hermes.png" alt="Logo Hermes" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <span class="logo-fallback">SEU<br>LOGO</span>
+                </div>
+                <div>
+                    <h1>Hermes Premium</h1>
+                    <span>Inteligencia em licitacoes</span>
+                </div>
+            </div>
+
+            <nav aria-label="Navegacao principal">
+                <button class="tab active" id="tab-oportunidades" onclick="showView('oportunidades')"><span class="nav-icon">▣</span> Oportunidades</button>
+                <button class="tab" id="tab-perfis" onclick="showView('perfis')"><span class="nav-icon">◎</span> Perfis de busca</button>
+            </nav>
+
+            <div class="side-note">
+                Painel local conectado ao banco SQLite, aos perfis configuraveis e a coleta no PNCP.
+            </div>
+
+            <form class="logout" method="post" action="/logout">
                 <button class="secondary" type="submit">Sair</button>
             </form>
-        </div>
-    </header>
+        </aside>
 
-    <main>
-        <div class="tabs">
-            <button class="tab active" id="tab-oportunidades" onclick="showView('oportunidades')">Oportunidades</button>
-            <button class="tab" id="tab-perfis" onclick="showView('perfis')">Perfis</button>
-        </div>
-
-        <section class="view active" id="view-oportunidades">
-            <div class="toolbar">
-                <select id="perfil"></select>
-                <button id="runButton" onclick="rodar()">Rodar coleta</button>
-                <button class="secondary" onclick="carregar()">Atualizar tabela</button>
-            </div>
-
-            <section class="metrics">
-                <div class="metric"><span>Registros</span><strong id="m-total">0</strong></div>
-                <div class="metric"><span>Score medio</span><strong id="m-score">0</strong></div>
-                <div class="metric"><span>Maior valor</span><strong id="m-valor">R$ 0</strong></div>
-                <div class="metric"><span>Alta prioridade</span><strong id="m-alta">0</strong></div>
+        <main>
+            <section class="topbar">
+                <div>
+                    <p class="eyebrow">Dashboard operacional</p>
+                    <h2>Monitor de oportunidades do Hermes</h2>
+                    <p>
+                        Acompanhe licitacoes coletadas no PNCP, priorize oportunidades por score e ajuste os perfis de busca conforme o foco comercial.
+                    </p>
+                </div>
+                <div class="actions">
+                    <div class="status" id="status">Pronto</div>
+                </div>
             </section>
 
-            <div class="table-wrap">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Objeto</th>
-                            <th>Estado</th>
-                            <th>Municipio</th>
-                            <th>Valor</th>
-                            <th>Score</th>
-                            <th>Classe</th>
-                            <th>Oportunidade</th>
-                            <th>Abertura</th>
-                            <th>Fonte</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabela"></tbody>
-                </table>
-            </div>
-        </section>
-
-        <section class="view" id="view-perfis">
-            <div class="profile-layout">
-                <div class="profile-list">
-                    <div class="toolbar">
-                        <button onclick="novoPerfil()">Novo perfil</button>
-                        <button class="secondary" onclick="carregarPerfis()">Atualizar</button>
+            <section class="view active" id="view-oportunidades">
+                <section class="status-strip" aria-label="Status operacional">
+                    <div class="status-box">
+                        <span>Fonte de dados</span>
+                        <strong>PNCP</strong>
+                        <p>Coleta por perfil, UF, periodo e paginacao, com gravacao no banco local.</p>
                     </div>
-                    <div id="listaPerfis"></div>
+                    <div class="status-box">
+                        <span>Perfil em uso</span>
+                        <strong id="perfilAtual">-</strong>
+                        <p>Selecione um perfil e rode uma nova busca quando precisar atualizar a base.</p>
+                    </div>
+                    <div class="status-box">
+                        <span>Ultima atualizacao</span>
+                        <strong id="ultimaAtualizacao">-</strong>
+                        <p>Horario local da ultima leitura feita pelo dashboard.</p>
+                    </div>
+                </section>
+
+                <section class="metrics">
+                    <div class="metric"><span>Registros</span><strong id="m-total">0</strong><small>Licitações exibidas na tabela atual.</small></div>
+                    <div class="metric"><span>Score medio</span><strong id="m-score">0</strong><small>Media dos scores retornados.</small></div>
+                    <div class="metric"><span>Maior valor</span><strong id="m-valor">R$ 0</strong><small>Maior valor estimado encontrado.</small></div>
+                    <div class="metric"><span>Alta prioridade</span><strong id="m-alta">0</strong><small>Itens classificados como alta.</small></div>
+                </section>
+
+                <article class="panel">
+                    <div class="panel-title">
+                        <div>
+                            <span>Ranking real</span>
+                            <h3>Oportunidades priorizadas</h3>
+                        </div>
+                        <span class="badge alta">ONLINE</span>
+                    </div>
+
+                    <div class="filters">
+                        <select id="perfil" aria-label="Perfil"></select>
+                        <button class="primary" id="runButton" onclick="rodar()">Rodar coleta</button>
+                        <button class="secondary" onclick="carregar()">Atualizar tabela</button>
+                        <select id="filtroClasse" aria-label="Filtrar por classificacao">
+                            <option value="">Todas as classes</option>
+                            <option value="ALTA">Alta</option>
+                            <option value="MEDIA">Media</option>
+                            <option value="BAIXA">Baixa</option>
+                        </select>
+                        <select id="filtroEstado" aria-label="Filtrar por estado">
+                            <option value="">Todos os estados</option>
+                        </select>
+                        <input id="filtroTexto" aria-label="Buscar por texto" placeholder="Buscar objeto, orgao ou cidade">
+                        <button class="secondary" id="exportButton" onclick="exportarCsv()">Exportar CSV</button>
+                    </div>
+
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Score</th>
+                                    <th>Classe</th>
+                                    <th>Objeto</th>
+                                    <th>Estado</th>
+                                    <th>Municipio</th>
+                                    <th>Valor</th>
+                                    <th>Oportunidade</th>
+                                    <th>Abertura</th>
+                                    <th>Fonte</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabela"></tbody>
+                        </table>
+                    </div>
+                </article>
+            </section>
+
+            <section class="view" id="view-perfis">
+                <section class="topbar">
+                    <div>
+                        <p class="eyebrow">Configuracao comercial</p>
+                        <h2>Perfis de busca</h2>
+                        <p>
+                            Cadastre palavras-chave, termos positivos, termos negativos e faixas de valor para calibrar a coleta.
+                        </p>
+                    </div>
+                </section>
+
+                <div class="profile-layout">
+                    <div class="profile-list">
+                        <div class="toolbar">
+                            <button class="primary" onclick="novoPerfil()">Novo perfil</button>
+                            <button class="secondary" onclick="carregarPerfis()">Atualizar</button>
+                        </div>
+                        <div id="listaPerfis"></div>
+                    </div>
+
+                    <form class="profile-form" id="perfilForm" onsubmit="salvarPerfil(event)">
+                        <div class="form-grid">
+                            <label>
+                                <span>ID do perfil</span>
+                                <input id="perfilId" required placeholder="ex: material_limpeza">
+                            </label>
+                            <label>
+                                <span>Nome de exibicao</span>
+                                <input id="perfilNome" required placeholder="ex: Material de limpeza">
+                            </label>
+                            <label class="wide">
+                                <span>Descricao</span>
+                                <textarea id="perfilDescricao" placeholder="Descreva o tipo de empresa ou oportunidade"></textarea>
+                            </label>
+                            <label class="wide">
+                                <span>Keywords principais, separadas por virgula ou linha</span>
+                                <textarea id="perfilKeywords"></textarea>
+                            </label>
+                            <label class="wide">
+                                <span>Keywords fortes</span>
+                                <textarea id="perfilKeywordsFortes"></textarea>
+                            </label>
+                            <label class="wide">
+                                <span>Termos positivos</span>
+                                <textarea id="perfilTermosPositivos"></textarea>
+                            </label>
+                            <label class="wide">
+                                <span>Termos negativos</span>
+                                <textarea id="perfilTermosNegativos"></textarea>
+                            </label>
+                            <label>
+                                <span>Valor minimo</span>
+                                <input id="perfilValorMinimo" type="number" min="0" step="1000" value="0">
+                            </label>
+                            <label>
+                                <span>Valor atrativo</span>
+                                <input id="perfilValorAtrativo" type="number" min="0" step="1000" value="50000">
+                            </label>
+                            <label>
+                                <span>Valor muito atrativo</span>
+                                <input id="perfilValorMuitoAtrativo" type="number" min="0" step="1000" value="200000">
+                            </label>
+                            <label>
+                                <span>Score alta</span>
+                                <input id="perfilScoreAlta" type="number" min="0" max="100" step="1" value="75">
+                            </label>
+                        </div>
+                        <div class="form-actions">
+                            <button class="primary" type="submit">Salvar perfil</button>
+                            <button type="button" class="secondary" onclick="novoPerfil()">Limpar</button>
+                            <button type="button" class="danger" onclick="excluirPerfil()">Excluir perfil</button>
+                        </div>
+                    </form>
                 </div>
-
-                <form class="profile-form" id="perfilForm" onsubmit="salvarPerfil(event)">
-                    <div class="form-grid">
-                        <label>
-                            <span>ID do perfil</span>
-                            <input id="perfilId" required placeholder="ex: material_limpeza">
-                        </label>
-                        <label>
-                            <span>Nome de exibicao</span>
-                            <input id="perfilNome" required placeholder="ex: Material de limpeza">
-                        </label>
-                        <label class="wide">
-                            <span>Descricao</span>
-                            <textarea id="perfilDescricao" placeholder="Descreva o tipo de empresa ou oportunidade"></textarea>
-                        </label>
-                        <label class="wide">
-                            <span>Keywords principais, separadas por virgula ou linha</span>
-                            <textarea id="perfilKeywords"></textarea>
-                        </label>
-                        <label class="wide">
-                            <span>Keywords fortes</span>
-                            <textarea id="perfilKeywordsFortes"></textarea>
-                        </label>
-                        <label class="wide">
-                            <span>Termos positivos</span>
-                            <textarea id="perfilTermosPositivos"></textarea>
-                        </label>
-                        <label class="wide">
-                            <span>Termos negativos</span>
-                            <textarea id="perfilTermosNegativos"></textarea>
-                        </label>
-                        <label>
-                            <span>Valor minimo</span>
-                            <input id="perfilValorMinimo" type="number" min="0" step="1000" value="0">
-                        </label>
-                        <label>
-                            <span>Valor atrativo</span>
-                            <input id="perfilValorAtrativo" type="number" min="0" step="1000" value="50000">
-                        </label>
-                        <label>
-                            <span>Valor muito atrativo</span>
-                            <input id="perfilValorMuitoAtrativo" type="number" min="0" step="1000" value="200000">
-                        </label>
-                        <label>
-                            <span>Score alta</span>
-                            <input id="perfilScoreAlta" type="number" min="0" max="100" step="1" value="75">
-                        </label>
-                    </div>
-                    <div class="form-actions">
-                        <button type="submit">Salvar perfil</button>
-                        <button type="button" class="secondary" onclick="novoPerfil()">Limpar</button>
-                        <button type="button" class="danger" onclick="excluirPerfil()">Excluir perfil</button>
-                    </div>
-                </form>
-            </div>
-        </section>
-    </main>
+            </section>
+        </main>
+    </div>
 
     <script>
         const fmtMoney = new Intl.NumberFormat('pt-BR', {
@@ -427,6 +750,7 @@
         let perfis = {};
         let perfilSelecionado = null;
         let perfilOriginalId = null;
+        let licitacoesData = [];
 
         function setStatus(message) {
             document.getElementById('status').textContent = message;
@@ -456,6 +780,15 @@
             return 'baixa';
         }
 
+        function escapeHtml(value) {
+            return String(value ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
         function fmtDateTime(value) {
             if (!value) return '-';
             const date = new Date(value);
@@ -481,6 +814,143 @@
             if (Array.isArray(value)) return value.join('\n');
             if (typeof value === 'string') return value;
             return '';
+        }
+
+        function getFilteredData() {
+            const classe = document.getElementById('filtroClasse').value;
+            const estado = document.getElementById('filtroEstado').value;
+            const termo = document.getElementById('filtroTexto').value.trim().toLowerCase();
+
+            return licitacoesData.filter(item => {
+                const itemClasse = String(item.classificacao || '').toUpperCase();
+                const itemEstado = String(item.estado || '').toUpperCase();
+                const text = [
+                    item.objeto,
+                    item.orgao,
+                    item.municipio,
+                    item.keyword,
+                    item.oportunidade
+                ].join(' ').toLowerCase();
+
+                if (classe && itemClasse !== classe) return false;
+                if (estado && itemEstado !== estado) return false;
+                if (termo && !text.includes(termo)) return false;
+                return true;
+            });
+        }
+
+        function atualizarFiltroEstados() {
+            const select = document.getElementById('filtroEstado');
+            const current = select.value;
+            const estados = [...new Set(licitacoesData.map(item => item.estado).filter(Boolean))]
+                .sort((a, b) => String(a).localeCompare(String(b), 'pt-BR'));
+
+            select.innerHTML = '<option value="">Todos os estados</option>';
+            estados.forEach(estado => {
+                const option = document.createElement('option');
+                option.value = estado;
+                option.textContent = estado;
+                select.appendChild(option);
+            });
+            if (current && estados.includes(current)) select.value = current;
+        }
+
+        function renderizarTabela() {
+            const data = getFilteredData();
+            const tabela = document.getElementById('tabela');
+            tabela.innerHTML = '';
+
+            if (!data.length) {
+                const row = document.createElement('tr');
+                row.innerHTML = '<td colspan="9">Nenhum registro encontrado para os filtros atuais.</td>';
+                tabela.appendChild(row);
+            }
+
+            let totalScore = 0;
+            let maiorValor = 0;
+            let altas = 0;
+
+            data.forEach(item => {
+                const valor = Number(item.valor_estimado_num || 0);
+                const score = Number(item.score || 0);
+                const classe = item.classificacao || 'BAIXA';
+                const fonte = item.link || (item.pncp_id ? `https://pncp.gov.br/app/editais?q=${encodeURIComponent(item.pncp_id)}` : '');
+
+                totalScore += score;
+                maiorValor = Math.max(maiorValor, valor);
+                if (classe === 'ALTA') altas += 1;
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${score.toFixed(0)}</td>
+                    <td><span class="badge ${badgeClass(classe)}">${escapeHtml(classe)}</span></td>
+                    <td class="objeto">${escapeHtml(item.objeto || '-')}</td>
+                    <td>${escapeHtml(item.estado || '-')}</td>
+                    <td>${escapeHtml(item.municipio || '-')}</td>
+                    <td>${fmtMoney.format(valor)}</td>
+                    <td>${escapeHtml(item.oportunidade || '-')}</td>
+                    <td>${escapeHtml(fmtDateTime(item.data_abertura))}</td>
+                    <td>${fonte ? `<a href="${escapeHtml(fonte)}" target="_blank" rel="noopener">Abrir</a>` : '-'}</td>
+                `;
+                tabela.appendChild(row);
+            });
+
+            document.getElementById('m-total').textContent = data.length;
+            document.getElementById('m-score').textContent = data.length ? (totalScore / data.length).toFixed(0) : '0';
+            document.getElementById('m-valor').textContent = fmtMoney.format(maiorValor);
+            document.getElementById('m-alta').textContent = altas;
+        }
+
+        function csvCell(value) {
+            return `"${String(value ?? '').replace(/"/g, '""')}"`;
+        }
+
+        function exportarCsv() {
+            const data = getFilteredData();
+            if (!data.length) {
+                setStatus('Nao ha registros para exportar');
+                return;
+            }
+
+            const headers = [
+                'score',
+                'classificacao',
+                'objeto',
+                'estado',
+                'municipio',
+                'orgao',
+                'valor_estimado',
+                'oportunidade',
+                'data_abertura',
+                'keyword',
+                'link'
+            ];
+            const rows = data.map(item => [
+                item.score,
+                item.classificacao,
+                item.objeto,
+                item.estado,
+                item.municipio,
+                item.orgao,
+                item.valor_estimado_num,
+                item.oportunidade,
+                item.data_abertura,
+                item.keyword,
+                item.link
+            ]);
+            const csv = [headers, ...rows]
+                .map(row => row.map(csvCell).join(';'))
+                .join('\n');
+            const blob = new Blob([`\ufeff${csv}`], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `hermes-oportunidades-${new Date().toISOString().slice(0, 10)}.csv`;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            URL.revokeObjectURL(url);
+            setStatus(`Exportados ${data.length} registros`);
         }
 
         function normalizeId(value) {
@@ -512,6 +982,8 @@
                 select.value = current;
             }
 
+            updatePerfilAtual();
+
             const lista = document.getElementById('listaPerfis');
             lista.innerHTML = '';
 
@@ -527,6 +999,12 @@
             if (!Object.keys(perfis).length) {
                 lista.innerHTML = '<p>Nenhum perfil cadastrado.</p>';
             }
+        }
+
+        function updatePerfilAtual() {
+            const select = document.getElementById('perfil');
+            const label = select.options[select.selectedIndex]?.textContent || '-';
+            document.getElementById('perfilAtual').textContent = label;
         }
 
         function novoPerfil() {
@@ -607,6 +1085,7 @@
             setStatus('Perfil salvo');
             await carregarPerfis();
             document.getElementById('perfil').value = payload.id;
+            updatePerfilAtual();
         }
 
         async function excluirPerfil() {
@@ -635,51 +1114,12 @@
         async function carregar() {
             setStatus('Carregando dados...');
             const res = await fetchAuth('/licitacoes?limit=200');
-            const data = await res.json();
-
-            const tabela = document.getElementById('tabela');
-            tabela.innerHTML = '';
-
-            if (!data.length) {
-                const row = document.createElement('tr');
-                row.innerHTML = '<td colspan="9">Nenhum registro encontrado. Rode uma coleta para preencher o dashboard.</td>';
-                tabela.appendChild(row);
-            }
-
-            let totalScore = 0;
-            let maiorValor = 0;
-            let altas = 0;
-
-            data.forEach(item => {
-                const valor = Number(item.valor_estimado_num || 0);
-                const score = Number(item.score || 0);
-                const classe = item.classificacao || 'BAIXA';
-                const fonte = item.link || (item.pncp_id ? `https://pncp.gov.br/app/editais?q=${encodeURIComponent(item.pncp_id)}` : '');
-
-                totalScore += score;
-                maiorValor = Math.max(maiorValor, valor);
-                if (classe === 'ALTA') altas += 1;
-
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td class="objeto">${item.objeto || '-'}</td>
-                    <td>${item.estado || '-'}</td>
-                    <td>${item.municipio || '-'}</td>
-                    <td>${fmtMoney.format(valor)}</td>
-                    <td>${score.toFixed(0)}</td>
-                    <td><span class="badge ${badgeClass(classe)}">${classe}</span></td>
-                    <td>${item.oportunidade || '-'}</td>
-                    <td>${fmtDateTime(item.data_abertura)}</td>
-                    <td>${fonte ? `<a href="${fonte}" target="_blank" rel="noopener">Abrir</a>` : '-'}</td>
-                `;
-                tabela.appendChild(row);
-            });
-
-            document.getElementById('m-total').textContent = data.length;
-            document.getElementById('m-score').textContent = data.length ? (totalScore / data.length).toFixed(0) : '0';
-            document.getElementById('m-valor').textContent = fmtMoney.format(maiorValor);
-            document.getElementById('m-alta').textContent = altas;
-            setStatus(`Atualizado: ${new Date().toLocaleTimeString('pt-BR')}`);
+            licitacoesData = await res.json();
+            atualizarFiltroEstados();
+            renderizarTabela();
+            const now = new Date().toLocaleTimeString('pt-BR');
+            document.getElementById('ultimaAtualizacao').textContent = now;
+            setStatus(`Atualizado: ${now}`);
         }
 
         async function rodar() {
@@ -687,6 +1127,7 @@
             const perfil = document.getElementById('perfil').value;
             button.disabled = true;
             setStatus('Coleta em andamento...');
+            updatePerfilAtual();
 
             try {
                 const res = await fetchAuth('/run', {
@@ -709,6 +1150,10 @@
             }
         }
 
+        document.getElementById('perfil').addEventListener('change', updatePerfilAtual);
+        document.getElementById('filtroClasse').addEventListener('change', renderizarTabela);
+        document.getElementById('filtroEstado').addEventListener('change', renderizarTabela);
+        document.getElementById('filtroTexto').addEventListener('input', renderizarTabela);
         carregarPerfis().then(carregar);
     </script>
 </body>
