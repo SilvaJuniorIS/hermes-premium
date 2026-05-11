@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import json
+import re
 import time
+import unicodedata
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -76,12 +78,27 @@ def build_config(perfil: str | None = None, overrides: dict[str, Any] | None = N
 
 
 def _first_match(text: str, terms: list[str]) -> str | None:
-    lowered = text.lower()
+    lowered = _normalize_text(text)
     for term in terms:
-        term_text = term.strip().lower()
-        if term_text and term_text in lowered:
+        term_text = _normalize_text(term)
+        if term_text and _term_in_text(term_text, lowered):
             return term
     return None
+
+
+def _normalize_text(value: str) -> str:
+    normalized = unicodedata.normalize("NFKD", value.lower())
+    normalized = "".join(ch for ch in normalized if not unicodedata.combining(ch))
+    normalized = normalized.replace("-", " ")
+    return re.sub(r"\s+", " ", normalized).strip()
+
+
+def _term_in_text(term: str, text: str) -> bool:
+    if term == "obra":
+        text = re.sub(r"\bmaos?\s+de\s+obra\b", " ", text)
+    if " " in term:
+        return term in text
+    return re.search(rf"\b{re.escape(term)}\b", text) is not None
 
 
 def _score_licitacao(lic: dict[str, Any], config: dict[str, Any]) -> dict[str, Any]:
