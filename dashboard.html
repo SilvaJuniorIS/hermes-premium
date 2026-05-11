@@ -504,6 +504,79 @@
             margin-top: 14px;
         }
 
+        .detail-dialog {
+            width: min(860px, calc(100vw - 32px));
+            max-height: min(760px, calc(100vh - 32px));
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 0;
+            color: var(--ink);
+            background: var(--surface);
+            box-shadow: 0 24px 60px rgba(22, 32, 39, 0.28);
+        }
+
+        .detail-dialog::backdrop {
+            background: rgba(20, 32, 40, 0.42);
+        }
+
+        .modal-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 18px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .modal-head h3 {
+            margin: 3px 0 0;
+            font-size: 20px;
+        }
+
+        .detail-dialog section,
+        .detail-dialog .form-actions {
+            padding: 0 18px 18px;
+        }
+
+        .detail-dialog h4 {
+            margin: 16px 0 8px;
+            font-size: 15px;
+        }
+
+        .detail-dialog p,
+        .detail-dialog li {
+            color: var(--muted);
+            line-height: 1.45;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 10px;
+            padding: 18px;
+        }
+
+        .detail-grid div {
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 12px;
+            background: #fbfcfd;
+        }
+
+        .detail-grid span {
+            display: block;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .detail-grid strong {
+            display: block;
+            margin-top: 6px;
+            font-size: 18px;
+        }
+
         @media (max-width: 1040px) {
             .app {
                 grid-template-columns: 1fr;
@@ -514,7 +587,8 @@
             }
 
             .status-strip,
-            .profile-layout {
+            .profile-layout,
+            .detail-grid {
                 grid-template-columns: 1fr;
             }
         }
@@ -566,6 +640,8 @@
             <nav aria-label="Navegacao principal">
                 <button class="tab active" id="tab-oportunidades" onclick="showView('oportunidades')"><span class="nav-icon">▣</span> Oportunidades</button>
                 <button class="tab" id="tab-perfis" onclick="showView('perfis')"><span class="nav-icon">◎</span> Perfis de busca</button>
+                <button class="tab" id="tab-historico" onclick="showView('historico')"><span class="nav-icon">≡</span> Histórico</button>
+                <button class="tab" id="tab-agendamento" onclick="showView('agendamento')"><span class="nav-icon">◷</span> Agendamento</button>
             </nav>
 
             <div class="side-note">
@@ -656,6 +732,7 @@
                                     <th>Oportunidade</th>
                                     <th>Abertura</th>
                                     <th>Fonte</th>
+                                    <th>Ações</th>
                                 </tr>
                             </thead>
                             <tbody id="tabela"></tbody>
@@ -739,8 +816,110 @@
                     </form>
                 </div>
             </section>
+
+            <section class="view" id="view-historico">
+                <section class="topbar">
+                    <div>
+                        <p class="eyebrow">Execuções</p>
+                        <h2>Histórico de coletas</h2>
+                        <p>Acompanhe quando as coletas rodaram, qual perfil foi usado e quantos registros foram salvos.</p>
+                    </div>
+                    <div class="actions">
+                        <button class="secondary" onclick="carregarRuns()">Atualizar histórico</button>
+                    </div>
+                </section>
+
+                <article class="panel">
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Perfil</th>
+                                    <th>Status</th>
+                                    <th>Início</th>
+                                    <th>Fim</th>
+                                    <th>Coletadas</th>
+                                    <th>Salvas</th>
+                                    <th>Observações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="runsTabela"></tbody>
+                        </table>
+                    </div>
+                </article>
+            </section>
+
+            <section class="view" id="view-agendamento">
+                <section class="topbar">
+                    <div>
+                        <p class="eyebrow">Rotina diária</p>
+                        <h2>Agendamento local</h2>
+                        <p>Configure uma coleta diária enquanto o Hermes estiver aberto neste computador ou servidor.</p>
+                    </div>
+                </section>
+
+                <form class="profile-form" id="scheduleForm" onsubmit="salvarSchedule(event)">
+                    <div class="form-grid">
+                        <label>
+                            <span>Status</span>
+                            <select id="scheduleEnabled">
+                                <option value="false">Pausado</option>
+                                <option value="true">Ativo</option>
+                            </select>
+                        </label>
+                        <label>
+                            <span>Perfil</span>
+                            <select id="schedulePerfil"></select>
+                        </label>
+                        <label>
+                            <span>Horário diário</span>
+                            <input id="scheduleTime" type="time" value="08:00" required>
+                        </label>
+                        <label>
+                            <span>Último status</span>
+                            <input id="scheduleLastStatus" disabled value="-">
+                        </label>
+                    </div>
+                    <div class="form-actions">
+                        <button class="primary" type="submit">Salvar agendamento</button>
+                        <button type="button" class="secondary" onclick="carregarSchedule()">Recarregar</button>
+                    </div>
+                </form>
+            </section>
         </main>
     </div>
+
+    <dialog id="detailDialog" class="detail-dialog">
+        <div class="modal-head">
+            <div>
+                <p class="eyebrow">Detalhe da oportunidade</p>
+                <h3 id="detailTitle">Licitação</h3>
+            </div>
+            <button class="secondary" type="button" onclick="fecharDetalhe()">Fechar</button>
+        </div>
+        <div class="detail-grid">
+            <div><span>Score</span><strong id="detailScore">-</strong></div>
+            <div><span>Classe</span><strong id="detailClasse">-</strong></div>
+            <div><span>Valor</span><strong id="detailValor">-</strong></div>
+            <div><span>Estado</span><strong id="detailEstado">-</strong></div>
+        </div>
+        <section>
+            <h4>Objeto</h4>
+            <p id="detailObjeto">-</p>
+        </section>
+        <section>
+            <h4>Motivo do score</h4>
+            <ul id="detailMotivos"></ul>
+        </section>
+        <section>
+            <h4>Dados comerciais</h4>
+            <p id="detailMeta">-</p>
+        </section>
+        <div class="form-actions">
+            <a id="detailLink" href="#" target="_blank" rel="noopener">Abrir fonte</a>
+        </div>
+    </dialog>
 
     <script>
         const fmtMoney = new Intl.NumberFormat('pt-BR', {
@@ -751,6 +930,7 @@
         let perfilSelecionado = null;
         let perfilOriginalId = null;
         let licitacoesData = [];
+        let runsData = [];
 
         function setStatus(message) {
             document.getElementById('status').textContent = message;
@@ -771,6 +951,8 @@
             document.getElementById(`view-${view}`).classList.add('active');
             document.getElementById(`tab-${view}`).classList.add('active');
             if (view === 'perfis') carregarPerfis();
+            if (view === 'historico') carregarRuns();
+            if (view === 'agendamento') carregarSchedule();
         }
 
         function badgeClass(classificacao) {
@@ -862,7 +1044,7 @@
 
             if (!data.length) {
                 const row = document.createElement('tr');
-                row.innerHTML = '<td colspan="9">Nenhum registro encontrado para os filtros atuais.</td>';
+                row.innerHTML = '<td colspan="10">Nenhum registro encontrado para os filtros atuais.</td>';
                 tabela.appendChild(row);
             }
 
@@ -891,6 +1073,7 @@
                     <td>${escapeHtml(item.oportunidade || '-')}</td>
                     <td>${escapeHtml(fmtDateTime(item.data_abertura))}</td>
                     <td>${fonte ? `<a href="${escapeHtml(fonte)}" target="_blank" rel="noopener">Abrir</a>` : '-'}</td>
+                    <td><button class="secondary" type="button" onclick="abrirDetalhe('${escapeHtml(item.pncp_id || '')}')">Detalhe</button></td>
                 `;
                 tabela.appendChild(row);
             });
@@ -953,6 +1136,21 @@
             setStatus(`Exportados ${data.length} registros`);
         }
 
+        function preencherSelectPerfis(selectId, selectedValue = '') {
+            const select = document.getElementById(selectId);
+            if (!select) return;
+            select.innerHTML = '';
+            Object.entries(perfis).forEach(([id, perfil]) => {
+                const option = document.createElement('option');
+                option.value = id;
+                option.textContent = perfil.nome_exibicao || id;
+                select.appendChild(option);
+            });
+            if (selectedValue && perfis[selectedValue]) {
+                select.value = selectedValue;
+            }
+        }
+
         function normalizeId(value) {
             return String(value || '')
                 .trim()
@@ -999,6 +1197,8 @@
             if (!Object.keys(perfis).length) {
                 lista.innerHTML = '<p>Nenhum perfil cadastrado.</p>';
             }
+
+            preencherSelectPerfis('schedulePerfil');
         }
 
         function updatePerfilAtual() {
@@ -1122,6 +1322,114 @@
             setStatus(`Atualizado: ${now}`);
         }
 
+        async function abrirDetalhe(pncpId) {
+            if (!pncpId) return;
+            setStatus('Carregando detalhe...');
+            const res = await fetchAuth(`/licitacao?pncp_id=${encodeURIComponent(pncpId)}`);
+            if (!res.ok) {
+                setStatus('Nao foi possivel abrir o detalhe');
+                return;
+            }
+            const item = await res.json();
+            const fonte = item.link || (item.pncp_id ? `https://pncp.gov.br/app/editais?q=${encodeURIComponent(item.pncp_id)}` : '#');
+            document.getElementById('detailTitle').textContent = item.orgao || item.pncp_id || 'Licitação';
+            document.getElementById('detailScore').textContent = Number(item.score || 0).toFixed(0);
+            document.getElementById('detailClasse').textContent = item.classificacao || '-';
+            document.getElementById('detailValor').textContent = fmtMoney.format(Number(item.valor_estimado_num || 0));
+            document.getElementById('detailEstado').textContent = [item.estado, item.municipio].filter(Boolean).join(' / ') || '-';
+            document.getElementById('detailObjeto').textContent = item.objeto || '-';
+            document.getElementById('detailMeta').textContent = [
+                item.keyword ? `Keyword: ${item.keyword}` : '',
+                item.oportunidade ? `Oportunidade: ${item.oportunidade}` : '',
+                item.data_abertura ? `Abertura: ${fmtDateTime(item.data_abertura)}` : '',
+                item.first_seen_at ? `Primeiro registro: ${fmtDateTime(item.first_seen_at)}` : '',
+                item.last_seen_at ? `Última leitura: ${fmtDateTime(item.last_seen_at)}` : ''
+            ].filter(Boolean).join(' | ') || '-';
+
+            const motivos = Array.isArray(item.score_motivos) ? item.score_motivos : [];
+            const lista = document.getElementById('detailMotivos');
+            lista.innerHTML = '';
+            motivos.forEach(motivo => {
+                const li = document.createElement('li');
+                li.textContent = motivo;
+                lista.appendChild(li);
+            });
+            if (!motivos.length) {
+                lista.innerHTML = '<li>Score calculado pelas regras atuais do perfil.</li>';
+            }
+            document.getElementById('detailLink').href = fonte;
+            document.getElementById('detailDialog').showModal();
+            setStatus('Detalhe carregado');
+        }
+
+        function fecharDetalhe() {
+            document.getElementById('detailDialog').close();
+        }
+
+        async function carregarRuns() {
+            setStatus('Carregando histórico...');
+            const res = await fetchAuth('/runs');
+            runsData = await res.json();
+            const tabela = document.getElementById('runsTabela');
+            tabela.innerHTML = '';
+
+            if (!runsData.length) {
+                tabela.innerHTML = '<tr><td colspan="8">Nenhuma coleta registrada ainda.</td></tr>';
+            }
+
+            runsData.forEach(run => {
+                const stats = run.stats || {};
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${escapeHtml(run.id)}</td>
+                    <td>${escapeHtml(run.perfil || '-')}</td>
+                    <td><span class="badge ${run.status === 'finished' ? 'alta' : 'baixa'}">${escapeHtml(run.status || '-')}</span></td>
+                    <td>${escapeHtml(fmtDateTime(run.start_time))}</td>
+                    <td>${escapeHtml(fmtDateTime(run.end_time))}</td>
+                    <td>${escapeHtml(stats.coletadas ?? '-')}</td>
+                    <td>${escapeHtml(stats.salvas ?? '-')}</td>
+                    <td>${escapeHtml(run.notes || stats.erro || '-')}</td>
+                `;
+                tabela.appendChild(row);
+            });
+            setStatus('Histórico atualizado');
+        }
+
+        async function carregarSchedule() {
+            if (!Object.keys(perfis).length) {
+                await carregarPerfis();
+            }
+            const res = await fetchAuth('/schedule');
+            const schedule = await res.json();
+            preencherSelectPerfis('schedulePerfil', schedule.perfil);
+            document.getElementById('scheduleEnabled').value = String(Boolean(schedule.enabled));
+            document.getElementById('scheduleTime').value = schedule.time || '08:00';
+            document.getElementById('scheduleLastStatus').value = schedule.last_run_status || '-';
+            setStatus('Agendamento carregado');
+        }
+
+        async function salvarSchedule(event) {
+            event.preventDefault();
+            const payload = {
+                enabled: document.getElementById('scheduleEnabled').value === 'true',
+                perfil: document.getElementById('schedulePerfil').value,
+                time: document.getElementById('scheduleTime').value || '08:00',
+                config: {}
+            };
+            const res = await fetchAuth('/schedule', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            if (!res.ok) {
+                const err = await res.json().catch(() => ({ detail: `HTTP ${res.status}` }));
+                setStatus(`Erro ao salvar agendamento: ${err.detail}`);
+                return;
+            }
+            await carregarSchedule();
+            setStatus(payload.enabled ? 'Agendamento ativo' : 'Agendamento pausado');
+        }
+
         async function rodar() {
             const button = document.getElementById('runButton');
             const perfil = document.getElementById('perfil').value;
@@ -1154,7 +1462,7 @@
         document.getElementById('filtroClasse').addEventListener('change', renderizarTabela);
         document.getElementById('filtroEstado').addEventListener('change', renderizarTabela);
         document.getElementById('filtroTexto').addEventListener('input', renderizarTabela);
-        carregarPerfis().then(carregar);
+        carregarPerfis().then(() => Promise.all([carregar(), carregarRuns(), carregarSchedule()]));
     </script>
 </body>
 </html>

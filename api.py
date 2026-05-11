@@ -3,7 +3,10 @@ from __future__ import annotations
 import json
 import os
 import secrets
+import threading
+import time
 from base64 import urlsafe_b64decode, urlsafe_b64encode
+from datetime import datetime
 from hashlib import pbkdf2_hmac
 from hmac import compare_digest
 from pathlib import Path
@@ -19,6 +22,7 @@ from src.hermes_db import (
     get_user_by_id,
     get_user_by_username,
     init_db,
+    load_licitacao_detail,
     load_recent_api_runs,
     load_recent_licitacoes,
     mark_user_login,
@@ -28,8 +32,11 @@ from src.main import DEFAULT_CONFIG, run_pipeline
 
 app = FastAPI(title="Hermes Premium")
 PERFIS_PATH = Path("config/perfis_negocio.json")
+SCHEDULE_PATH = Path("config/agendamento.json")
 SESSION_COOKIE = "hermes_session"
 SESSION_TOKENS: dict[str, int] = {}
+SCHEDULER_LOCK = threading.Lock()
+SCHEDULER_STARTED = False
 
 Path("docs/assets").mkdir(parents=True, exist_ok=True)
 app.mount("/assets", StaticFiles(directory="docs/assets"), name="assets")
@@ -53,6 +60,13 @@ class PerfilRequest(BaseModel):
     valor_muito_atrativo: float = 200000
     score_relevancia_media: float = 50
     score_relevancia_alta: float = 75
+
+
+class ScheduleRequest(BaseModel):
+    enabled: bool = False
+    perfil: str = "limpeza_higiene"
+    time: str = "08:00"
+    config: dict[str, Any] | None = None
 
 
 def _hash_password(password: str, salt: bytes | None = None) -> str:
@@ -199,6 +213,83 @@ def _save_perfis(perfis: dict[str, Any]) -> None:
     )
 
 
+def _load_schedule() -> dict[str, Any]:
+    default = {
+        "enabled": False,
+        "perfil": "limpeza_higiene",
+        "time": "08:00",
+        "config": {},
+        "last_run_date": "",
+        "last_run_status": "",
+    }
+    if not SCHEDULE_PATH.exists():
+        return default
+    try:
+        data = json.loads(SCHEDULE_PATH.read_text(encoding="utf-8-sig"))
+    except (OSError, json.JSONDecodeError):
+        return default
+
+    return {**default, **data}
+
+
+def _save_schedule(data: dict[str, Any]) -> None:
+    SCHEDULE_PATH.parent.mkdir(parents=True, exist_ok=True)
+    SCHEDULE_PATH.write_text(
+        json.dumps(data, ensure_ascii=False, indent=4),
+        encoding="utf-8",
+    )
+
+
+def _valid_schedule_time(value: str) -> str:
+    try:
+        datetime.strptime(value, "%H:%M")
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail="Horario deve usar HH:MM") from exc
+    return value
+
+
+def _scheduler_loop() -> None:
+    while True:
+        try:
+            schedule = _load_schedule()
+            now = datetime.now()
+            today = now.date().isoformat()
+            if (
+                schedule.get("enabled")
+                and schedule.get("time") == now.strftime("%H:%M")
+                and schedule.get("last_run_date") != today
+            ):
+                with SCHEDULER_LOCK:
+                    schedule = _load_schedule()
+                    if schedule.get("last_run_date") == today:
+                        time.sleep(30)
+                        continue
+
+                    perfil = schedule.get("perfil") or "limpeza_higiene"
+                    config = {**DEFAULT_CONFIG, **(schedule.get("config") or {})}
+                    try:
+                        result = run_pipeline(perfil, config)
+                        schedule["last_run_status"] = (
+                            f"finished: {result['stats'].get('salvas', 0)} registros"
+                        )
+                    except Exception as exc:  # pragma: no cover - defensive background loop
+                        schedule["last_run_status"] = f"error: {exc}"
+                    schedule["last_run_date"] = today
+                    _save_schedule(schedule)
+            time.sleep(30)
+        except Exception:
+            time.sleep(60)
+
+
+def _start_scheduler_once() -> None:
+    global SCHEDULER_STARTED
+    if SCHEDULER_STARTED:
+        return
+    thread = threading.Thread(target=_scheduler_loop, daemon=True)
+    thread.start()
+    SCHEDULER_STARTED = True
+
+
 def _perfil_payload(req: PerfilRequest) -> dict[str, Any]:
     return {
         "nome_exibicao": req.nome_exibicao,
@@ -219,6 +310,7 @@ def _perfil_payload(req: PerfilRequest) -> dict[str, Any]:
 def startup() -> None:
     init_db()
     ensure_admin_user(_hash_password)
+    _start_scheduler_once()
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -290,9 +382,43 @@ def listar(
     return load_recent_licitacoes(limit=limit)
 
 
+@app.get("/licitacao")
+def detalhe_licitacao(
+    pncp_id: str,
+    _: dict[str, Any] = Depends(_current_user),
+) -> dict[str, Any]:
+    detail = load_licitacao_detail(pncp_id)
+    if not detail:
+        raise HTTPException(status_code=404, detail="Licitacao nao encontrada")
+    return detail
+
+
 @app.get("/runs")
 def runs(_: dict[str, Any] = Depends(_current_user)) -> list[dict[str, Any]]:
     return load_recent_api_runs()
+
+
+@app.get("/schedule")
+def get_schedule(_: dict[str, Any] = Depends(_current_user)) -> dict[str, Any]:
+    return _load_schedule()
+
+
+@app.put("/schedule")
+def update_schedule(
+    req: ScheduleRequest,
+    _: dict[str, Any] = Depends(_current_user),
+) -> dict[str, Any]:
+    data = _load_schedule()
+    data.update(
+        {
+            "enabled": req.enabled,
+            "perfil": req.perfil,
+            "time": _valid_schedule_time(req.time),
+            "config": req.config or {},
+        }
+    )
+    _save_schedule(data)
+    return data
 
 
 @app.get("/health")

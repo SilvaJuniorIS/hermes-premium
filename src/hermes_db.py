@@ -114,6 +114,7 @@ def ensure_schema(db_path: Path | str = DB_PATH) -> None:
                 classificacao TEXT,
                 oportunidade TEXT,
                 delta_preco REAL DEFAULT 0,
+                score_motivos TEXT,
                 link TEXT,
                 source TEXT,
                 raw_json TEXT,
@@ -136,6 +137,7 @@ def ensure_schema(db_path: Path | str = DB_PATH) -> None:
             "classificacao": "TEXT",
             "oportunidade": "TEXT",
             "delta_preco": "REAL DEFAULT 0",
+            "score_motivos": "TEXT",
             "link": "TEXT",
             "source": "TEXT",
             "raw_json": "TEXT",
@@ -354,9 +356,9 @@ def upsert_licitacoes(
                 INSERT INTO licitacoes (
                     pncp_id, objeto, valor_estimado_num, estado, municipio,
                     orgao, keyword, data_abertura, score, classificacao,
-                    oportunidade, delta_preco, link, source, raw_json,
-                    first_seen_at, last_seen_at
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    oportunidade, delta_preco, score_motivos, link, source,
+                    raw_json, first_seen_at, last_seen_at
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ON CONFLICT(pncp_id) DO UPDATE SET
                     objeto = excluded.objeto,
                     valor_estimado_num = excluded.valor_estimado_num,
@@ -369,6 +371,7 @@ def upsert_licitacoes(
                     classificacao = excluded.classificacao,
                     oportunidade = excluded.oportunidade,
                     delta_preco = excluded.delta_preco,
+                    score_motivos = excluded.score_motivos,
                     link = excluded.link,
                     source = excluded.source,
                     raw_json = excluded.raw_json,
@@ -387,6 +390,7 @@ def upsert_licitacoes(
                     lic.get("classificacao"),
                     lic.get("oportunidade"),
                     lic.get("delta_preco", 0),
+                    json.dumps(lic.get("score_motivos") or [], ensure_ascii=False),
                     lic.get("link"),
                     lic.get("source", "pncp"),
                     json.dumps(raw, ensure_ascii=False) if raw is not None else None,
@@ -421,7 +425,7 @@ def load_recent_licitacoes(
             SELECT
                 pncp_id, objeto, valor_estimado_num, estado, municipio, orgao,
                 keyword, data_abertura, score, classificacao, oportunidade,
-                delta_preco, link, source, first_seen_at, last_seen_at
+                delta_preco, score_motivos, link, source, first_seen_at, last_seen_at
             FROM licitacoes
             ORDER BY score DESC, valor_estimado_num DESC, last_seen_at DESC
             LIMIT ?
@@ -429,7 +433,73 @@ def load_recent_licitacoes(
             (limit,),
         ).fetchall()
 
-    return [dict(row) for row in rows]
+    return [_format_licitacao_row(row) for row in rows]
+
+
+def _format_licitacao_row(row: sqlite3.Row) -> dict[str, Any]:
+    data = dict(row)
+    motivos = data.get("score_motivos")
+    if isinstance(motivos, str) and motivos.strip():
+        try:
+            data["score_motivos"] = json.loads(motivos)
+        except json.JSONDecodeError:
+            data["score_motivos"] = [motivos]
+    else:
+        data["score_motivos"] = _fallback_score_motivos(data)
+    return data
+
+
+def _fallback_score_motivos(data: dict[str, Any]) -> list[str]:
+    motivos: list[str] = []
+    keyword = data.get("keyword")
+    valor = parse_money(data.get("valor_estimado_num"))
+    score = float(data.get("score") or 0)
+    if keyword:
+        motivos.append(f"Encontrou keyword principal: {keyword}")
+    if valor > 0:
+        motivos.append("Valor estimado considerado na pontuacao")
+    if score >= 75:
+        motivos.append("Score final acima do corte de alta prioridade")
+    elif score >= 50:
+        motivos.append("Score final acima do corte de media prioridade")
+    else:
+        motivos.append("Score final mantido para monitoramento")
+    return motivos
+
+
+def load_licitacao_detail(
+    pncp_id: str,
+    db_path: Path | str = DB_PATH,
+) -> dict[str, Any] | None:
+    ensure_schema(db_path)
+    with connect(db_path) as conn:
+        row = conn.execute(
+            """
+            SELECT
+                pncp_id, objeto, valor_estimado_num, estado, municipio, orgao,
+                keyword, data_abertura, score, classificacao, oportunidade,
+                delta_preco, score_motivos, link, source, raw_json,
+                first_seen_at, last_seen_at
+            FROM licitacoes
+            WHERE pncp_id = ?
+            """,
+            (pncp_id,),
+        ).fetchone()
+
+    if not row:
+        return None
+
+    data = _format_licitacao_row(row)
+    raw = data.get("raw_json")
+    if isinstance(raw, str) and raw.strip():
+        try:
+            data["raw"] = json.loads(raw)
+        except json.JSONDecodeError:
+            data["raw"] = None
+    else:
+        data["raw"] = None
+    data.pop("raw_json", None)
+    return data
 
 
 def load_recent_api_runs(db_path: Path | str = DB_PATH) -> list[dict[str, Any]]:
@@ -444,7 +514,19 @@ def load_recent_api_runs(db_path: Path | str = DB_PATH) -> list[dict[str, Any]]:
             """
         ).fetchall()
 
-    return [dict(row) for row in rows]
+    result: list[dict[str, Any]] = []
+    for row in rows:
+        item = dict(row)
+        stats = item.get("stats")
+        if isinstance(stats, str) and stats.strip():
+            try:
+                item["stats"] = json.loads(stats)
+            except json.JSONDecodeError:
+                item["stats"] = {"raw": stats}
+        else:
+            item["stats"] = {}
+        result.append(item)
+    return result
 
 
 def get_price_reference(

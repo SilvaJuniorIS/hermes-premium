@@ -64,9 +64,54 @@ $env:HERMES_ADMIN_PASSWORD="uma-senha-forte"
 8. Colocar proxy HTTPS na frente, como Nginx, Caddy ou IIS.
 9. Configurar backup do banco `data/hermes.sqlite3`.
 
+## Checklist para demo vendavel
+
+Antes de apresentar o Hermes para um cliente ou socio, use este roteiro:
+
+1. Rodar uma coleta recente para 2 ou 3 perfis comerciais fortes.
+2. Conferir o dashboard em `http://127.0.0.1:8000`.
+3. Abrir uma oportunidade de alta prioridade e mostrar:
+   - objeto da licitacao;
+   - orgao e municipio;
+   - valor estimado;
+   - motivo do score;
+   - link da fonte.
+4. Mostrar filtros por classe, estado e texto.
+5. Exportar CSV para provar que o dado sai do sistema para analise comercial.
+6. Abrir o historico de coletas para demonstrar recorrencia operacional.
+7. Mostrar o agendamento diario como rotina automatizada.
+
+## Caminho recomendado para primeira demo online
+
+Para uma demonstracao acompanhada, o caminho mais rapido e controlado e:
+
+1. Manter o Hermes rodando localmente:
+
+```powershell
+python -m uvicorn api:app --host 127.0.0.1 --port 8000
+```
+
+2. Publicar temporariamente com Cloudflare Tunnel ou ngrok.
+3. Usar uma senha forte definida por variavel de ambiente.
+4. Levar somente uma base de demonstracao, sem dados sensiveis de clientes.
+5. Desativar o tunel ao final da apresentacao.
+
+Esse formato evita custo inicial de servidor e permite validar a proposta comercial antes de contratar infraestrutura.
+
+## Caminho recomendado para piloto
+
+Quando houver cliente piloto, avance para hospedagem real:
+
+1. VPS pequena ou plataforma como Render, Railway, Fly.io, Azure ou AWS.
+2. HTTPS obrigatorio.
+3. Variaveis `HERMES_ADMIN_USER` e `HERMES_ADMIN_PASSWORD`.
+4. Backup automatico de `data/hermes.sqlite3`.
+5. Processo de atualizacao via Git.
+6. Agendamento diario ligado no proprio backend ou em um job externo.
+7. Monitoramento simples de erro e disponibilidade.
+
 ## Resumo
 
 - GitHub Pages: ideal para a demo publica.
 - Sistema real: precisa de backend hospedado.
 - Logo da demo: salvar em `docs/assets/logo-hermes.png`.
-

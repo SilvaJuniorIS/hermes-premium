@@ -89,6 +89,7 @@ def _score_licitacao(lic: dict[str, Any], config: dict[str, Any]) -> dict[str, A
     valor = parse_money(lic.get("valor_estimado_num"))
 
     score = 0.0
+    motivos: list[str] = []
     keyword = _first_match(text, config["keywords"])
     strong = _first_match(text, config["keywords_fortes"])
     positive = _first_match(text, config["termos_positivos"])
@@ -96,19 +97,26 @@ def _score_licitacao(lic: dict[str, Any], config: dict[str, Any]) -> dict[str, A
 
     if keyword:
         score += 25
+        motivos.append(f"Encontrou keyword principal: {keyword}")
     if strong:
         score += 25
+        motivos.append(f"Encontrou termo forte: {strong}")
     if positive:
         score += 15
+        motivos.append(f"Encontrou termo positivo: {positive}")
     if negative:
         score -= 25
+        motivos.append(f"Penalizacao por termo negativo: {negative}")
 
     if valor >= config["valor_muito_atrativo"]:
         score += 25
+        motivos.append("Valor estimado muito atrativo para o perfil")
     elif valor >= config["valor_atrativo"]:
         score += 15
+        motivos.append("Valor estimado atrativo para o perfil")
     elif valor >= config["valor_minimo_interesse"]:
         score += 8
+        motivos.append("Valor estimado acima do minimo de interesse")
 
     referencia = get_price_reference(keyword, lic.get("estado")) if keyword else {"media": None}
     media = referencia.get("media")
@@ -117,8 +125,10 @@ def _score_licitacao(lic: dict[str, Any], config: dict[str, Any]) -> dict[str, A
         delta = round((valor - media) / media, 2)
         if delta > 0.5:
             score += 10
+            motivos.append("Valor acima da media historica do mesmo termo/estado")
         elif delta < -0.2:
             score -= 5
+            motivos.append("Valor abaixo da media historica do mesmo termo/estado")
 
     score = max(0.0, min(100.0, score))
     alta = config["score_relevancia_alta"]
@@ -140,6 +150,7 @@ def _score_licitacao(lic: dict[str, Any], config: dict[str, Any]) -> dict[str, A
         "oportunidade": oportunidade,
         "delta_preco": delta,
         "keyword": keyword,
+        "score_motivos": motivos,
     }
 
 

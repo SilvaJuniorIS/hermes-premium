@@ -20,6 +20,7 @@ data/*.db
 data/*.sqlite
 data/*.sqlite3
 *.zip
+config/agendamento.json
 
 # Ignorar chaves de API ou outros segredos (se voce os tiver localmente)
 # NUNCA faca commit de chaves de API!
