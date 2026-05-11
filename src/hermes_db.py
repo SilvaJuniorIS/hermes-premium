@@ -421,15 +421,39 @@ def upsert_licitacoes(
 def load_recent_licitacoes(
     limit: int = 100,
     perfil: str | None = None,
+    classificacao: str | None = None,
+    estado: str | None = None,
+    q: str | None = None,
+    valor_min: float | None = None,
+    valor_max: float | None = None,
     db_path: Path | str = DB_PATH,
 ) -> list[dict[str, Any]]:
     ensure_schema(db_path)
     with connect(db_path) as conn:
-        where = ""
+        where_parts: list[str] = []
         params: list[Any] = []
         if perfil:
-            where = "WHERE perfil = ?"
+            where_parts.append("perfil = ?")
             params.append(perfil)
+        if classificacao:
+            where_parts.append("classificacao = ?")
+            params.append(classificacao.upper())
+        if estado:
+            where_parts.append("estado = ?")
+            params.append(estado.upper())
+        if q:
+            where_parts.append(
+                "(LOWER(objeto) LIKE ? OR LOWER(orgao) LIKE ? OR LOWER(municipio) LIKE ? OR LOWER(keyword) LIKE ?)"
+            )
+            q_like = f"%{q.lower()}%"
+            params.extend([q_like, q_like, q_like, q_like])
+        if valor_min is not None:
+            where_parts.append("valor_estimado_num >= ?")
+            params.append(valor_min)
+        if valor_max is not None:
+            where_parts.append("valor_estimado_num <= ?")
+            params.append(valor_max)
+        where = f"WHERE {' AND '.join(where_parts)}" if where_parts else ""
         params.append(limit)
         rows = conn.execute(
             f"""

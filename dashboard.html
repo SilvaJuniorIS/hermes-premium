@@ -716,7 +716,10 @@
                             <option value="">Todos os estados</option>
                         </select>
                         <input id="filtroTexto" aria-label="Buscar por texto" placeholder="Buscar objeto, orgao ou cidade">
+                        <input id="filtroValorMin" aria-label="Valor minimo" type="number" min="0" step="1000" placeholder="Valor minimo">
+                        <input id="filtroValorMax" aria-label="Valor maximo" type="number" min="0" step="1000" placeholder="Valor maximo">
                         <button class="secondary" id="exportButton" onclick="exportarCsv()">Exportar CSV</button>
+                        <button class="secondary" id="exportExcelButton" onclick="exportarExcel()">Exportar Excel</button>
                     </div>
 
                     <div class="table-wrap">
@@ -1002,10 +1005,13 @@
             const classe = document.getElementById('filtroClasse').value;
             const estado = document.getElementById('filtroEstado').value;
             const termo = document.getElementById('filtroTexto').value.trim().toLowerCase();
+            const valorMin = Number(document.getElementById('filtroValorMin').value || 0);
+            const valorMax = Number(document.getElementById('filtroValorMax').value || 0);
 
             return licitacoesData.filter(item => {
                 const itemClasse = String(item.classificacao || '').toUpperCase();
                 const itemEstado = String(item.estado || '').toUpperCase();
+                const valor = Number(item.valor_estimado_num || 0);
                 const text = [
                     item.objeto,
                     item.orgao,
@@ -1017,8 +1023,27 @@
                 if (classe && itemClasse !== classe) return false;
                 if (estado && itemEstado !== estado) return false;
                 if (termo && !text.includes(termo)) return false;
+                if (valorMin && valor < valorMin) return false;
+                if (valorMax && valor > valorMax) return false;
                 return true;
             });
+        }
+
+        function getFilterParams(limit = '500') {
+            const params = new URLSearchParams({ limit });
+            const perfil = document.getElementById('perfil').value;
+            const classe = document.getElementById('filtroClasse').value;
+            const estado = document.getElementById('filtroEstado').value;
+            const termo = document.getElementById('filtroTexto').value.trim();
+            const valorMin = document.getElementById('filtroValorMin').value;
+            const valorMax = document.getElementById('filtroValorMax').value;
+            if (perfil) params.set('perfil', perfil);
+            if (classe) params.set('classificacao', classe);
+            if (estado) params.set('estado', estado);
+            if (termo) params.set('q', termo);
+            if (valorMin) params.set('valor_min', valorMin);
+            if (valorMax) params.set('valor_max', valorMax);
+            return params;
         }
 
         function atualizarFiltroEstados() {
@@ -1134,6 +1159,12 @@
             link.remove();
             URL.revokeObjectURL(url);
             setStatus(`Exportados ${data.length} registros`);
+        }
+
+        function exportarExcel() {
+            const params = getFilterParams('500');
+            window.location.href = `/licitacoes/export.xlsx?${params.toString()}`;
+            setStatus('Gerando Excel com filtros atuais');
         }
 
         function preencherSelectPerfis(selectId, selectedValue = '') {
@@ -1318,9 +1349,7 @@
 
         async function carregar() {
             setStatus('Carregando dados...');
-            const perfil = document.getElementById('perfil').value;
-            const params = new URLSearchParams({ limit: '200' });
-            if (perfil) params.set('perfil', perfil);
+            const params = getFilterParams('200');
             const res = await fetchAuth(`/licitacoes?${params.toString()}`);
             licitacoesData = await res.json();
             atualizarFiltroEstados();
@@ -1470,6 +1499,8 @@
         document.getElementById('filtroClasse').addEventListener('change', renderizarTabela);
         document.getElementById('filtroEstado').addEventListener('change', renderizarTabela);
         document.getElementById('filtroTexto').addEventListener('input', renderizarTabela);
+        document.getElementById('filtroValorMin').addEventListener('input', renderizarTabela);
+        document.getElementById('filtroValorMax').addEventListener('input', renderizarTabela);
         carregarPerfis().then(() => Promise.all([carregar(), carregarRuns(), carregarSchedule()]));
     </script>
 </body>

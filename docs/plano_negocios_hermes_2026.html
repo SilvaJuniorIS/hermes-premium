@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Plano de Negocios Hermes Premium 2026</title>
+<style>
+body { margin:0; font-family: Arial, Helvetica, sans-serif; color:#172027; background:#f5f7f9; line-height:1.55; }
+.cover { min-height: 92vh; background:#142028; color:white; padding:60px; display:grid; align-content:center; }
+.cover img { width:150px; background:#07101f; border-radius:10px; padding:10px; margin-bottom:26px; }
+h1 { font-size:48px; margin:0 0 12px; }
+h2 { font-size:28px; margin:38px 0 12px; }
+h3 { font-size:20px; margin:24px 0 8px; }
+section { max-width:980px; margin:0 auto; padding:34px 28px; background:white; border-bottom:1px solid #d9e1e7; }
+.lead { font-size:20px; max-width:780px; color:#d7e2ea; }
+.grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+.card { border:1px solid #d9e1e7; border-radius:8px; padding:16px; background:#fbfcfd; }
+.card strong { display:block; font-size:28px; color:#18875f; }
+img.chart { width:100%; border:1px solid #d9e1e7; border-radius:8px; margin:16px 0; }
+table { width:100%; border-collapse:collapse; margin:14px 0; }
+th,td { border:1px solid #d9e1e7; padding:10px; text-align:left; vertical-align:top; }
+th { background:#eef3f5; }
+small, .muted { color:#64717d; }
+@media print { body { background:white; } section { break-inside:avoid; } .cover { min-height:720px; } }
+</style>
+</head>
+<body>
+<div class="cover">
+<img src="assets/logo-hermes.png" alt="Logo Hermes">
+<h1>Hermes Premium</h1>
+<p class="lead">Plano de negocios e produto para uma plataforma de inteligencia comercial em licitacoes publicas, combinando software, consultoria e operacao assistida.</p>
+<p class="muted">Atualizado em 11/05/2026</p>
+</div>
+<section>
+<h2>1. Resumo executivo</h2>
+<p>O Hermes Premium deve ser posicionado como uma solucao de inteligencia comercial para empresas que desejam vender melhor para o setor publico. A proposta nao e apenas encontrar editais: e transformar dados publicos em oportunidades qualificadas, com score, explicacao, historico, rotina de coleta, exportacao e apoio consultivo.</p>
+<div class="grid">
+<div class="card"><strong>SaaS</strong>Monitoramento, filtros, score, historico e exportacao.</div>
+<div class="card"><strong>Consultoria</strong>Prontidao documental, estrategia e analise de edital.</div>
+<div class="card"><strong>Operacao</strong>Acompanhamento de prazos, propostas e rotina comercial.</div>
+</div>
+</section>
+<section>
+<h2>2. Contexto de mercado</h2>
+<p>O PNCP e o sitio oficial de divulgacao centralizada de contratacoes publicas previsto na Lei 14.133/2021. Segundo o portal oficial, ele centraliza dados de contratacoes da Uniao, estados e municipios e oferece pesquisa de editais, atas, contratos, dados abertos e APIs. O Compras.gov.br tambem reforca a jornada do fornecedor, com SICAF, oportunidades e operacionalizacao de compras publicas.</p>
+<ul>
+<li>Fonte oficial PNCP: <a href="https://www.gov.br/pncp/">https://www.gov.br/pncp/</a></li>
+<li>Sobre o PNCP e Lei 14.133/2021: <a href="https://www.gov.br/pncp/pt-br/pncp/sobre-o-pncp">gov.br/pncp/sobre-o-pncp</a></li>
+<li>Compras.gov.br fornecedor: <a href="https://www.gov.br/compras/pt-br/fornecedor">gov.br/compras/pt-br/fornecedor</a></li>
+</ul>
+</section>
+<section>
+<h2>3. Problema que o Hermes resolve</h2>
+<table><tr><th>Dor do cliente</th><th>Resposta do Hermes</th></tr>
+<tr><td>Excesso de editais irrelevantes</td><td>Perfis de negocio, palavras-chave, termos negativos e score.</td></tr>
+<tr><td>Dificuldade de priorizar oportunidades</td><td>Classificacao ALTA/MEDIA/BAIXA, valor estimado e motivo do score.</td></tr>
+<tr><td>Rotina comercial manual</td><td>Coleta agendada, historico e exportacao Excel/CSV.</td></tr>
+<tr><td>Baixa maturidade em licitacoes</td><td>Pacotes consultivos de habilitacao, leitura de edital e proposta.</td></tr>
+</table>
+</section>
+<section>
+<h2>4. Produto atual</h2>
+<p>O MVP ja possui login, dashboard, coleta PNCP, banco SQLite, filtros por perfil, estado, classificacao, valor e texto, tela de detalhe, motivo do score, historico de coletas, agendamento local e exportacao CSV/Excel.</p>
+<img class="chart" src="assets/business_plan/oportunidades_por_perfil.png" alt="Grafico de oportunidades por perfil">
+<img class="chart" src="assets/business_plan/oportunidades_por_uf.png" alt="Grafico de oportunidades por UF">
+<img class="chart" src="assets/business_plan/oportunidades_por_classe.png" alt="Grafico de oportunidades por classificacao">
+</section>
+<section>
+<h2>5. Publico-alvo inicial</h2>
+<p>O ICP recomendado sao pequenas e medias empresas com capacidade operacional, certidoes organizaveis e produtos ou servicos recorrentes para orgaos publicos.</p>
+<ul><li>Construcao, manutencao predial e reformas.</li><li>TI, equipamentos e perifericos.</li><li>Limpeza, higiene e descartaveis.</li><li>Material de escritorio e papelaria.</li><li>Moveis corporativos e escolares.</li></ul>
+</section>
+<section>
+<h2>6. Modelo de receita</h2>
+<table><tr><th>Plano</th><th>Preco inicial sugerido</th><th>Entrega</th></tr>
+<tr><td>Monitoramento</td><td>R$ 297 a R$ 497/mes</td><td>1 perfil, ate 3 UFs, alertas, dashboard e exportacao.</td></tr>
+<tr><td>Inteligencia Comercial</td><td>R$ 797 a R$ 1.497/mes</td><td>Ate 3 perfis, score, relatorio semanal e reuniao mensal.</td></tr>
+<tr><td>Premium Consultivo</td><td>R$ 2.500 a R$ 6.000/mes</td><td>Analise de editais, apoio em proposta, precificacao e acompanhamento.</td></tr>
+<tr><td>Avulso</td><td>R$ 300 a R$ 1.500 por edital</td><td>Leitura de edital, checklist de habilitacao ou revisao de proposta.</td></tr>
+</table>
+</section>
+<section>
+<h2>7. Funil comercial</h2>
+<img class="chart" src="assets/business_plan/funil_comercial.png" alt="Funil comercial Hermes">
+<p>O software gera recorrencia; a consultoria aumenta ticket medio; a operacao assistida reduz churn e cria relacionamento continuo.</p>
+</section>
+<section>
+<h2>8. Roadmap recomendado</h2>
+<table><tr><th>Fase</th><th>Objetivo</th><th>Entregas</th></tr>
+<tr><td>0-30 dias</td><td>Demo vendavel</td><td>Base demo, dashboard polido, plano comercial, pitch e landing page.</td></tr>
+<tr><td>31-60 dias</td><td>Piloto pago</td><td>Hospedagem, backup, alertas e 3 clientes piloto.</td></tr>
+<tr><td>61-90 dias</td><td>Operacao repetivel</td><td>Relatorio semanal, onboarding, playbook de proposta e suporte.</td></tr>
+<tr><td>90+ dias</td><td>Escala</td><td>Multiusuario, permissoes, e-mail/WhatsApp, CRM e IA de edital.</td></tr>
+</table>
+</section>
+<section>
+<h2>9. Indicadores de sucesso</h2>
+<ul><li>Oportunidades qualificadas por cliente/semana.</li><li>Taxa de oportunidades descartadas por irrelevancia.</li><li>Tempo economizado na busca de editais.</li><li>Propostas enviadas por mes.</li><li>Receita mensal recorrente e churn.</li><li>Taxa de conversao de demo para piloto pago.</li></ul>
+</section>
+<section>
+<h2>10. Proxima acao</h2>
+<p>Usar o dashboard atual para revisar oportunidades reais dos perfis mais fortes, especialmente construcao/manutencao e TI. A partir dessa revisao, montar uma apresentacao comercial curta e abordar 5 empresas candidatas a piloto.</p>
+</section>
+</body></html>

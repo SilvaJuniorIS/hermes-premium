@@ -5,6 +5,7 @@ import os
 import secrets
 import threading
 import time
+from io import BytesIO
 from base64 import urlsafe_b64decode, urlsafe_b64encode
 from datetime import datetime
 from hashlib import pbkdf2_hmac
@@ -13,8 +14,9 @@ from pathlib import Path
 from typing import Any
 
 from fastapi import Cookie, Depends, FastAPI, Form, HTTPException
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import HTMLResponse, RedirectResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
+from openpyxl import Workbook
 from pydantic import BaseModel, Field
 
 from src.hermes_db import (
@@ -378,9 +380,98 @@ def run(req: RunRequest, _: dict[str, Any] = Depends(_current_user)) -> dict[str
 def listar(
     limit: int = 100,
     perfil: str | None = None,
+    classificacao: str | None = None,
+    estado: str | None = None,
+    q: str | None = None,
+    valor_min: float | None = None,
+    valor_max: float | None = None,
     _: dict[str, Any] = Depends(_current_user),
 ) -> list[dict[str, Any]]:
-    return load_recent_licitacoes(limit=limit, perfil=perfil)
+    return load_recent_licitacoes(
+        limit=limit,
+        perfil=perfil,
+        classificacao=classificacao,
+        estado=estado,
+        q=q,
+        valor_min=valor_min,
+        valor_max=valor_max,
+    )
+
+
+@app.get("/licitacoes/export.xlsx")
+def exportar_licitacoes_excel(
+    limit: int = 500,
+    perfil: str | None = None,
+    classificacao: str | None = None,
+    estado: str | None = None,
+    q: str | None = None,
+    valor_min: float | None = None,
+    valor_max: float | None = None,
+    _: dict[str, Any] = Depends(_current_user),
+) -> StreamingResponse:
+    rows = load_recent_licitacoes(
+        limit=limit,
+        perfil=perfil,
+        classificacao=classificacao,
+        estado=estado,
+        q=q,
+        valor_min=valor_min,
+        valor_max=valor_max,
+    )
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Oportunidades"
+    headers = [
+        "perfil",
+        "score",
+        "classificacao",
+        "objeto",
+        "estado",
+        "municipio",
+        "orgao",
+        "valor_estimado",
+        "oportunidade",
+        "data_abertura",
+        "keyword",
+        "motivos_score",
+        "link",
+        "pncp_id",
+    ]
+    ws.append(headers)
+    for item in rows:
+        ws.append(
+            [
+                item.get("perfil"),
+                item.get("score"),
+                item.get("classificacao"),
+                item.get("objeto"),
+                item.get("estado"),
+                item.get("municipio"),
+                item.get("orgao"),
+                item.get("valor_estimado_num"),
+                item.get("oportunidade"),
+                item.get("data_abertura"),
+                item.get("keyword"),
+                "; ".join(item.get("score_motivos") or []),
+                item.get("link"),
+                item.get("pncp_id"),
+            ]
+        )
+    for column in ws.columns:
+        letter = column[0].column_letter
+        ws.column_dimensions[letter].width = min(
+            max(len(str(cell.value or "")) for cell in column) + 2,
+            55,
+        )
+    output = BytesIO()
+    wb.save(output)
+    output.seek(0)
+    filename = f"hermes-oportunidades-{datetime.now().date().isoformat()}.xlsx"
+    return StreamingResponse(
+        output,
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    )
 
 
 @app.get("/licitacao")
