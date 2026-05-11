@@ -22,6 +22,10 @@ data/*.sqlite3
 *.zip
 config/agendamento.json
 
+# Ignorar ferramentas locais de tunel usadas em demonstracoes
+cloudflared.exe
+ngrok.exe
+
 # Ignorar chaves de API ou outros segredos (se voce os tiver localmente)
 # NUNCA faca commit de chaves de API!
 .api_key

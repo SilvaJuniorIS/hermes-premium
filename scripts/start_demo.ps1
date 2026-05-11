@@ -34,6 +34,8 @@ if ($PublicTunnel -and $usingDefaultPassword) {
     exit 1
 }
 
+$env:HERMES_RESET_ADMIN_PASSWORD = "1"
+
 $depsCheck = @"
 import fastapi
 import uvicorn

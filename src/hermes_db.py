@@ -243,6 +243,19 @@ def create_user(
         return int(cur.lastrowid)
 
 
+def update_user_password(
+    username: str,
+    password_hash: str,
+    db_path: Path | str = DB_PATH,
+) -> None:
+    ensure_schema(db_path)
+    with connect(db_path) as conn:
+        conn.execute(
+            "UPDATE usuarios SET password_hash = ?, ativo = 1 WHERE username = ?",
+            (password_hash, username),
+        )
+
+
 def mark_user_login(
     user_id: int,
     db_path: Path | str = DB_PATH,
@@ -262,7 +275,10 @@ def ensure_admin_user(
     ensure_schema(db_path)
     username = os.getenv("HERMES_ADMIN_USER", "admin")
     password = os.getenv("HERMES_ADMIN_PASSWORD", "admin123")
-    if get_user_by_username(username, db_path):
+    existing_user = get_user_by_username(username, db_path)
+    if existing_user:
+        if os.getenv("HERMES_RESET_ADMIN_PASSWORD") == "1":
+            update_user_password(username, password_hash_factory(password), db_path)
         return
 
     create_user(
