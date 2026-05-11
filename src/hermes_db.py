@@ -102,6 +102,7 @@ def ensure_schema(db_path: Path | str = DB_PATH) -> None:
         conn.execute("""
             CREATE TABLE IF NOT EXISTS licitacoes (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
+                perfil TEXT,
                 pncp_id TEXT,
                 objeto TEXT,
                 valor_estimado_num REAL DEFAULT 0,
@@ -125,6 +126,7 @@ def ensure_schema(db_path: Path | str = DB_PATH) -> None:
 
         for column, ddl in {
             "id": "INTEGER",
+            "perfil": "TEXT",
             "pncp_id": "TEXT",
             "objeto": "TEXT",
             "valor_estimado_num": "REAL DEFAULT 0",
@@ -354,12 +356,13 @@ def upsert_licitacoes(
             conn.execute(
                 """
                 INSERT INTO licitacoes (
-                    pncp_id, objeto, valor_estimado_num, estado, municipio,
+                    perfil, pncp_id, objeto, valor_estimado_num, estado, municipio,
                     orgao, keyword, data_abertura, score, classificacao,
                     oportunidade, delta_preco, score_motivos, link, source,
                     raw_json, first_seen_at, last_seen_at
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ON CONFLICT(pncp_id) DO UPDATE SET
+                    perfil = excluded.perfil,
                     objeto = excluded.objeto,
                     valor_estimado_num = excluded.valor_estimado_num,
                     estado = excluded.estado,
@@ -378,6 +381,7 @@ def upsert_licitacoes(
                     last_seen_at = excluded.last_seen_at
                 """,
                 (
+                    lic.get("perfil"),
                     pncp_id,
                     lic.get("objeto"),
                     valor,
@@ -416,21 +420,29 @@ def upsert_licitacoes(
 
 def load_recent_licitacoes(
     limit: int = 100,
+    perfil: str | None = None,
     db_path: Path | str = DB_PATH,
 ) -> list[dict[str, Any]]:
     ensure_schema(db_path)
     with connect(db_path) as conn:
+        where = ""
+        params: list[Any] = []
+        if perfil:
+            where = "WHERE perfil = ?"
+            params.append(perfil)
+        params.append(limit)
         rows = conn.execute(
-            """
+            f"""
             SELECT
-                pncp_id, objeto, valor_estimado_num, estado, municipio, orgao,
+                perfil, pncp_id, objeto, valor_estimado_num, estado, municipio, orgao,
                 keyword, data_abertura, score, classificacao, oportunidade,
                 delta_preco, score_motivos, link, source, first_seen_at, last_seen_at
             FROM licitacoes
+            {where}
             ORDER BY score DESC, valor_estimado_num DESC, last_seen_at DESC
             LIMIT ?
             """,
-            (limit,),
+            params,
         ).fetchall()
 
     return [_format_licitacao_row(row) for row in rows]
@@ -477,7 +489,7 @@ def load_licitacao_detail(
             """
             SELECT
                 pncp_id, objeto, valor_estimado_num, estado, municipio, orgao,
-                keyword, data_abertura, score, classificacao, oportunidade,
+                perfil, keyword, data_abertura, score, classificacao, oportunidade,
                 delta_preco, score_motivos, link, source, raw_json,
                 first_seen_at, last_seen_at
             FROM licitacoes

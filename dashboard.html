@@ -1207,6 +1207,11 @@
             document.getElementById('perfilAtual').textContent = label;
         }
 
+        async function trocarPerfil() {
+            updatePerfilAtual();
+            await carregar();
+        }
+
         function novoPerfil() {
             perfilSelecionado = null;
             perfilOriginalId = null;
@@ -1313,7 +1318,10 @@
 
         async function carregar() {
             setStatus('Carregando dados...');
-            const res = await fetchAuth('/licitacoes?limit=200');
+            const perfil = document.getElementById('perfil').value;
+            const params = new URLSearchParams({ limit: '200' });
+            if (perfil) params.set('perfil', perfil);
+            const res = await fetchAuth(`/licitacoes?${params.toString()}`);
             licitacoesData = await res.json();
             atualizarFiltroEstados();
             renderizarTabela();
@@ -1458,7 +1466,7 @@
             }
         }
 
-        document.getElementById('perfil').addEventListener('change', updatePerfilAtual);
+        document.getElementById('perfil').addEventListener('change', trocarPerfil);
         document.getElementById('filtroClasse').addEventListener('change', renderizarTabela);
         document.getElementById('filtroEstado').addEventListener('change', renderizarTabela);
         document.getElementById('filtroTexto').addEventListener('input', renderizarTabela);

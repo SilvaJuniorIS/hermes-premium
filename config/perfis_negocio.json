@@ -197,6 +197,9 @@
             "suporte tecnico",
             "consultoria",
             "monitoramento",
+            "monitor de transporte",
+            "monitor escolar",
+            "apoio escolar",
             "obra",
             "reforma"
         ],
@@ -382,7 +385,14 @@
             "mão de obra",
             "obra",
             "reforma",
-            "instalação"
+            "instalação",
+            "instituições financeiras",
+            "instituicoes financeiras",
+            "serviços bancários",
+            "servicos bancarios",
+            "tributos",
+            "receitas públicas",
+            "receitas publicas"
         ],
         "valor_minimo_interesse": 10000,
         "valor_atrativo": 30000,

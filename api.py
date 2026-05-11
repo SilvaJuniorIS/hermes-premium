@@ -377,9 +377,10 @@ def run(req: RunRequest, _: dict[str, Any] = Depends(_current_user)) -> dict[str
 @app.get("/licitacoes")
 def listar(
     limit: int = 100,
+    perfil: str | None = None,
     _: dict[str, Any] = Depends(_current_user),
 ) -> list[dict[str, Any]]:
-    return load_recent_licitacoes(limit=limit)
+    return load_recent_licitacoes(limit=limit, perfil=perfil)
 
 
 @app.get("/licitacao")

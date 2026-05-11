@@ -79,8 +79,13 @@ def build_config(perfil: str | None = None, overrides: dict[str, Any] | None = N
 
 def _first_match(text: str, terms: list[str]) -> str | None:
     lowered = _normalize_text(text)
-    for term in terms:
-        term_text = _normalize_text(term)
+    normalized_terms = [
+        (term, _normalize_text(term))
+        for term in terms
+        if _normalize_text(term)
+    ]
+    normalized_terms.sort(key=lambda item: len(item[1]), reverse=True)
+    for term, term_text in normalized_terms:
         if term_text and _term_in_text(term_text, lowered):
             return term
     return None
@@ -181,6 +186,7 @@ def _normalize_item(item: dict[str, Any], estado: str, config: dict[str, Any]) -
     )
 
     lic = {
+        "perfil": config.get("perfil"),
         "pncp_id": str(pncp_id) if pncp_id is not None else "",
         "objeto": item.get("objetoCompra") or item.get("objeto") or "",
         "valor_estimado_num": item.get("valorTotalEstimado") or item.get("valorEstimado") or 0,
