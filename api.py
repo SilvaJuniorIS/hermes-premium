@@ -398,26 +398,7 @@ def listar(
     )
 
 
-@app.get("/licitacoes/export.xlsx")
-def exportar_licitacoes_excel(
-    limit: int = 500,
-    perfil: str | None = None,
-    classificacao: str | None = None,
-    estado: str | None = None,
-    q: str | None = None,
-    valor_min: float | None = None,
-    valor_max: float | None = None,
-    _: dict[str, Any] = Depends(_current_user),
-) -> StreamingResponse:
-    rows = load_recent_licitacoes(
-        limit=limit,
-        perfil=perfil,
-        classificacao=classificacao,
-        estado=estado,
-        q=q,
-        valor_min=valor_min,
-        valor_max=valor_max,
-    )
+def _build_licitacoes_workbook(rows: list[dict[str, Any]]) -> Workbook:
     wb = Workbook()
     ws = wb.active
     ws.title = "Oportunidades"
@@ -463,6 +444,30 @@ def exportar_licitacoes_excel(
             max(len(str(cell.value or "")) for cell in column) + 2,
             55,
         )
+    return wb
+
+
+@app.get("/licitacoes/export.xlsx")
+def exportar_licitacoes_excel(
+    limit: int = 500,
+    perfil: str | None = None,
+    classificacao: str | None = None,
+    estado: str | None = None,
+    q: str | None = None,
+    valor_min: float | None = None,
+    valor_max: float | None = None,
+    _: dict[str, Any] = Depends(_current_user),
+) -> StreamingResponse:
+    rows = load_recent_licitacoes(
+        limit=limit,
+        perfil=perfil,
+        classificacao=classificacao,
+        estado=estado,
+        q=q,
+        valor_min=valor_min,
+        valor_max=valor_max,
+    )
+    wb = _build_licitacoes_workbook(rows)
     output = BytesIO()
     wb.save(output)
     output.seek(0)
@@ -472,6 +477,40 @@ def exportar_licitacoes_excel(
         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         headers={"Content-Disposition": f'attachment; filename="{filename}"'},
     )
+
+
+@app.get("/licitacoes/export/local")
+def exportar_licitacoes_excel_local(
+    limit: int = 500,
+    perfil: str | None = None,
+    classificacao: str | None = None,
+    estado: str | None = None,
+    q: str | None = None,
+    valor_min: float | None = None,
+    valor_max: float | None = None,
+    _: dict[str, Any] = Depends(_current_user),
+) -> dict[str, Any]:
+    rows = load_recent_licitacoes(
+        limit=limit,
+        perfil=perfil,
+        classificacao=classificacao,
+        estado=estado,
+        q=q,
+        valor_min=valor_min,
+        valor_max=valor_max,
+    )
+    wb = _build_licitacoes_workbook(rows)
+    output_dir = Path("output")
+    output_dir.mkdir(parents=True, exist_ok=True)
+    filename = f"hermes-oportunidades-{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx"
+    output_path = output_dir / filename
+    wb.save(output_path)
+    return {
+        "status": "saved",
+        "total": len(rows),
+        "filename": filename,
+        "path": str(output_path.resolve()),
+    }
 
 
 @app.get("/licitacao")

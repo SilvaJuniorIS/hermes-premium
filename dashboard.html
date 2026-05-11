@@ -1161,10 +1161,19 @@
             setStatus(`Exportados ${data.length} registros`);
         }
 
-        function exportarExcel() {
+        async function exportarExcel() {
             const params = getFilterParams('500');
-            window.location.href = `/licitacoes/export.xlsx?${params.toString()}`;
-            setStatus('Gerando Excel com filtros atuais');
+            setStatus('Gerando Excel com filtros atuais...');
+            try {
+                const res = await fetchAuth(`/licitacoes/export/local?${params.toString()}`);
+                if (!res.ok) {
+                    throw new Error(`HTTP ${res.status}`);
+                }
+                const result = await res.json();
+                setStatus(`Excel salvo: ${result.filename} (${result.total} registros)`);
+            } catch (err) {
+                setStatus(`Erro ao exportar Excel: ${err.message}`);
+            }
         }
 
         function preencherSelectPerfis(selectId, selectedValue = '') {

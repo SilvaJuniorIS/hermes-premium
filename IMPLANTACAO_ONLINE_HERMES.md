@@ -34,10 +34,29 @@ Por isso, ele nao roda diretamente no GitHub Pages. GitHub Pages hospeda apenas 
 
 Para uma demonstracao controlada, rode o sistema em uma maquina Windows e use um tunel seguro temporario, como Cloudflare Tunnel ou ngrok.
 
-Exemplo conceitual:
+O projeto agora inclui um inicializador de demo:
 
 ```powershell
-python -m uvicorn api:app --host 127.0.0.1 --port 8000
+.\scripts\start_demo.ps1
+```
+
+Ou, no Windows, de duplo clique em:
+
+```text
+INICIAR_DEMO_HERMES.bat
+```
+
+Credenciais locais padrao da demo:
+
+- Usuario: `demo`
+- Senha: `HermesDemo2026!`
+
+Para publicar temporariamente por tunel, defina uma senha propria antes:
+
+```powershell
+$env:HERMES_ADMIN_USER="demo"
+$env:HERMES_ADMIN_PASSWORD="troque-por-uma-senha-forte"
+.\scripts\start_demo.ps1 -PublicTunnel
 ```
 
 Depois o tunel publica uma URL HTTPS temporaria apontando para `http://127.0.0.1:8000`.

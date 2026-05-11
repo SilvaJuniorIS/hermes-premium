@@ -2,6 +2,10 @@
 
 Esta pasta contem uma versao estatica do dashboard para publicacao no GitHub Pages.
 
+O GitHub Pages publica apenas arquivos estaticos. O sistema real do Hermes
+usa FastAPI, SQLite, autenticacao por cookie, chamadas ao PNCP e rotinas Python,
+por isso deve rodar em um servidor separado ou em uma demo local com tunel.
+
 ## Publicar no GitHub Pages
 
 1. Envie a pasta `docs/` para o repositorio no GitHub.
@@ -12,6 +16,17 @@ Esta pasta contem uma versao estatica do dashboard para publicacao no GitHub Pag
 6. Salve.
 
 O GitHub vai gerar uma URL publica para a demonstracao.
+
+## Link para o sistema real
+
+Quando a versao real estiver hospedada, ajuste o botao principal em
+`docs/index.html`:
+
+```html
+<a class="btn primary" href="https://app.seudominio.com" target="_blank" rel="noopener">Acessar sistema</a>
+```
+
+Troque `https://app.seudominio.com` pelo dominio definitivo do backend.
 
 ## Inserir seu logo
 
