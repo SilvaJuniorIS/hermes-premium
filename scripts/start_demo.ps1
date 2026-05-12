@@ -67,7 +67,7 @@ Write-Host ""
 Write-Host "Hermes Premium - demo operacional" -ForegroundColor Green
 Write-Host "URL:      $appUrl"
 Write-Host "Usuario: $env:HERMES_ADMIN_USER"
-Write-Host "Senha:   $env:HERMES_ADMIN_PASSWORD"
+Write-Host "Senha:   definida em HERMES_ADMIN_PASSWORD"
 Write-Host ""
 Write-Host "Para encerrar a demo, pressione Ctrl+C nesta janela."
 if ($PublicTunnel) {

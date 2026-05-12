@@ -168,3 +168,78 @@ Fazer um pequeno hardening da demo:
 4. Criar uma base demo selecionada.
 5. Publicar a vitrine no GitHub Pages.
 
+## Atualizacao: envio de planilha por e-mail
+
+Foi adicionado ao fluxo vendavel da demo:
+
+- botao `Enviar por e-mail` no dashboard operacional;
+- solicitacao do destinatario ao clicar;
+- endpoint `POST /licitacoes/export/email`;
+- geracao da planilha Excel com os filtros atuais;
+- envio usando `src/notifier.py`;
+- corpo de e-mail explicando oportunidades, filtros, score, classificacoes e destaques;
+- documentacao do fluxo em `DEMO_HERMES.md` e `DOCUMENTACAO_DEMO_ONLINE_HERMES.md`.
+
+Configuracao SMTP:
+
+- o sistema reaproveita a configuracao existente em `src/notifier.py`;
+- para producao ou piloto, preferir variaveis de ambiente `HERMES_SMTP_HOST`,
+  `HERMES_SMTP_PORT`, `HERMES_SMTP_USER`, `HERMES_SMTP_PASSWORD` e
+  `HERMES_EMAIL_FROM`.
+
+## Atualizacao: acompanhamento comercial
+
+Foi adicionada uma camada de funil comercial nas oportunidades:
+
+- campos persistidos no SQLite: `status_comercial`, `favorito`, `anotacoes` e
+  `comercial_updated_at`;
+- endpoint `PUT /licitacao/comercial/{pncp_id}`;
+- controles no detalhe da oportunidade para salvar status, favorito e anotacoes;
+- filtros por status comercial e favoritos;
+- exibicao do status na tabela;
+- inclusao desses campos nas exportacoes CSV/Excel e no envio por e-mail;
+- documentacao atualizada em `DEMO_HERMES.md` e
+  `DOCUMENTACAO_DEMO_ONLINE_HERMES.md`.
+
+Impacto comercial:
+
+O Hermes deixa de ser apenas um monitor de editais e passa a apoiar a rotina de
+priorizacao, triagem e acompanhamento de oportunidades.
+
+## Atualizacao: prioridade para abertura futura
+
+Foi ajustada a priorizacao de oportunidades para evitar que licitacoes ja
+vencidas dominem o dashboard:
+
+- API de listagem usa `prazo=futuras` por padrao;
+- dashboard ganhou filtro `Abertura futura`, `Todas as datas` e `Ja passaram`;
+- a tela inicia em `Abertura futura`;
+- quando `Todas as datas` e usado, o backend ordena futuras antes das vencidas;
+- tabela exibe a janela comercial junto da data de abertura;
+- exportacoes CSV/Excel incluem `janela_comercial`;
+- envio por e-mail respeita o filtro de prazo selecionado.
+
+Impacto comercial:
+
+A demonstracao passa a priorizar oportunidades acionaveis, com prazo aberto para
+avaliacao, cotacao e proposta.
+
+## Atualizacao: identidade de marca
+
+Foi aplicado um passe de marca com base na direcao definida para HERMES:
+
+- posicionamento como assistente estrategico de inteligencia licitatoria;
+- tagline `Inteligencia em Licitacoes Publicas`;
+- paleta com Azul Profundo `#0A2342`, Laranja Hermes `#F7931E`, Branco Gelo
+  `#F5F7FA` e Cinza Grafite `#2D3748`;
+- dashboard operacional com textos e cores alinhados;
+- vitrine estatica `docs/index.html` ajustada para proposta premium;
+- login com identidade visual HERMES;
+- e-mail de envio de planilha com assinatura HERMES;
+- planilha Excel com cabecalho de marca;
+- novo guia `IDENTIDADE_MARCA_HERMES.md`.
+
+Impacto comercial:
+
+O produto passa a comunicar uma categoria mais forte: inteligencia e automacao
+para compras governamentais, nao apenas um coletor de licitacoes.

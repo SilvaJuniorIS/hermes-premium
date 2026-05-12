@@ -30,6 +30,40 @@ GitHub Pages nao executa Python, FastAPI ou SQLite. Por isso, ele deve ser usado
 como vitrine publica, enquanto o sistema real deve rodar localmente, em servidor
 proprio ou em plataforma de hospedagem backend.
 
+## 1.1. Direcao de marca
+
+A marca deve ser apresentada como:
+
+```text
+HERMES
+Inteligencia em Licitacoes Publicas
+```
+
+Posicionamento:
+
+```text
+Assistente estrategico de inteligencia licitatoria.
+```
+
+Proposito:
+
+```text
+Transformar dados publicos em oportunidades estrategicas.
+```
+
+Paleta aplicada:
+
+- Azul Profundo: `#0A2342`
+- Laranja Hermes: `#F7931E`
+- Branco Gelo: `#F5F7FA`
+- Cinza Grafite: `#2D3748`
+
+Referencia completa:
+
+```text
+IDENTIDADE_MARCA_HERMES.md
+```
+
 ## 2. Arquivos principais
 
 - `docs/index.html`: pagina estatica para GitHub Pages.
@@ -254,10 +288,14 @@ Durante a reuniao:
 3. Mostrar indicadores do dashboard.
 4. Filtrar por perfil, estado, classificacao e texto.
 5. Abrir uma oportunidade de alta prioridade.
-6. Mostrar objeto, orgao, municipio, valor estimado, score e link da fonte.
-7. Exportar dados.
-8. Mostrar historico de coletas.
-9. Mostrar agendamento como rotina automatizada.
+6. Mostrar acao recomendada, janela comercial, origem e motivos do score.
+7. Registrar status comercial, favorito e anotacoes internas.
+8. Mostrar objeto, orgao, municipio, valor estimado, score e link da fonte.
+9. Mostrar que o filtro padrao e `Abertura futura`.
+10. Exportar dados.
+11. Enviar a planilha por e-mail para demonstrar continuidade comercial.
+12. Mostrar historico de coletas.
+13. Mostrar agendamento como rotina automatizada.
 
 Depois da reuniao:
 
@@ -266,7 +304,81 @@ Depois da reuniao:
 3. Trocar a senha antes da proxima demo.
 4. Registrar feedbacks do cliente ou socio.
 
-## 8. Cuidados de seguranca
+## 8. Enviar planilha por e-mail
+
+O dashboard operacional possui o botao `Enviar por e-mail` na tela de
+oportunidades.
+
+Fluxo:
+
+1. O usuario ajusta os filtros da tabela.
+2. Clica em `Enviar por e-mail`.
+3. O sistema solicita o e-mail do destinatario.
+4. A API gera uma planilha Excel com os filtros atuais.
+5. O Hermes envia o anexo usando `src/notifier.py`.
+6. O corpo do e-mail explica o total de oportunidades, filtros usados, leitura
+   do score, destaques e recomendacao comercial.
+
+Endpoint usado:
+
+```text
+POST /licitacoes/export/email
+```
+
+Configuracao SMTP:
+
+O envio reaproveita a configuracao existente em `src/notifier.py`. Para
+ambientes de demo ou producao, prefira variaveis de ambiente:
+
+```powershell
+$env:HERMES_SMTP_HOST="smtp.gmail.com"
+$env:HERMES_SMTP_PORT="465"
+$env:HERMES_SMTP_USER="seu-email@gmail.com"
+$env:HERMES_SMTP_PASSWORD="sua-senha-de-app"
+$env:HERMES_EMAIL_FROM="seu-email@gmail.com"
+```
+
+## 9. Acompanhamento comercial
+
+O detalhe da oportunidade possui uma area de acompanhamento comercial.
+
+Campos disponiveis:
+
+- status comercial: `Novo`, `Em analise`, `Proposta`, `Monitorar` ou `Descartado`;
+- favorito;
+- anotacoes internas.
+
+Uso recomendado na demo:
+
+1. Abra uma oportunidade de alta prioridade.
+2. Explique os motivos do score.
+3. Marque como `Em analise` ou `Proposta`.
+4. Ative favorito para destacar a oportunidade.
+5. Escreva uma anotacao curta, como `validar edital e cotar fornecedor`.
+6. Salve o acompanhamento.
+7. Mostre que a tabela passa a refletir status e favorito.
+8. Use filtros por status ou favoritos.
+
+Esses campos entram nas exportacoes CSV/Excel e ajudam a demonstrar que o
+Hermes apoia a rotina comercial depois da coleta.
+
+## 10. Priorizacao por data de abertura
+
+O dashboard prioriza oportunidades com data de abertura futura.
+
+Comportamento:
+
+- a tela usa `Abertura futura` como filtro padrao;
+- o backend tambem recebe `prazo=futuras` por padrao na API de listagem;
+- quando o usuario seleciona `Todas as datas`, oportunidades futuras aparecem
+  antes das vencidas;
+- oportunidades vencidas continuam disponiveis no filtro `Ja passaram`, mas
+  deixam de competir com oportunidades acionaveis;
+- CSV, Excel e envio por e-mail respeitam o filtro de prazo selecionado;
+- as exportacoes incluem a coluna `janela_comercial` para indicar urgencia ou
+  se a abertura ja passou.
+
+## 11. Cuidados de seguranca
 
 - Nao usar a senha padrao em tunel publico.
 - Nao divulgar a URL do tunel fora da apresentacao.
@@ -275,8 +387,9 @@ Depois da reuniao:
 - Trocar senha entre apresentacoes.
 - Evitar deixar o computador desbloqueado durante a demo.
 - Nao depender de tunel temporario para producao.
+- Nao versionar senhas reais de SMTP em novos arquivos.
 
-## 9. Caminho para piloto
+## 12. Caminho para piloto
 
 Quando houver cliente piloto, migrar do tunel temporario para hospedagem real:
 
@@ -291,7 +404,7 @@ Quando houver cliente piloto, migrar do tunel temporario para hospedagem real:
 9. Configurar backup automatico de `data/hermes.sqlite3`.
 10. Atualizar o botao da vitrine para o dominio real.
 
-## 10. Melhorias recomendadas
+## 13. Melhorias recomendadas
 
 ### Seguranca
 
@@ -331,4 +444,3 @@ Quando houver cliente piloto, migrar do tunel temporario para hospedagem real:
 - Configurar monitoramento simples.
 - Criar processo de deploy via Git.
 - Planejar migracao futura de SQLite para PostgreSQL se houver multiplos usuarios.
-

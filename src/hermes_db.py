@@ -120,7 +120,11 @@ def ensure_schema(db_path: Path | str = DB_PATH) -> None:
                 source TEXT,
                 raw_json TEXT,
                 first_seen_at TEXT,
-                last_seen_at TEXT
+                last_seen_at TEXT,
+                status_comercial TEXT DEFAULT 'novo',
+                favorito INTEGER DEFAULT 0,
+                anotacoes TEXT,
+                comercial_updated_at TEXT
             )
         """)
 
@@ -145,6 +149,10 @@ def ensure_schema(db_path: Path | str = DB_PATH) -> None:
             "raw_json": "TEXT",
             "first_seen_at": "TEXT",
             "last_seen_at": "TEXT",
+            "status_comercial": "TEXT DEFAULT 'novo'",
+            "favorito": "INTEGER DEFAULT 0",
+            "anotacoes": "TEXT",
+            "comercial_updated_at": "TEXT",
         }.items():
             if column != "id":
                 _add_column(conn, "licitacoes", column, ddl)
@@ -442,6 +450,9 @@ def load_recent_licitacoes(
     q: str | None = None,
     valor_min: float | None = None,
     valor_max: float | None = None,
+    status_comercial: str | None = None,
+    favorito: bool | None = None,
+    prazo: str | None = None,
     db_path: Path | str = DB_PATH,
 ) -> list[dict[str, Any]]:
     ensure_schema(db_path)
@@ -469,6 +480,22 @@ def load_recent_licitacoes(
         if valor_max is not None:
             where_parts.append("valor_estimado_num <= ?")
             params.append(valor_max)
+        if status_comercial:
+            where_parts.append("COALESCE(status_comercial, 'novo') = ?")
+            params.append(status_comercial)
+        if favorito is not None:
+            where_parts.append("COALESCE(favorito, 0) = ?")
+            params.append(1 if favorito else 0)
+        if prazo == "futuras":
+            where_parts.append(
+                "data_abertura IS NOT NULL "
+                "AND datetime(replace(substr(data_abertura, 1, 19), 'T', ' ')) >= datetime('now', 'localtime')"
+            )
+        elif prazo == "vencidas":
+            where_parts.append(
+                "data_abertura IS NOT NULL "
+                "AND datetime(replace(substr(data_abertura, 1, 19), 'T', ' ')) < datetime('now', 'localtime')"
+            )
         where = f"WHERE {' AND '.join(where_parts)}" if where_parts else ""
         params.append(limit)
         rows = conn.execute(
@@ -476,10 +503,23 @@ def load_recent_licitacoes(
             SELECT
                 perfil, pncp_id, objeto, valor_estimado_num, estado, municipio, orgao,
                 keyword, data_abertura, score, classificacao, oportunidade,
-                delta_preco, score_motivos, link, source, first_seen_at, last_seen_at
+                delta_preco, score_motivos, link, source, first_seen_at, last_seen_at,
+                COALESCE(status_comercial, 'novo') AS status_comercial,
+                COALESCE(favorito, 0) AS favorito,
+                anotacoes,
+                comercial_updated_at
             FROM licitacoes
             {where}
-            ORDER BY score DESC, valor_estimado_num DESC, last_seen_at DESC
+            ORDER BY
+                CASE
+                    WHEN data_abertura IS NULL THEN 2
+                    WHEN datetime(replace(substr(data_abertura, 1, 19), 'T', ' ')) >= datetime('now', 'localtime') THEN 0
+                    ELSE 1
+                END ASC,
+                score DESC,
+                datetime(replace(substr(data_abertura, 1, 19), 'T', ' ')) ASC,
+                valor_estimado_num DESC,
+                last_seen_at DESC
             LIMIT ?
             """,
             params,
@@ -531,7 +571,11 @@ def load_licitacao_detail(
                 pncp_id, objeto, valor_estimado_num, estado, municipio, orgao,
                 perfil, keyword, data_abertura, score, classificacao, oportunidade,
                 delta_preco, score_motivos, link, source, raw_json,
-                first_seen_at, last_seen_at
+                first_seen_at, last_seen_at,
+                COALESCE(status_comercial, 'novo') AS status_comercial,
+                COALESCE(favorito, 0) AS favorito,
+                anotacoes,
+                comercial_updated_at
             FROM licitacoes
             WHERE pncp_id = ?
             """,
@@ -552,6 +596,33 @@ def load_licitacao_detail(
         data["raw"] = None
     data.pop("raw_json", None)
     return data
+
+
+def update_licitacao_comercial(
+    pncp_id: str,
+    status_comercial: str,
+    favorito: bool,
+    anotacoes: str,
+    db_path: Path | str = DB_PATH,
+) -> dict[str, Any] | None:
+    ensure_schema(db_path)
+    updated_at = now_iso()
+    with connect(db_path) as conn:
+        cur = conn.execute(
+            """
+            UPDATE licitacoes
+            SET status_comercial = ?,
+                favorito = ?,
+                anotacoes = ?,
+                comercial_updated_at = ?
+            WHERE pncp_id = ?
+            """,
+            (status_comercial, 1 if favorito else 0, anotacoes, updated_at, pncp_id),
+        )
+        if cur.rowcount == 0:
+            return None
+
+    return load_licitacao_detail(pncp_id, db_path)
 
 
 def load_recent_api_runs(db_path: Path | str = DB_PATH) -> list[dict[str, Any]]:

@@ -5,6 +5,7 @@ import os
 import secrets
 import threading
 import time
+from email.utils import parseaddr
 from io import BytesIO
 from base64 import urlsafe_b64decode, urlsafe_b64encode
 from datetime import datetime
@@ -17,6 +18,8 @@ from fastapi import Cookie, Depends, FastAPI, Form, HTTPException
 from fastapi.responses import HTMLResponse, RedirectResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from openpyxl import Workbook
+from openpyxl.utils import get_column_letter
+from openpyxl.styles import Alignment, Font, PatternFill
 from pydantic import BaseModel, Field
 
 from src.hermes_db import (
@@ -28,11 +31,13 @@ from src.hermes_db import (
     load_recent_api_runs,
     load_recent_licitacoes,
     mark_user_login,
+    update_licitacao_comercial,
 )
 from src.main import DEFAULT_CONFIG, run_pipeline
+from src.notifier import enviar_planilha_oportunidades
 
 
-app = FastAPI(title="Hermes Premium")
+app = FastAPI(title="HERMES - Inteligencia em Licitacoes Publicas")
 PERFIS_PATH = Path("config/perfis_negocio.json")
 SCHEDULE_PATH = Path("config/agendamento.json")
 SESSION_COOKIE = "hermes_session"
@@ -71,6 +76,26 @@ class ScheduleRequest(BaseModel):
     config: dict[str, Any] | None = None
 
 
+class EmailExportRequest(BaseModel):
+    destinatario: str
+    limit: int = 500
+    perfil: str | None = None
+    classificacao: str | None = None
+    estado: str | None = None
+    q: str | None = None
+    valor_min: float | None = None
+    valor_max: float | None = None
+    status_comercial: str | None = None
+    favorito: bool | None = None
+    prazo: str | None = "futuras"
+
+
+class ComercialUpdateRequest(BaseModel):
+    status_comercial: str = "novo"
+    favorito: bool = False
+    anotacoes: str = ""
+
+
 def _hash_password(password: str, salt: bytes | None = None) -> str:
     salt = salt or os.urandom(16)
     digest = pbkdf2_hmac("sha256", password.encode("utf-8"), salt, 120000)
@@ -101,7 +126,7 @@ def _login_page(error: str = "") -> str:
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Login - Hermes Premium</title>
+    <title>Login - HERMES</title>
     <style>
         * {{ box-sizing: border-box; }}
         body {{
@@ -109,20 +134,30 @@ def _login_page(error: str = "") -> str:
             min-height: 100vh;
             display: grid;
             place-items: center;
-            background: #101418;
-            color: #eef3f7;
-            font-family: Arial, Helvetica, sans-serif;
+            background: #0a2342;
+            color: #f5f7fa;
+            font-family: Inter, Roboto, Arial, Helvetica, sans-serif;
         }}
         form {{
             width: min(420px, calc(100vw - 32px));
-            border: 1px solid #2c343c;
+            border: 1px solid rgba(245, 247, 250, 0.14);
             border-radius: 8px;
-            background: #171d22;
+            background: #102f55;
             padding: 24px;
+            box-shadow: 0 18px 48px rgba(0, 0, 0, 0.24);
         }}
         h1 {{
-            margin: 0 0 18px;
+            margin: 0 0 8px;
             font-size: 24px;
+            font-family: Poppins, Montserrat, Inter, Arial, sans-serif;
+        }}
+        h1 span {{
+            color: #f7931e;
+        }}
+        .tagline {{
+            margin: 0 0 18px;
+            color: #cbd5e1;
+            font-size: 13px;
         }}
         label {{
             display: grid;
@@ -133,17 +168,17 @@ def _login_page(error: str = "") -> str:
         }}
         input, button {{
             height: 40px;
-            border: 1px solid #2c343c;
+            border: 1px solid rgba(245, 247, 250, 0.16);
             border-radius: 6px;
-            background: #101418;
-            color: #eef3f7;
+            background: #0a2342;
+            color: #f5f7fa;
             padding: 0 12px;
             font-size: 15px;
         }}
         button {{
             width: 100%;
-            border-color: #24785d;
-            background: #17694f;
+            border-color: #d97706;
+            background: #f7931e;
             cursor: pointer;
             font-weight: 700;
         }}
@@ -165,7 +200,8 @@ def _login_page(error: str = "") -> str:
 </head>
 <body>
     <form method="post" action="/login">
-        <h1>Hermes Premium</h1>
+        <h1>HER<span>MES</span></h1>
+        <p class="tagline">Inteligencia em Licitacoes Publicas</p>
         {error_html}
         <label>
             Usuario
@@ -385,6 +421,9 @@ def listar(
     q: str | None = None,
     valor_min: float | None = None,
     valor_max: float | None = None,
+    status_comercial: str | None = None,
+    favorito: bool | None = None,
+    prazo: str | None = "futuras",
     _: dict[str, Any] = Depends(_current_user),
 ) -> list[dict[str, Any]]:
     return load_recent_licitacoes(
@@ -395,6 +434,9 @@ def listar(
         q=q,
         valor_min=valor_min,
         valor_max=valor_max,
+        status_comercial=status_comercial,
+        favorito=favorito,
+        prazo=_normalize_prazo(prazo),
     )
 
 
@@ -402,7 +444,21 @@ def _build_licitacoes_workbook(rows: list[dict[str, Any]]) -> Workbook:
     wb = Workbook()
     ws = wb.active
     ws.title = "Oportunidades"
+    ws.append(["HERMES - Inteligencia em Licitacoes Publicas"])
+    ws.merge_cells(start_row=1, start_column=1, end_row=1, end_column=21)
+    title_cell = ws.cell(1, 1)
+    title_cell.font = Font(bold=True, color="F7931E", size=15)
+    title_cell.fill = PatternFill("solid", fgColor="0A2342")
+    title_cell.alignment = Alignment(horizontal="center")
+    ws.append(["Dados publicos transformados em oportunidades estrategicas"])
+    ws.merge_cells(start_row=2, start_column=1, end_row=2, end_column=21)
+    subtitle_cell = ws.cell(2, 1)
+    subtitle_cell.font = Font(color="2D3748", italic=True)
+    subtitle_cell.alignment = Alignment(horizontal="center")
     headers = [
+        "acao_recomendada",
+        "status_comercial",
+        "favorito",
         "perfil",
         "score",
         "classificacao",
@@ -413,15 +469,29 @@ def _build_licitacoes_workbook(rows: list[dict[str, Any]]) -> Workbook:
         "valor_estimado",
         "oportunidade",
         "data_abertura",
+        "janela_comercial",
         "keyword",
         "motivos_score",
+        "anotacoes",
+        "primeiro_registro",
+        "ultima_leitura",
         "link",
         "pncp_id",
     ]
     ws.append(headers)
+    header_row = 3
+    header_fill = PatternFill("solid", fgColor="0A2342")
+    header_font = Font(bold=True, color="FFFFFF")
+    for cell in ws[header_row]:
+        cell.fill = header_fill
+        cell.font = header_font
+        cell.alignment = Alignment(horizontal="center", vertical="center")
     for item in rows:
         ws.append(
             [
+                _acao_recomendada(item),
+                item.get("status_comercial") or "novo",
+                "sim" if item.get("favorito") else "nao",
                 item.get("perfil"),
                 item.get("score"),
                 item.get("classificacao"),
@@ -432,19 +502,104 @@ def _build_licitacoes_workbook(rows: list[dict[str, Any]]) -> Workbook:
                 item.get("valor_estimado_num"),
                 item.get("oportunidade"),
                 item.get("data_abertura"),
+                _janela_comercial(item.get("data_abertura")),
                 item.get("keyword"),
                 "; ".join(item.get("score_motivos") or []),
+                item.get("anotacoes"),
+                item.get("first_seen_at"),
+                item.get("last_seen_at"),
                 item.get("link"),
                 item.get("pncp_id"),
             ]
         )
-    for column in ws.columns:
-        letter = column[0].column_letter
+    for column_index, column in enumerate(ws.columns, start=1):
+        letter = get_column_letter(column_index)
         ws.column_dimensions[letter].width = min(
             max(len(str(cell.value or "")) for cell in column) + 2,
             55,
         )
+    ws.freeze_panes = "A4"
     return wb
+
+
+def _acao_recomendada(item: dict[str, Any]) -> str:
+    score = float(item.get("score") or 0)
+    valor = float(item.get("valor_estimado_num") or 0)
+    if score >= 85 and valor >= 200000:
+        return "Priorizar contato e analise do edital"
+    if score >= 75:
+        return "Avaliar proposta nesta semana"
+    if score >= 50:
+        return "Monitorar e validar aderencia"
+    return "Manter no radar"
+
+
+def _janela_comercial(value: Any) -> str:
+    if not value:
+        return "Prazo nao informado"
+    try:
+        normalized = str(value).replace("Z", "").replace("T", " ")[:19]
+        abertura = datetime.fromisoformat(normalized)
+    except ValueError:
+        return "Data de abertura invalida"
+
+    dias = (abertura.date() - datetime.now().date()).days
+    if dias < 0:
+        return "Abertura ja passou"
+    if dias == 0:
+        return "Abre hoje"
+    if dias <= 7:
+        return f"{dias} dias: decisao imediata"
+    if dias <= 21:
+        return f"{dias} dias: janela boa para proposta"
+    return f"{dias} dias: monitorar e preparar abordagem"
+
+
+def _valid_email(value: str) -> str:
+    _, email = parseaddr(value.strip())
+    if not email or "@" not in email or "." not in email.rsplit("@", 1)[-1]:
+        raise HTTPException(status_code=400, detail="E-mail do destinatario invalido")
+    return email
+
+
+def _describe_export_filters(req: EmailExportRequest) -> str:
+    filtros = []
+    if req.perfil:
+        filtros.append(f"perfil={req.perfil}")
+    if req.classificacao:
+        filtros.append(f"classificacao={req.classificacao}")
+    if req.estado:
+        filtros.append(f"estado={req.estado}")
+    if req.q:
+        filtros.append(f"texto={req.q}")
+    if req.valor_min is not None:
+        filtros.append(f"valor_min={req.valor_min}")
+    if req.valor_max is not None:
+        filtros.append(f"valor_max={req.valor_max}")
+    if req.status_comercial:
+        filtros.append(f"status_comercial={req.status_comercial}")
+    if req.favorito is not None:
+        filtros.append(f"favorito={req.favorito}")
+    if req.prazo:
+        filtros.append(f"prazo={req.prazo}")
+    filtros.append(f"limite={req.limit}")
+    return ", ".join(filtros)
+
+
+def _normalize_commercial_status(value: str) -> str:
+    allowed = {"novo", "em_analise", "proposta", "descartado", "monitorar"}
+    normalized = value.strip().lower()
+    if normalized not in allowed:
+        raise HTTPException(status_code=400, detail="Status comercial invalido")
+    return normalized
+
+
+def _normalize_prazo(value: str | None) -> str | None:
+    if not value or value == "todas":
+        return None
+    if value not in {"futuras", "vencidas"}:
+        raise HTTPException(status_code=400, detail="Filtro de prazo invalido")
+    return value
 
 
 @app.get("/licitacoes/export.xlsx")
@@ -456,6 +611,9 @@ def exportar_licitacoes_excel(
     q: str | None = None,
     valor_min: float | None = None,
     valor_max: float | None = None,
+    status_comercial: str | None = None,
+    favorito: bool | None = None,
+    prazo: str | None = "futuras",
     _: dict[str, Any] = Depends(_current_user),
 ) -> StreamingResponse:
     rows = load_recent_licitacoes(
@@ -466,6 +624,9 @@ def exportar_licitacoes_excel(
         q=q,
         valor_min=valor_min,
         valor_max=valor_max,
+        status_comercial=status_comercial,
+        favorito=favorito,
+        prazo=_normalize_prazo(prazo),
     )
     wb = _build_licitacoes_workbook(rows)
     output = BytesIO()
@@ -488,6 +649,9 @@ def exportar_licitacoes_excel_local(
     q: str | None = None,
     valor_min: float | None = None,
     valor_max: float | None = None,
+    status_comercial: str | None = None,
+    favorito: bool | None = None,
+    prazo: str | None = "futuras",
     _: dict[str, Any] = Depends(_current_user),
 ) -> dict[str, Any]:
     rows = load_recent_licitacoes(
@@ -498,6 +662,9 @@ def exportar_licitacoes_excel_local(
         q=q,
         valor_min=valor_min,
         valor_max=valor_max,
+        status_comercial=status_comercial,
+        favorito=favorito,
+        prazo=_normalize_prazo(prazo),
     )
     wb = _build_licitacoes_workbook(rows)
     output_dir = Path("output")
@@ -513,12 +680,76 @@ def exportar_licitacoes_excel_local(
     }
 
 
+@app.post("/licitacoes/export/email")
+def enviar_licitacoes_excel_email(
+    req: EmailExportRequest,
+    _: dict[str, Any] = Depends(_current_user),
+) -> dict[str, Any]:
+    destinatario = _valid_email(req.destinatario)
+    rows = load_recent_licitacoes(
+        limit=min(max(req.limit, 1), 1000),
+        perfil=req.perfil,
+        classificacao=req.classificacao,
+        estado=req.estado,
+        q=req.q,
+        valor_min=req.valor_min,
+        valor_max=req.valor_max,
+        status_comercial=req.status_comercial,
+        favorito=req.favorito,
+        prazo=_normalize_prazo(req.prazo),
+    )
+    if not rows:
+        raise HTTPException(status_code=400, detail="Nao ha oportunidades para enviar")
+
+    wb = _build_licitacoes_workbook(rows)
+    output = BytesIO()
+    wb.save(output)
+    arquivo_bytes = output.getvalue()
+    filename = f"hermes-oportunidades-{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx"
+
+    try:
+        enviar_planilha_oportunidades(
+            destinatario=destinatario,
+            arquivo_bytes=arquivo_bytes,
+            nome_arquivo=filename,
+            total=len(rows),
+            filtros=_describe_export_filters(req),
+            destaques=rows,
+        )
+    except Exception as exc:
+        raise HTTPException(status_code=502, detail=f"Erro ao enviar e-mail: {exc}") from exc
+
+    return {
+        "status": "sent",
+        "total": len(rows),
+        "filename": filename,
+        "destinatario": destinatario,
+    }
+
+
 @app.get("/licitacao")
 def detalhe_licitacao(
     pncp_id: str,
     _: dict[str, Any] = Depends(_current_user),
 ) -> dict[str, Any]:
     detail = load_licitacao_detail(pncp_id)
+    if not detail:
+        raise HTTPException(status_code=404, detail="Licitacao nao encontrada")
+    return detail
+
+
+@app.put("/licitacao/comercial/{pncp_id}")
+def atualizar_licitacao_comercial(
+    pncp_id: str,
+    req: ComercialUpdateRequest,
+    _: dict[str, Any] = Depends(_current_user),
+) -> dict[str, Any]:
+    detail = update_licitacao_comercial(
+        pncp_id=pncp_id,
+        status_comercial=_normalize_commercial_status(req.status_comercial),
+        favorito=req.favorito,
+        anotacoes=req.anotacoes.strip(),
+    )
     if not detail:
         raise HTTPException(status_code=404, detail="Licitacao nao encontrada")
     return detail

@@ -3,25 +3,30 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Hermes Premium</title>
+    <title>HERMES - Inteligencia em Licitacoes Publicas</title>
     <style>
         :root {
             color-scheme: light;
-            --bg: #f5f7f9;
+            --bg: #f5f7fa;
             --surface: #ffffff;
-            --surface-2: #eef3f5;
-            --ink: #172027;
-            --muted: #64717d;
-            --line: #d9e1e7;
+            --surface-2: #edf2f7;
+            --ink: #0a2342;
+            --muted: #5d6b7a;
+            --line: #d7dee8;
+            --brand-blue: #0a2342;
+            --brand-blue-2: #102f55;
+            --brand-orange: #f7931e;
+            --brand-orange-soft: #fff1df;
+            --graphite: #2d3748;
             --green: #18875f;
             --green-soft: #e4f5ee;
-            --blue: #246fba;
-            --blue-soft: #e6f0fb;
+            --blue: #0a2342;
+            --blue-soft: #e7eef7;
             --amber: #9b6a12;
             --amber-soft: #fff3d6;
             --red: #b42318;
             --red-soft: #fde8e5;
-            --shadow: 0 14px 36px rgba(22, 32, 39, 0.08);
+            --shadow: 0 14px 36px rgba(10, 35, 66, 0.10);
         }
 
         * {
@@ -32,7 +37,7 @@
             margin: 0;
             background: var(--bg);
             color: var(--ink);
-            font-family: Arial, Helvetica, sans-serif;
+            font-family: Inter, Roboto, Arial, Helvetica, sans-serif;
         }
 
         a {
@@ -55,7 +60,7 @@
         }
 
         aside {
-            background: #142028;
+            background: var(--brand-blue);
             color: #f7fafc;
             padding: 22px 18px;
             display: flex;
@@ -78,7 +83,7 @@
             display: grid;
             place-items: center;
             overflow: hidden;
-            background: #07101f;
+            background: #07182d;
             flex: 0 0 auto;
         }
 
@@ -101,6 +106,11 @@
             margin: 0;
             font-size: 19px;
             line-height: 1.1;
+            font-family: Poppins, Montserrat, Inter, Arial, sans-serif;
+        }
+
+        .brand h1 .accent {
+            color: var(--brand-orange);
         }
 
         .brand span {
@@ -132,7 +142,7 @@
         }
 
         .tab.active {
-            background: #1f8a63;
+            background: var(--brand-orange);
             color: #ffffff;
             font-weight: 700;
         }
@@ -172,7 +182,7 @@
 
         .eyebrow {
             margin: 0 0 5px;
-            color: var(--green);
+            color: var(--brand-orange);
             font-size: 12px;
             font-weight: 800;
             text-transform: uppercase;
@@ -182,6 +192,7 @@
             margin: 0;
             font-size: 28px;
             line-height: 1.15;
+            font-family: Poppins, Montserrat, Inter, Arial, sans-serif;
         }
 
         .topbar p {
@@ -240,8 +251,8 @@
         }
 
         button.primary {
-            border-color: #147653;
-            background: var(--green);
+            border-color: #d97706;
+            background: var(--brand-orange);
             color: #ffffff;
         }
 
@@ -337,6 +348,8 @@
             display: block;
             margin-top: 8px;
             font-size: 27px;
+            color: var(--brand-blue);
+            font-family: Poppins, Montserrat, Inter, Arial, sans-serif;
         }
 
         .metric small {
@@ -348,6 +361,86 @@
 
         .panel {
             overflow: hidden;
+        }
+
+        .demo-guide {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .demo-card {
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+            box-shadow: var(--shadow);
+            padding: 14px;
+        }
+
+        .demo-card h3,
+        .demo-card h4 {
+            margin: 3px 0 8px;
+        }
+
+        .demo-card p,
+        .demo-card li {
+            color: var(--muted);
+            line-height: 1.45;
+        }
+
+        .demo-card ol {
+            margin: 10px 0 0;
+            padding-left: 20px;
+        }
+
+        .insight-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 10px;
+            padding: 0 18px 18px;
+        }
+
+        .insight-card {
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 12px;
+            background: #fbfcfd;
+        }
+
+        .insight-card span {
+            display: block;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .insight-card strong {
+            display: block;
+            margin-top: 6px;
+        }
+
+        .commercial-form {
+            display: grid;
+            gap: 10px;
+        }
+
+        .commercial-form textarea {
+            min-height: 86px;
+        }
+
+        .inline-check {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--ink);
+            font-weight: 700;
+        }
+
+        .inline-check input {
+            width: 18px;
+            height: 18px;
         }
 
         .panel-title {
@@ -429,13 +522,13 @@
         }
 
         .alta {
-            background: var(--green-soft);
-            color: var(--green);
+            background: var(--brand-orange-soft);
+            color: #a94f00;
         }
 
         .media {
             background: var(--blue-soft);
-            color: var(--blue);
+            color: var(--brand-blue);
         }
 
         .baixa {
@@ -587,6 +680,7 @@
             }
 
             .status-strip,
+            .demo-guide,
             .profile-layout,
             .detail-grid {
                 grid-template-columns: 1fr;
@@ -608,6 +702,10 @@
 
             .metrics {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .insight-grid {
+                grid-template-columns: 1fr;
             }
 
             .form-grid,
@@ -632,8 +730,8 @@
                     <span class="logo-fallback">SEU<br>LOGO</span>
                 </div>
                 <div>
-                    <h1>Hermes Premium</h1>
-                    <span>Inteligencia em licitacoes</span>
+                    <h1>HER<span class="accent">MES</span></h1>
+                    <span>Inteligencia em Licitacoes Publicas</span>
                 </div>
             </div>
 
@@ -656,10 +754,10 @@
         <main>
             <section class="topbar">
                 <div>
-                    <p class="eyebrow">Dashboard operacional</p>
-                    <h2>Monitor de oportunidades do Hermes</h2>
+                    <p class="eyebrow">Assistente estrategico</p>
+                    <h2>Inteligencia em Licitacoes Publicas</h2>
                     <p>
-                        Acompanhe licitacoes coletadas no PNCP, priorize oportunidades por score e ajuste os perfis de busca conforme o foco comercial.
+                        Transforme dados publicos em oportunidades estrategicas com velocidade, precisao e rastreabilidade comercial.
                     </p>
                 </div>
                 <div class="actions">
@@ -672,23 +770,42 @@
                     <div class="status-box">
                         <span>Fonte de dados</span>
                         <strong>PNCP</strong>
-                        <p>Coleta por perfil, UF, periodo e paginacao, com gravacao no banco local.</p>
+                        <p>Monitoramento de dados publicos com foco em compras governamentais.</p>
                     </div>
                     <div class="status-box">
                         <span>Perfil em uso</span>
                         <strong id="perfilAtual">-</strong>
-                        <p>Selecione um perfil e rode uma nova busca quando precisar atualizar a base.</p>
+                        <p>Perfis traduzem estrategia comercial em inteligencia automatizada.</p>
                     </div>
                     <div class="status-box">
                         <span>Ultima atualizacao</span>
                         <strong id="ultimaAtualizacao">-</strong>
-                        <p>Horario local da ultima leitura feita pelo dashboard.</p>
+                        <p>Leitura operacional para decisao rapida e segura.</p>
                     </div>
+                </section>
+
+                <section class="demo-guide" aria-label="Roteiro de demonstracao">
+                    <article class="demo-card">
+                        <p class="eyebrow">Demo estrategica</p>
+                        <h3>Conduza a conversa pela oportunidade, nao pela tela</h3>
+                        <ol>
+                            <li>Comece pelas oportunidades de alta prioridade e maior valor.</li>
+                            <li>Abra o detalhe para explicar por que HERMES priorizou o edital.</li>
+                            <li>Mostre fonte, prazo, orgao e municipio para provar rastreabilidade.</li>
+                            <li>Exporte a lista filtrada para mostrar continuidade comercial.</li>
+                        </ol>
+                    </article>
+                    <article class="demo-card">
+                        <p class="eyebrow">Dados que viram oportunidades</p>
+                        <h4>Dados bons antes da reuniao</h4>
+                        <p>Se a coleta real estiver fraca no dia, carregue oportunidades demonstrativas controladas.</p>
+                        <code>.\venv\Scripts\python.exe scripts\seed_demo_data.py</code>
+                    </article>
                 </section>
 
                 <section class="metrics">
                     <div class="metric"><span>Registros</span><strong id="m-total">0</strong><small>Licitações exibidas na tabela atual.</small></div>
-                    <div class="metric"><span>Score medio</span><strong id="m-score">0</strong><small>Media dos scores retornados.</small></div>
+                    <div class="metric"><span>Aberturas futuras</span><strong id="m-futuras">0</strong><small>Oportunidades ainda dentro do prazo.</small></div>
                     <div class="metric"><span>Maior valor</span><strong id="m-valor">R$ 0</strong><small>Maior valor estimado encontrado.</small></div>
                     <div class="metric"><span>Alta prioridade</span><strong id="m-alta">0</strong><small>Itens classificados como alta.</small></div>
                 </section>
@@ -712,6 +829,23 @@
                             <option value="MEDIA">Media</option>
                             <option value="BAIXA">Baixa</option>
                         </select>
+                        <select id="filtroPrazo" aria-label="Filtrar por prazo">
+                            <option value="futuras">Abertura futura</option>
+                            <option value="todas">Todas as datas</option>
+                            <option value="vencidas">Ja passaram</option>
+                        </select>
+                        <select id="filtroStatusComercial" aria-label="Filtrar por status comercial">
+                            <option value="">Todos os status</option>
+                            <option value="novo">Novo</option>
+                            <option value="em_analise">Em analise</option>
+                            <option value="proposta">Proposta</option>
+                            <option value="monitorar">Monitorar</option>
+                            <option value="descartado">Descartado</option>
+                        </select>
+                        <select id="filtroFavorito" aria-label="Filtrar favoritos">
+                            <option value="">Todos</option>
+                            <option value="true">Favoritos</option>
+                        </select>
                         <select id="filtroEstado" aria-label="Filtrar por estado">
                             <option value="">Todos os estados</option>
                         </select>
@@ -720,6 +854,7 @@
                         <input id="filtroValorMax" aria-label="Valor maximo" type="number" min="0" step="1000" placeholder="Valor maximo">
                         <button class="secondary" id="exportButton" onclick="exportarCsv()">Exportar CSV</button>
                         <button class="secondary" id="exportExcelButton" onclick="exportarExcel()">Exportar Excel</button>
+                        <button class="secondary" id="emailExcelButton" onclick="enviarPlanilhaEmail()">Enviar por e-mail</button>
                     </div>
 
                     <div class="table-wrap">
@@ -732,6 +867,7 @@
                                     <th>Estado</th>
                                     <th>Municipio</th>
                                     <th>Valor</th>
+                                    <th>Status</th>
                                     <th>Oportunidade</th>
                                     <th>Abertura</th>
                                     <th>Fonte</th>
@@ -907,6 +1043,11 @@
             <div><span>Valor</span><strong id="detailValor">-</strong></div>
             <div><span>Estado</span><strong id="detailEstado">-</strong></div>
         </div>
+        <div class="insight-grid">
+            <div class="insight-card"><span>Acao recomendada</span><strong id="detailAcao">-</strong></div>
+            <div class="insight-card"><span>Janela comercial</span><strong id="detailPrazo">-</strong></div>
+            <div class="insight-card"><span>Origem</span><strong id="detailOrigem">-</strong></div>
+        </div>
         <section>
             <h4>Objeto</h4>
             <p id="detailObjeto">-</p>
@@ -918,6 +1059,33 @@
         <section>
             <h4>Dados comerciais</h4>
             <p id="detailMeta">-</p>
+        </section>
+        <section>
+            <h4>Acompanhamento comercial</h4>
+            <form class="commercial-form" id="commercialForm" onsubmit="salvarComercial(event)">
+                <input id="detailPncpId" type="hidden">
+                <label>
+                    <span>Status</span>
+                    <select id="detailStatusComercial">
+                        <option value="novo">Novo</option>
+                        <option value="em_analise">Em analise</option>
+                        <option value="proposta">Proposta</option>
+                        <option value="monitorar">Monitorar</option>
+                        <option value="descartado">Descartado</option>
+                    </select>
+                </label>
+                <label class="inline-check">
+                    <input id="detailFavorito" type="checkbox">
+                    Favoritar oportunidade
+                </label>
+                <label>
+                    <span>Anotacoes internas</span>
+                    <textarea id="detailAnotacoes" placeholder="Ex: validar edital, cotar fornecedor, falar com representante local"></textarea>
+                </label>
+                <div class="form-actions">
+                    <button class="primary" type="submit">Salvar acompanhamento</button>
+                </div>
+            </form>
         </section>
         <div class="form-actions">
             <a id="detailLink" href="#" target="_blank" rel="noopener">Abrir fonte</a>
@@ -988,6 +1156,52 @@
             return `${day}/${month}/${year} - ${hours}:${minutes}h`;
         }
 
+        function diasAteAbertura(value) {
+            if (!value) return null;
+            const date = new Date(value);
+            if (Number.isNaN(date.getTime())) return null;
+            return Math.ceil((date - new Date()) / 86400000);
+        }
+
+        function aberturaFutura(value) {
+            const dias = diasAteAbertura(value);
+            return dias !== null && dias >= 0;
+        }
+
+        function janelaComercial(value) {
+            const dias = diasAteAbertura(value);
+            if (dias === null) return 'Prazo nao informado';
+            if (dias < 0) return 'Abertura ja passou';
+            if (dias === 0) return 'Abre hoje';
+            if (dias <= 7) return `${dias} dias: decisao imediata`;
+            if (dias <= 21) return `${dias} dias: janela boa para proposta`;
+            return `${dias} dias: monitorar e preparar abordagem`;
+        }
+
+        function acaoRecomendada(item) {
+            const score = Number(item.score || 0);
+            const valor = Number(item.valor_estimado_num || 0);
+            if (score >= 85 && valor >= 200000) return 'Priorizar contato e analise do edital';
+            if (score >= 75) return 'Avaliar proposta nesta semana';
+            if (score >= 50) return 'Monitorar e validar aderencia';
+            return 'Manter no radar';
+        }
+
+        function motivosTexto(item) {
+            return (Array.isArray(item.score_motivos) ? item.score_motivos : []).join(' | ');
+        }
+
+        function statusComercialLabel(value) {
+            const labels = {
+                novo: 'Novo',
+                em_analise: 'Em analise',
+                proposta: 'Proposta',
+                monitorar: 'Monitorar',
+                descartado: 'Descartado'
+            };
+            return labels[value] || 'Novo';
+        }
+
         function splitList(value) {
             return String(value || '')
                 .split(/[\n,;]/)
@@ -1003,6 +1217,9 @@
 
         function getFilteredData() {
             const classe = document.getElementById('filtroClasse').value;
+            const prazo = document.getElementById('filtroPrazo').value;
+            const statusComercial = document.getElementById('filtroStatusComercial').value;
+            const favoritoFiltro = document.getElementById('filtroFavorito').value;
             const estado = document.getElementById('filtroEstado').value;
             const termo = document.getElementById('filtroTexto').value.trim().toLowerCase();
             const valorMin = Number(document.getElementById('filtroValorMin').value || 0);
@@ -1010,6 +1227,7 @@
 
             return licitacoesData.filter(item => {
                 const itemClasse = String(item.classificacao || '').toUpperCase();
+                const itemStatus = String(item.status_comercial || 'novo');
                 const itemEstado = String(item.estado || '').toUpperCase();
                 const valor = Number(item.valor_estimado_num || 0);
                 const text = [
@@ -1021,6 +1239,10 @@
                 ].join(' ').toLowerCase();
 
                 if (classe && itemClasse !== classe) return false;
+                if (prazo === 'futuras' && !aberturaFutura(item.data_abertura)) return false;
+                if (prazo === 'vencidas' && aberturaFutura(item.data_abertura)) return false;
+                if (statusComercial && itemStatus !== statusComercial) return false;
+                if (favoritoFiltro === 'true' && !item.favorito) return false;
                 if (estado && itemEstado !== estado) return false;
                 if (termo && !text.includes(termo)) return false;
                 if (valorMin && valor < valorMin) return false;
@@ -1033,12 +1255,18 @@
             const params = new URLSearchParams({ limit });
             const perfil = document.getElementById('perfil').value;
             const classe = document.getElementById('filtroClasse').value;
+            const prazo = document.getElementById('filtroPrazo').value;
+            const statusComercial = document.getElementById('filtroStatusComercial').value;
+            const favoritoFiltro = document.getElementById('filtroFavorito').value;
             const estado = document.getElementById('filtroEstado').value;
             const termo = document.getElementById('filtroTexto').value.trim();
             const valorMin = document.getElementById('filtroValorMin').value;
             const valorMax = document.getElementById('filtroValorMax').value;
             if (perfil) params.set('perfil', perfil);
             if (classe) params.set('classificacao', classe);
+            if (prazo) params.set('prazo', prazo);
+            if (statusComercial) params.set('status_comercial', statusComercial);
+            if (favoritoFiltro) params.set('favorito', favoritoFiltro);
             if (estado) params.set('estado', estado);
             if (termo) params.set('q', termo);
             if (valorMin) params.set('valor_min', valorMin);
@@ -1069,23 +1297,24 @@
 
             if (!data.length) {
                 const row = document.createElement('tr');
-                row.innerHTML = '<td colspan="10">Nenhum registro encontrado para os filtros atuais.</td>';
+                row.innerHTML = '<td colspan="11">Nenhum registro encontrado para os filtros atuais.</td>';
                 tabela.appendChild(row);
             }
 
-            let totalScore = 0;
             let maiorValor = 0;
             let altas = 0;
+            let futuras = 0;
 
             data.forEach(item => {
                 const valor = Number(item.valor_estimado_num || 0);
                 const score = Number(item.score || 0);
                 const classe = item.classificacao || 'BAIXA';
+                const statusComercial = item.status_comercial || 'novo';
                 const fonte = item.link || (item.pncp_id ? `https://pncp.gov.br/app/editais?q=${encodeURIComponent(item.pncp_id)}` : '');
 
-                totalScore += score;
                 maiorValor = Math.max(maiorValor, valor);
                 if (classe === 'ALTA') altas += 1;
+                if (aberturaFutura(item.data_abertura)) futuras += 1;
 
                 const row = document.createElement('tr');
                 row.innerHTML = `
@@ -1095,8 +1324,9 @@
                     <td>${escapeHtml(item.estado || '-')}</td>
                     <td>${escapeHtml(item.municipio || '-')}</td>
                     <td>${fmtMoney.format(valor)}</td>
+                    <td>${item.favorito ? '[fav] ' : ''}${escapeHtml(statusComercialLabel(statusComercial))}</td>
                     <td>${escapeHtml(item.oportunidade || '-')}</td>
-                    <td>${escapeHtml(fmtDateTime(item.data_abertura))}</td>
+                    <td>${escapeHtml(fmtDateTime(item.data_abertura))}<br><small>${escapeHtml(janelaComercial(item.data_abertura))}</small></td>
                     <td>${fonte ? `<a href="${escapeHtml(fonte)}" target="_blank" rel="noopener">Abrir</a>` : '-'}</td>
                     <td><button class="secondary" type="button" onclick="abrirDetalhe('${escapeHtml(item.pncp_id || '')}')">Detalhe</button></td>
                 `;
@@ -1104,7 +1334,7 @@
             });
 
             document.getElementById('m-total').textContent = data.length;
-            document.getElementById('m-score').textContent = data.length ? (totalScore / data.length).toFixed(0) : '0';
+            document.getElementById('m-futuras').textContent = futuras;
             document.getElementById('m-valor').textContent = fmtMoney.format(maiorValor);
             document.getElementById('m-alta').textContent = altas;
         }
@@ -1121,6 +1351,9 @@
             }
 
             const headers = [
+                'acao_recomendada',
+                'status_comercial',
+                'favorito',
                 'score',
                 'classificacao',
                 'objeto',
@@ -1130,10 +1363,18 @@
                 'valor_estimado',
                 'oportunidade',
                 'data_abertura',
+                'janela_comercial',
                 'keyword',
+                'motivos_score',
+                'anotacoes',
+                'primeiro_registro',
+                'ultima_leitura',
                 'link'
             ];
             const rows = data.map(item => [
+                acaoRecomendada(item),
+                statusComercialLabel(item.status_comercial || 'novo'),
+                item.favorito ? 'sim' : 'nao',
                 item.score,
                 item.classificacao,
                 item.objeto,
@@ -1143,7 +1384,12 @@
                 item.valor_estimado_num,
                 item.oportunidade,
                 item.data_abertura,
+                janelaComercial(item.data_abertura),
                 item.keyword,
+                motivosTexto(item),
+                item.anotacoes,
+                item.first_seen_at,
+                item.last_seen_at,
                 item.link
             ]);
             const csv = [headers, ...rows]
@@ -1173,6 +1419,45 @@
                 setStatus(`Excel salvo: ${result.filename} (${result.total} registros)`);
             } catch (err) {
                 setStatus(`Erro ao exportar Excel: ${err.message}`);
+            }
+        }
+
+        async function enviarPlanilhaEmail() {
+            const destinatario = prompt('Digite o e-mail do destinatario da planilha:');
+            if (!destinatario) {
+                setStatus('Envio por e-mail cancelado');
+                return;
+            }
+
+            const params = getFilterParams('500');
+            const payload = {
+                destinatario: destinatario.trim(),
+                limit: Number(params.get('limit') || 500),
+                perfil: params.get('perfil'),
+                classificacao: params.get('classificacao'),
+                estado: params.get('estado'),
+                q: params.get('q'),
+                valor_min: params.get('valor_min') ? Number(params.get('valor_min')) : null,
+                valor_max: params.get('valor_max') ? Number(params.get('valor_max')) : null,
+                status_comercial: params.get('status_comercial'),
+                favorito: params.get('favorito') ? params.get('favorito') === 'true' : null,
+                prazo: params.get('prazo')
+            };
+
+            setStatus('Enviando planilha por e-mail...');
+            try {
+                const res = await fetchAuth('/licitacoes/export/email', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const result = await res.json().catch(() => ({}));
+                if (!res.ok) {
+                    throw new Error(result.detail || `HTTP ${res.status}`);
+                }
+                setStatus(`Planilha enviada para ${result.destinatario} (${result.total} registros)`);
+            } catch (err) {
+                setStatus(`Erro ao enviar e-mail: ${err.message}`);
             }
         }
 
@@ -1383,8 +1668,16 @@
             document.getElementById('detailClasse').textContent = item.classificacao || '-';
             document.getElementById('detailValor').textContent = fmtMoney.format(Number(item.valor_estimado_num || 0));
             document.getElementById('detailEstado').textContent = [item.estado, item.municipio].filter(Boolean).join(' / ') || '-';
+            document.getElementById('detailAcao').textContent = acaoRecomendada(item);
+            document.getElementById('detailPrazo').textContent = janelaComercial(item.data_abertura);
+            document.getElementById('detailOrigem').textContent = item.source === 'demo' ? 'Base demonstrativa' : 'PNCP';
+            document.getElementById('detailPncpId').value = item.pncp_id || '';
+            document.getElementById('detailStatusComercial').value = item.status_comercial || 'novo';
+            document.getElementById('detailFavorito').checked = Boolean(item.favorito);
+            document.getElementById('detailAnotacoes').value = item.anotacoes || '';
             document.getElementById('detailObjeto').textContent = item.objeto || '-';
             document.getElementById('detailMeta').textContent = [
+                item.perfil ? `Perfil: ${item.perfil}` : '',
                 item.keyword ? `Keyword: ${item.keyword}` : '',
                 item.oportunidade ? `Oportunidade: ${item.oportunidade}` : '',
                 item.data_abertura ? `Abertura: ${fmtDateTime(item.data_abertura)}` : '',
@@ -1406,6 +1699,41 @@
             document.getElementById('detailLink').href = fonte;
             document.getElementById('detailDialog').showModal();
             setStatus('Detalhe carregado');
+        }
+
+        async function salvarComercial(event) {
+            event.preventDefault();
+            const pncpId = document.getElementById('detailPncpId').value;
+            if (!pncpId) {
+                setStatus('Oportunidade sem identificador');
+                return;
+            }
+
+            const payload = {
+                status_comercial: document.getElementById('detailStatusComercial').value,
+                favorito: document.getElementById('detailFavorito').checked,
+                anotacoes: document.getElementById('detailAnotacoes').value.trim()
+            };
+
+            setStatus('Salvando acompanhamento...');
+            const res = await fetchAuth(`/licitacao/comercial/${encodeURIComponent(pncpId)}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const result = await res.json().catch(() => ({}));
+            if (!res.ok) {
+                setStatus(`Erro ao salvar acompanhamento: ${result.detail || res.status}`);
+                return;
+            }
+
+            const index = licitacoesData.findIndex(item => item.pncp_id === pncpId);
+            if (index >= 0) {
+                licitacoesData[index] = { ...licitacoesData[index], ...result };
+            }
+            renderizarTabela();
+            setStatus('Acompanhamento comercial salvo');
         }
 
         function fecharDetalhe() {
@@ -1506,6 +1834,9 @@
 
         document.getElementById('perfil').addEventListener('change', trocarPerfil);
         document.getElementById('filtroClasse').addEventListener('change', renderizarTabela);
+        document.getElementById('filtroPrazo').addEventListener('change', carregar);
+        document.getElementById('filtroStatusComercial').addEventListener('change', renderizarTabela);
+        document.getElementById('filtroFavorito').addEventListener('change', renderizarTabela);
         document.getElementById('filtroEstado').addEventListener('change', renderizarTabela);
         document.getElementById('filtroTexto').addEventListener('input', renderizarTabela);
         document.getElementById('filtroValorMin').addEventListener('input', renderizarTabela);
