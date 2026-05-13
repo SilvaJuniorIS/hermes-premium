@@ -46,21 +46,19 @@ Quando a versao real estiver hospedada, ajuste o botao principal em
 
 Troque `https://app.seudominio.com` pelo dominio definitivo do backend.
 
-## Inserir seu logo
+## Logo Hermes (vitrine e dashboard)
 
-Salve o arquivo do logo em:
+O Hermes usa o mesmo arquivo de marca em vitrine (`docs/index.html`) e no
+dashboard operacional (`dashboard.html`), servido em `/assets/...` pelo FastAPI:
 
 ```text
-docs/assets/logo-hermes.png
+docs/assets/hermes-product-logo.png
 ```
 
-O `index.html` ja esta preparado para carregar essa imagem automaticamente:
+O arquivo legado `docs/assets/logo-hermes.png` pode permanecer em repositorios
+antigos; a vitrine atual aponta para `hermes-product-logo.png`.
 
-```html
-<img class="logo-img" src="assets/logo-hermes.png" alt="Logo Hermes">
-```
-
-Se o arquivo ainda nao existir, a pagina mostra um fallback escrito `SEU LOGO`.
+Se a imagem nao existir, a vitrine mostra um fallback escrito `SEU LOGO`.
 
 ## Publicar alteracoes
 

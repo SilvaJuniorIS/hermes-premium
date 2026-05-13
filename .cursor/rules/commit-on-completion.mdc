@@ -1,0 +1,14 @@
+---
+description: Ao concluir um fluxo de trabalho no repositório, versionar as alterações.
+alwaysApply: true
+---
+
+# Commit ao finalizar um processo
+
+Quando uma tarefa ou processo for concluído neste projeto:
+
+1. Rode `git status` e inclua **todos** os arquivos relevantes da alteração (`git add`), sem deixar mudanças órfãs ligadas ao mesmo objetivo.
+2. Faça **um commit** com mensagem clara em português (imperativo ou `tipo: descrição`).
+3. Se o remoto for usado para deploy (GitHub Pages, demo), faça `git push` quando fizer sentido para o usuário.
+
+Evite encerrar a sessão só com arquivos modificados e não commitados, salvo se o usuário pedir explicitamente para não commitar.
