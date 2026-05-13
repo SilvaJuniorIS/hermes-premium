@@ -217,6 +217,13 @@
             font-weight: 700;
         }
 
+        .btn.disabled,
+        .btn.primary.disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
         .status-strip {
             display: grid;
             grid-template-columns: 1.3fr 1fr 1fr;
@@ -633,7 +640,7 @@
                 <div class="actions">
                     <a class="btn" href="index.html">Apresentacao</a>
                     <a class="btn" href="#fluxo">Ver fluxo</a>
-                    <a class="btn primary" href="https://computed-unit-stadium-suite.trycloudflare.com/" target="_blank" rel="noopener">Acessar o Site</a>
+                    <span class="btn primary disabled" role="button" aria-disabled="true" tabindex="-1" title="Desativado: o ambiente operacional nao e aberto a partir desta vitrine (evita ligacao a producao ou tunel temporario).">Acessar o Site</span>
                 </div>
             </section>
 
