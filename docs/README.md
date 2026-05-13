@@ -2,6 +2,24 @@
 
 Esta pasta contem uma versao estatica do dashboard para publicacao no GitHub Pages.
 
+## AtlasNex (empresa-mae)
+
+A vitrine institucional da **AtlasNex** (holding do ecossistema) esta em:
+
+```text
+docs/atlasnex.html
+```
+
+No GitHub Pages, a URL tipica sera `.../atlasnex.html`. A pagina inclui a identidade visual premium (paleta, Exo 2, slogan) e links para a vitrine do Hermes e para o dashboard operacional (URL configuravel).
+
+Para apontar o botao do dashboard para um ambiente publico ou tunel, use query string:
+
+```text
+atlasnex.html?hermes_dashboard=https://seu-subdominio.trycloudflare.com
+```
+
+O script da pagina atualiza os links do dashboard automaticamente.
+
 O GitHub Pages publica apenas arquivos estaticos. O sistema real do Hermes
 usa FastAPI, SQLite, autenticacao por cookie, chamadas ao PNCP e rotinas Python,
 por isso deve rodar em um servidor separado ou em uma demo local com tunel.
