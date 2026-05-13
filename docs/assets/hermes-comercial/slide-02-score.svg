@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" role="img" aria-labelledby="t2">
-  <title id="t2">Hermes  score e classificação estratégica</title>
+  <title id="t2">Hermes â€“ score e classificaÃ§Ã£o estratÃ©gica</title>
   <rect width="960" height="540" fill="#f5f7fa"/>
   <rect x="48" y="48" width="864" height="444" rx="16" fill="#fff" stroke="#d7dee8" stroke-width="2"/>
   <circle cx="180" cy="200" r="88" fill="none" stroke="#e2e8f0" stroke-width="16"/>
@@ -16,5 +16,5 @@
   <rect x="320" y="332" width="560" height="72" rx="8" fill="#f8fafc" stroke="#e2e8f0"/>
   <rect x="72" y="320" width="200" height="12" rx="3" fill="#0a2342" opacity="0.7"/>
   <rect x="72" y="344" width="240" height="8" rx="2" fill="#94a3b8"/>
-  <text x="72" y="508" fill="#64748b" font-family="system-ui,sans-serif" font-size="14">Inteligência · ALTA · MÉDIA · BAIXA</text>
+  <text x="72" y="508" fill="#64748b" font-family="system-ui,sans-serif" font-size="14">InteligÃªncia Â· ALTA Â· MÃ‰DIA Â· BAIXA</text>
 </svg>

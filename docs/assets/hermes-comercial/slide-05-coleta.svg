@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" role="img" aria-labelledby="t5">
-  <title id="t5">Hermes  coleta PNCP por perfil e coleta geral</title>
+  <title id="t5">Hermes â€“ coleta PNCP por perfil e coleta geral</title>
   <rect width="960" height="540" fill="#f5f7fa"/>
   <rect x="48" y="48" width="864" height="444" rx="16" fill="#fff" stroke="#d7dee8" stroke-width="2"/>
   <rect x="72" y="72" width="320" height="48" rx="10" fill="#f8fafc" stroke="#cbd5e1"/>
@@ -21,5 +21,5 @@
   <rect x="96" y="340" width="680" height="10" rx="2" fill="#e2e8f0"/>
   <rect x="96" y="370" width="768" height="14" rx="3" fill="#cbd5e1"/>
   <rect x="96" y="400" width="600" height="10" rx="2" fill="#e2e8f0"/>
-  <text x="72" y="508" fill="#64748b" font-family="system-ui,sans-serif" font-size="14">PNCP · perfis · coleta geral · histórico</text>
+  <text x="72" y="508" fill="#64748b" font-family="system-ui,sans-serif" font-size="14">PNCP Â· perfis Â· coleta geral Â· histÃ³rico</text>
 </svg>

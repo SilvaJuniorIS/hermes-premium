@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" role="img" aria-labelledby="t1">
-  <title id="t1">Hermes  visão unificada de oportunidades</title>
+  <title id="t1">Hermes â€“ visÃ£o unificada de oportunidades</title>
   <defs>
     <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" style="stop-color:#0a2342"/>
@@ -26,5 +26,5 @@
   <rect x="412" y="252" width="60" height="12" rx="3" fill="#f7931e"/>
   <rect x="396" y="292" width="468" height="36" rx="6" fill="#f8fafc"/>
   <rect x="396" y="344" width="468" height="36" rx="6" fill="#f8fafc"/>
-  <text x="72" y="520" fill="#64748b" font-family="system-ui,sans-serif" font-size="14">Painel · oportunidades priorizadas</text>
+  <text x="72" y="520" fill="#64748b" font-family="system-ui,sans-serif" font-size="14">Painel Â· oportunidades priorizadas</text>
 </svg>
