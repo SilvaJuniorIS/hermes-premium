@@ -66,7 +66,9 @@ Se alguma palavra-passe de aplicação (ex.: Gmail) chegou a estar no código ou
 
 ## 4. Variáveis de ambiente (referência rápida)
 
-Ver `.env.example` na raiz do repositório.
+Ver [`.env.example`](../.env.example) na raiz do repositório.
+
+**Checklist de comercialização:** [COMMERCIALIZACAO_CHECKLIST.md](COMMERCIALIZACAO_CHECKLIST.md)
 
 ---
 

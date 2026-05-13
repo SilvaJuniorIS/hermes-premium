@@ -387,6 +387,33 @@ def _start_scheduler_once() -> None:
     SCHEDULER_STARTED = True
 
 
+def _validate_production_environment() -> None:
+    """Passo 1 comercialização: falha cedo se produção estiver mal configurada."""
+    env = os.getenv("HERMES_ENV", "").strip().lower()
+    if env != "production":
+        return
+
+    errors: list[str] = []
+    pwd = os.getenv("HERMES_ADMIN_PASSWORD", "").strip()
+    if not pwd:
+        errors.append("defina HERMES_ADMIN_PASSWORD (obrigatorio em HERMES_ENV=production)")
+    elif pwd.lower() == "admin123":
+        errors.append("HERMES_ADMIN_PASSWORD nao pode ser a senha padrao admin123 em producao")
+
+    cookie = os.getenv("HERMES_COOKIE_SECURE", "").strip().lower()
+    if cookie not in ("1", "true", "yes"):
+        errors.append("defina HERMES_COOKIE_SECURE=true em producao (HTTPS obrigatorio)")
+
+    hint = os.getenv("HERMES_DEV_LOGIN_HINT", "").strip().lower()
+    if hint in ("1", "true", "yes"):
+        errors.append("desative HERMES_DEV_LOGIN_HINT em producao")
+
+    if errors:
+        raise RuntimeError(
+            "Hermes em modo producao (HERMES_ENV=production): " + " | ".join(errors)
+        )
+
+
 def _perfil_payload(req: PerfilRequest) -> dict[str, Any]:
     return {
         "nome_exibicao": req.nome_exibicao,
@@ -405,6 +432,7 @@ def _perfil_payload(req: PerfilRequest) -> dict[str, Any]:
 
 @app.on_event("startup")
 def startup() -> None:
+    _validate_production_environment()
     init_db()
     ensure_admin_user(_hash_password)
     _start_scheduler_once()

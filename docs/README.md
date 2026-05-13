@@ -15,6 +15,7 @@ Esta pasta publica **paginas estaticas** no GitHub Pages. O sistema completo
 | `config/ecossistema_portfolio.json` | Catálogo do portfólio (cópia publicável; fonte de verdade em `../config/` no repositório). |
 | `vitrine.html` | **Demonstracao interativa** (layout tipo dashboard) com dados ficticios no navegador. |
 | `atlasnex.html` | Pagina da **AtlasNex** (holding): ecossistema e links para Hermes. |
+| `COMMERCIALIZACAO_CHECKLIST.md` | Checklist de passos para comercializar o produto (com referência ao código). |
 
 A URL raiz do Pages (`.../`) abre a **apresentacao**. A demo interativa fica em
 `.../vitrine.html`.

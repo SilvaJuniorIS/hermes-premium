@@ -64,6 +64,7 @@ pip install -r requirements.txt
 
 - Copie [`.env.example`](.env.example) para `.env` (o `.env` não deve ir para o Git).
 - Leia [docs/BLINDAGEM_E_COMERCIALIZACAO.md](docs/BLINDAGEM_E_COMERCIALIZACAO.md): variáveis de ambiente, endurecimento no código e lacunas para comercialização.
+- Checklist acionável: [docs/COMMERCIALIZACAO_CHECKLIST.md](docs/COMMERCIALIZACAO_CHECKLIST.md) (passos 1–8; **Passo 1** inclui validação `HERMES_ENV=production` no arranque da API).
 
 ---
 
