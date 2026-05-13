@@ -7,7 +7,8 @@ Esta pasta publica **paginas estaticas** no GitHub Pages. O sistema completo
 
 | Arquivo | Funcao |
 |---------|--------|
-| `index.html` | **Apresentacao comercial** do Hermes: proposta de valor, funcionalidades, prova social modelo, oferta piloto e botoes para a demo. |
+| `index.html` | **Apresentacao comercial**: dossiê por abas, carrossel com ilustrações SVG, proposta de valor, oferta e CTAs. |
+| `assets/hermes-comercial/` | Ilustrações vetoriais 16:9 usadas no carrossel (substituíveis por capturas reais). |
 | `vitrine.html` | **Demonstracao interativa** (layout tipo dashboard) com dados ficticios no navegador. |
 | `atlasnex.html` | Pagina da **AtlasNex** (holding): ecossistema e links para Hermes. |
 

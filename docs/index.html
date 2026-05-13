@@ -311,6 +311,278 @@
         }
 
         .foot-links { margin-top: 14px; display: flex; flex-wrap: wrap; justify-content: center; gap: 14px 22px; }
+
+        /* —— Dossiê (folder) —— */
+        .dossier-section { padding: 56px 0 48px; background: linear-gradient(180deg, #eef2f7 0%, var(--bg) 100%); }
+        .dossier-intro { margin-bottom: 28px; }
+
+        .dossier-shell {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0;
+            max-width: 100%;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 22px 60px rgba(10, 35, 66, 0.14);
+            border: 1px solid var(--line);
+        }
+
+        @media (min-width: 720px) {
+            .dossier-shell { grid-template-columns: 56px 1fr; }
+        }
+
+        .dossier-spine {
+            background: linear-gradient(180deg, #f7931e 0%, #d97706 100%);
+            color: #fff;
+            padding: 20px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-family: Poppins, sans-serif;
+            font-weight: 700;
+            font-size: 0.72rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            writing-mode: horizontal-tb;
+        }
+
+        @media (min-width: 720px) {
+            .dossier-spine {
+                writing-mode: vertical-rl;
+                transform: rotate(180deg);
+                padding: 24px 10px;
+            }
+        }
+
+        .dossier-body {
+            background: var(--surface);
+            display: flex;
+            flex-direction: column;
+            min-height: 320px;
+        }
+
+        .dossier-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0;
+            border-bottom: 1px solid var(--line);
+            background: #f8fafc;
+        }
+
+        .dossier-tab {
+            flex: 1 1 auto;
+            min-width: 0;
+            padding: 14px 16px;
+            border: none;
+            background: transparent;
+            font-family: Poppins, sans-serif;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--muted);
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: color 0.15s, background 0.15s, border-color 0.15s;
+        }
+
+        .dossier-tab:hover { color: var(--ink); background: rgba(247, 147, 30, 0.06); }
+        .dossier-tab[aria-selected="true"] {
+            color: var(--brand);
+            background: #fff;
+            border-bottom-color: var(--accent);
+        }
+
+        .dossier-panel {
+            display: none;
+            padding: 26px 24px 28px;
+            animation: dossierFade 0.35s ease;
+        }
+
+        .dossier-panel.active { display: block; }
+
+        @keyframes dossierFade {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .dossier-panel h3 {
+            font-family: Poppins, sans-serif;
+            margin: 0 0 10px;
+            font-size: 1.15rem;
+            color: var(--brand);
+        }
+
+        .dossier-panel p { margin: 0 0 12px; color: var(--muted); font-size: 0.95rem; max-width: 72ch; }
+        .dossier-panel ul { margin: 0; padding-left: 1.15rem; color: var(--muted); font-size: 0.93rem; }
+        .dossier-panel li { margin-bottom: 8px; }
+
+        .dossier-kpi {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        .dossier-kpi span {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            border-radius: 999px;
+            background: var(--accent-soft);
+            border: 1px solid rgba(247, 147, 30, 0.35);
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--brand);
+        }
+
+        /* —— Carrossel —— */
+        .carousel-block { margin-top: 44px; padding-top: 36px; border-top: 1px solid var(--line); }
+
+        .carousel-head {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .carousel-head h3 {
+            margin: 0;
+            font-family: Poppins, sans-serif;
+            font-size: 1.2rem;
+            color: var(--brand);
+        }
+
+        .carousel-head p { margin: 0; font-size: 0.88rem; color: var(--muted); }
+
+        .carousel {
+            position: relative;
+            border-radius: var(--radius);
+            background: #0f2847;
+            padding: 12px 12px 56px;
+            box-shadow: var(--shadow);
+        }
+
+        @media (min-width: 640px) {
+            .carousel { padding: 16px 52px 56px; }
+        }
+
+        .carousel-viewport {
+            overflow: hidden;
+            border-radius: 10px;
+            background: #fff;
+            width: 100%;
+        }
+
+        .carousel-track {
+            display: flex;
+            width: 500%;
+            transition: transform 0.45s cubic-bezier(0.33, 1, 0.68, 1);
+        }
+
+        .carousel-slide {
+            flex: 0 0 20%;
+            width: 20%;
+            padding: 0;
+        }
+
+        .carousel-slide figure { margin: 0; }
+        .carousel-slide img {
+            display: block;
+            width: 100%;
+            height: auto;
+            max-height: min(420px, 52vh);
+            object-fit: contain;
+            background: #f8fafc;
+        }
+
+        .carousel-caption {
+            padding: 14px 18px 16px;
+            background: #fff;
+            border-top: 1px solid var(--line);
+        }
+
+        .carousel-caption strong {
+            display: block;
+            font-family: Poppins, sans-serif;
+            font-size: 1rem;
+            color: var(--brand);
+            margin-bottom: 4px;
+        }
+
+        .carousel-caption span { font-size: 0.88rem; color: var(--muted); line-height: 1.45; }
+
+        .carousel-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: none;
+            background: #fff;
+            color: var(--brand);
+            font-size: 22px;
+            line-height: 1;
+            cursor: pointer;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.12);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+        }
+
+        @media (min-width: 640px) {
+            .carousel-nav { display: flex; }
+        }
+
+        .carousel-nav:hover { background: var(--accent-soft); }
+        .carousel-nav:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+        .carousel-nav.prev { left: 8px; }
+        .carousel-nav.next { right: 8px; }
+
+        .carousel-dots {
+            position: absolute;
+            bottom: 16px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            padding: 0 12px;
+        }
+
+        .carousel-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            border: none;
+            padding: 0;
+            background: rgba(255, 255, 255, 0.35);
+            cursor: pointer;
+            transition: transform 0.15s, background 0.15s;
+        }
+
+        .carousel-dot[aria-current="true"] {
+            background: var(--accent);
+            transform: scale(1.25);
+        }
+
+        .carousel-dot:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+        .carousel-live {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
     </style>
 </head>
 <body>
@@ -345,6 +617,168 @@
             </div>
         </div>
     </header>
+
+    <section class="dossier-section" id="dossier" aria-labelledby="dossier-title">
+        <div class="wrap">
+            <div class="dossier-intro">
+                <p class="eyebrow">Material comercial</p>
+                <h2 class="section-title" id="dossier-title">Dossiê Hermes — visão executiva do produto</h2>
+                <p class="section-lede">
+                    Estrutura em pastas para apresentações e propostas: resumo por dimensão (estratégia, dados, operação, ecossistema).
+                    Abaixo, um carrossel com ilustrações conceituais do fluxo de trabalho — substitua por capturas reais quando disponíveis.
+                </p>
+            </div>
+
+            <div class="dossier-shell">
+                <div class="dossier-spine" aria-hidden="true">Hermes</div>
+                <div class="dossier-body">
+                    <div class="dossier-tabs" role="tablist" aria-label="Secoes do dossie">
+                        <button type="button" class="dossier-tab" role="tab" id="tab-cap" aria-selected="true" aria-controls="panel-cap" tabindex="0">Capa</button>
+                        <button type="button" class="dossier-tab" role="tab" id="tab-plat" aria-selected="false" aria-controls="panel-plat" tabindex="-1">Plataforma</button>
+                        <button type="button" class="dossier-tab" role="tab" id="tab-dados" aria-selected="false" aria-controls="panel-dados" tabindex="-1">Dados &amp; PNCP</button>
+                        <button type="button" class="dossier-tab" role="tab" id="tab-ops" aria-selected="false" aria-controls="panel-ops" tabindex="-1">Operação</button>
+                        <button type="button" class="dossier-tab" role="tab" id="tab-eco" aria-selected="false" aria-controls="panel-eco" tabindex="-1">Ecossistema</button>
+                    </div>
+
+                    <div class="dossier-panel active" role="tabpanel" id="panel-cap" aria-labelledby="tab-cap">
+                        <h3>Resumo executivo</h3>
+                        <p>
+                            O Hermes é a camada de <strong>inteligência aplicada às compras públicas</strong> dentro do guarda-chuvas AtlasNex:
+                            prioriza oportunidades, sustenta o funil comercial e documenta decisões com exportações e e-mail contextual.
+                        </p>
+                        <ul>
+                            <li>Posicionamento: decisão e previsibilidade, não “mais um buscador”.</li>
+                            <li>Entrega: painel operacional + banco local + rotinas de coleta.</li>
+                            <li>Próximo passo: piloto com metas e acompanhamento conjunto.</li>
+                        </ul>
+                        <div class="dossier-kpi">
+                            <span>PNCP</span>
+                            <span>Score &amp; classe</span>
+                            <span>Funil comercial</span>
+                            <span>Exportação</span>
+                        </div>
+                    </div>
+
+                    <div class="dossier-panel" role="tabpanel" id="panel-plat" aria-labelledby="tab-plat" hidden>
+                        <h3>Plataforma e experiência</h3>
+                        <p>
+                            Interface pensada para <strong>triagem diária</strong>: filtros por prazo de abertura, classificação, UF,
+                            status comercial e favoritos. Detalhe da oportunidade com motivos do score e ação sugerida.
+                        </p>
+                        <ul>
+                            <li>Login com sessão e dashboard responsivo.</li>
+                            <li>Coleta por perfil ou coleta geral (todos os perfis em sequência).</li>
+                            <li>Histórico de execuções e agendamento local da rotina.</li>
+                        </ul>
+                    </div>
+
+                    <div class="dossier-panel" role="tabpanel" id="panel-dados" aria-labelledby="tab-dados" hidden>
+                        <h3>Dados e conformidade</h3>
+                        <p>
+                            Uso de <strong>dados públicos</strong> do PNCP com parâmetros de perfil (palavras-chave, termos positivos e negativos, faixas de valor).
+                            O cliente mantém soberania sobre onde o sistema roda e quem acessa.
+                        </p>
+                        <ul>
+                            <li>SQLite para ambiente de piloto e operação controlada.</li>
+                            <li>Rastreabilidade: última leitura, primeiro registro, origem da oportunidade.</li>
+                            <li>Evolução: integrações adicionais conforme roadmap AtlasNex.</li>
+                        </ul>
+                    </div>
+
+                    <div class="dossier-panel" role="tabpanel" id="panel-ops" aria-labelledby="tab-ops" hidden>
+                        <h3>Operação comercial</h3>
+                        <p>
+                            Campos persistentes para <strong>acompanhamento de vendas</strong>: status comercial, favorito e anotações internas,
+                            refletidos nas exportações e no envio de planilhas por e-mail.
+                        </p>
+                        <ul>
+                            <li>Reduz dependência de planilhas paralelas desconectadas.</li>
+                            <li>Alinha compras e comercial no mesmo quadro de oportunidades.</li>
+                            <li>Comunicação externa com contexto (filtros e score explicados no corpo do e-mail).</li>
+                        </ul>
+                    </div>
+
+                    <div class="dossier-panel" role="tabpanel" id="panel-eco" aria-labelledby="tab-eco" hidden>
+                        <h3>Ecossistema AtlasNex</h3>
+                        <p>
+                            O Hermes é o produto <strong>licitatório e de inteligência pública</strong> da holding. Outras linhas (Ícaro, Minerva, Pandora)
+                            expandem inovação, analytics e dados — com a mesma disciplina de marca.
+                        </p>
+                        <ul>
+                            <li>Site institucional da holding: <a href="atlasnex.html">AtlasNex</a>.</li>
+                            <li>Demonstração estática adicional: <a href="vitrine.html">vitrine interativa</a>.</li>
+                            <li>Ambiente com login: botão <strong>Acessar o Site</strong> no topo desta página.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="carousel-block">
+                <div class="carousel-head">
+                    <h3>Carrossel — jornada do produto</h3>
+                    <p>Ilustrações vetoriais · formato 16:9 · prontas para PDF ou site</p>
+                </div>
+
+                <div class="carousel" id="hermes-carousel" aria-roledescription="carousel" aria-label="Destaques visuais do Hermes">
+                    <p class="carousel-live" id="carousel-live" aria-live="polite"></p>
+                    <button type="button" class="carousel-nav prev" id="car-prev" aria-label="Slide anterior">‹</button>
+                    <button type="button" class="carousel-nav next" id="car-next" aria-label="Proximo slide">›</button>
+
+                    <div class="carousel-viewport">
+                        <div class="carousel-track" id="carousel-track">
+                            <div class="carousel-slide" role="group" aria-roledescription="slide" aria-label="1 de 5">
+                                <figure>
+                                    <img src="assets/hermes-comercial/slide-01-visao.svg" width="960" height="540" alt="Ilustracao: painel com oportunidades priorizadas" loading="eager">
+                                    <figcaption class="carousel-caption">
+                                        <strong>Visão unificada</strong>
+                                        <span>Priorização, filtros e leitura executiva do que merece atenção hoje.</span>
+                                    </figcaption>
+                                </figure>
+                            </div>
+                            <div class="carousel-slide" role="group" aria-roledescription="slide" aria-label="2 de 5">
+                                <figure>
+                                    <img src="assets/hermes-comercial/slide-02-score.svg" width="960" height="540" alt="Ilustracao: score e classificacao" loading="lazy">
+                                    <figcaption class="carousel-caption">
+                                        <strong>Score e classe</strong>
+                                        <span>Regras por perfil para separar sinal de ruído com transparência.</span>
+                                    </figcaption>
+                                </figure>
+                            </div>
+                            <div class="carousel-slide" role="group" aria-roledescription="slide" aria-label="3 de 5">
+                                <figure>
+                                    <img src="assets/hermes-comercial/slide-03-comercial.svg" width="960" height="540" alt="Ilustracao: funil comercial" loading="lazy">
+                                    <figcaption class="carousel-caption">
+                                        <strong>Funil comercial</strong>
+                                        <span>Status, favoritos e anotações ligados a cada oportunidade.</span>
+                                    </figcaption>
+                                </figure>
+                            </div>
+                            <div class="carousel-slide" role="group" aria-roledescription="slide" aria-label="4 de 5">
+                                <figure>
+                                    <img src="assets/hermes-comercial/slide-04-export.svg" width="960" height="540" alt="Ilustracao: exportacao e e-mail" loading="lazy">
+                                    <figcaption class="carousel-caption">
+                                        <strong>Continuidade</strong>
+                                        <span>Excel, CSV e e-mail com contexto para quem decide fora do painel.</span>
+                                    </figcaption>
+                                </figure>
+                            </div>
+                            <div class="carousel-slide" role="group" aria-roledescription="slide" aria-label="5 de 5">
+                                <figure>
+                                    <img src="assets/hermes-comercial/slide-05-coleta.svg" width="960" height="540" alt="Ilustracao: coleta PNCP e perfis" loading="lazy">
+                                    <figcaption class="carousel-caption">
+                                        <strong>Coleta inteligente</strong>
+                                        <span>Perfis de negócio, coleta geral e rastreio no histórico de execuções.</span>
+                                    </figcaption>
+                                </figure>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="carousel-dots" id="carousel-dots" role="tablist" aria-label="Selecionar slide"></div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <section class="block" id="produto">
         <div class="wrap">
@@ -483,5 +917,112 @@
             </div>
         </div>
     </footer>
+
+    <script>
+        (function () {
+            var tabs = Array.prototype.slice.call(document.querySelectorAll('.dossier-tab'));
+            var panels = {
+                'tab-cap': document.getElementById('panel-cap'),
+                'tab-plat': document.getElementById('panel-plat'),
+                'tab-dados': document.getElementById('panel-dados'),
+                'tab-ops': document.getElementById('panel-ops'),
+                'tab-eco': document.getElementById('panel-eco')
+            };
+
+            function selectTab(id) {
+                tabs.forEach(function (t) {
+                    var on = t.id === id;
+                    t.setAttribute('aria-selected', on ? 'true' : 'false');
+                    t.tabIndex = on ? 0 : -1;
+                });
+                Object.keys(panels).forEach(function (key) {
+                    var p = panels[key];
+                    if (!p) return;
+                    if (key === id) {
+                        p.classList.add('active');
+                        p.removeAttribute('hidden');
+                    } else {
+                        p.classList.remove('active');
+                        p.setAttribute('hidden', '');
+                    }
+                });
+            }
+
+            tabs.forEach(function (tab) {
+                tab.addEventListener('click', function () {
+                    selectTab(tab.id);
+                });
+            });
+
+            var track = document.getElementById('carousel-track');
+            var prev = document.getElementById('car-prev');
+            var next = document.getElementById('car-next');
+            var dotsWrap = document.getElementById('carousel-dots');
+            var live = document.getElementById('carousel-live');
+            var total = 5;
+            var idx = 0;
+
+            function announce() {
+                if (live) live.textContent = 'Slide ' + (idx + 1) + ' de ' + total;
+            }
+
+            function renderDots() {
+                if (!dotsWrap) return;
+                dotsWrap.innerHTML = '';
+                for (var i = 0; i < total; i++) {
+                    var b = document.createElement('button');
+                    b.type = 'button';
+                    b.className = 'carousel-dot';
+                    b.setAttribute('aria-label', 'Ir para slide ' + (i + 1));
+                    b.setAttribute('aria-current', i === idx ? 'true' : 'false');
+                    (function (j) {
+                        b.addEventListener('click', function () {
+                            idx = j;
+                            go();
+                        });
+                    })(i);
+                    dotsWrap.appendChild(b);
+                }
+            }
+
+            function go() {
+                if (track) track.style.transform = 'translateX(-' + (idx * (100 / total)) + '%)';
+                if (dotsWrap) {
+                    var dots = dotsWrap.querySelectorAll('.carousel-dot');
+                    for (var i = 0; i < dots.length; i++) {
+                        dots[i].setAttribute('aria-current', i === idx ? 'true' : 'false');
+                    }
+                }
+                announce();
+            }
+
+            if (prev) prev.addEventListener('click', function () {
+                idx = (idx - 1 + total) % total;
+                go();
+            });
+            if (next) next.addEventListener('click', function () {
+                idx = (idx + 1) % total;
+                go();
+            });
+
+            renderDots();
+            go();
+
+            var el = document.getElementById('hermes-carousel');
+            if (el) {
+                var sx = 0;
+                el.addEventListener('touchstart', function (e) {
+                    sx = e.changedTouches[0].screenX;
+                }, { passive: true });
+                el.addEventListener('touchend', function (e) {
+                    var dx = e.changedTouches[0].screenX - sx;
+                    if (Math.abs(dx) > 50) {
+                        if (dx < 0) { idx = (idx + 1) % total; go(); }
+                        else { idx = (idx - 1 + total) % total; go(); }
+                    }
+                }, { passive: true });
+            }
+        })();
+    </script>
 </body>
 </html>
