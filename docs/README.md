@@ -9,6 +9,10 @@ Esta pasta publica **paginas estaticas** no GitHub Pages. O sistema completo
 |---------|--------|
 | `index.html` | **Apresentacao comercial**: dossiê por abas, carrossel com ilustrações SVG, proposta de valor, oferta e CTAs. |
 | `assets/hermes-comercial/` | Ilustrações vetoriais 16:9 usadas no carrossel (substituíveis por capturas reais). |
+| `produtos/index.html` | Índice das dez linhas de produto AtlasNex em roadmap. |
+| `produtos/*.html` | Ficha por produto (problema, MVP, Hermes). |
+| `assets/eco-product.css` | Estilos das fichas do portfólio. |
+| `config/ecossistema_portfolio.json` | Catálogo do portfólio (cópia publicável; fonte de verdade em `../config/` no repositório). |
 | `vitrine.html` | **Demonstracao interativa** (layout tipo dashboard) com dados ficticios no navegador. |
 | `atlasnex.html` | Pagina da **AtlasNex** (holding): ecossistema e links para Hermes. |
 

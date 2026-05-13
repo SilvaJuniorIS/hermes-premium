@@ -479,7 +479,64 @@
         .foot-links a {
             font-size: 0.85rem;
         }
-    </style>
+
+        .eco-note {
+            margin-top: 22px;
+            color: var(--silver);
+            font-size: 0.9rem;
+            max-width: 72ch;
+            line-height: 1.5;
+        }
+
+        .eco-grid.portfolio {
+            margin-top: 18px;
+        }
+
+        @media (min-width: 900px) {
+            .eco-grid.portfolio {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .eco-grid.portfolio {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .eco-card.compact {
+            min-height: 0;
+            padding: 18px 16px;
+            gap: 8px;
+        }
+
+        .eco-card.compact h3 {
+            font-size: 0.92rem;
+            letter-spacing: 0.04em;
+        }
+
+        .eco-card .linea {
+            font-size: 0.62rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--gold);
+            font-weight: 700;
+        }
+
+        .eco-card.compact p {
+            font-size: 0.82rem;
+            flex: 0;
+            line-height: 1.4;
+        }
+
+        .eco-card.compact .eco-actions {
+            margin-top: 10px;
+        }
+
+        .eco-card.compact .btn-ghost {
+            font-size: 0.78rem;
+            padding: 8px 12px;
+        }
 </head>
 <body>
     <header class="site">
@@ -491,6 +548,7 @@
                 <a href="#essencia">Essência</a>
                 <a href="#proposito">Propósito</a>
                 <a href="#ecossistema">Ecossistema</a>
+                <a href="produtos/index.html">Portfólio</a>
                 <a href="#posicionamento">Posicionamento</a>
                 <a class="btn btn-gold" href="#hermes">Hermes</a>
             </nav>
@@ -595,28 +653,92 @@
                         </div>
                     </article>
 
-                    <article class="eco-card muted">
-                        <header>
-                            <h3>ÍCARO</h3>
-                            <span class="badge">Roadmap</span>
-                        </header>
-                        <p>Inovação e expansão — novos horizontes para organizações que precisam crescer com método e inteligência.</p>
-                    </article>
+                <p class="eco-note" id="portfolio">
+                    Além do Hermes em operação, a AtlasNex mantém <strong>dez linhas de produto</strong> em roadmap,
+                    agrupadas nas famílias <strong>Ícaro</strong> (expansão e relação), <strong>Minerva</strong> (analytics e ambiente)
+                    e <strong>Pandora</strong> (dados e conformidade). Veja o <a href="produtos/index.html" style="color:var(--gold)">índice do portfólio</a> ou abra cada ficha abaixo.
+                </p>
 
-                    <article class="eco-card muted">
-                        <header>
-                            <h3>MINERVA</h3>
-                            <span class="badge">Roadmap</span>
-                        </header>
-                        <p>Inteligência analítica — clareza em dados complexos para sustentar escolhas estratégicas.</p>
+                <div class="eco-grid portfolio" aria-label="Produtos em roadmap">
+                    <article class="eco-card muted compact">
+                        <span class="linea">Pandora</span>
+                        <h3>Cadastro &amp; qualificação</h3>
+                        <p>Documentos, validade e checklist por edital.</p>
+                        <div class="eco-actions">
+                            <a class="btn btn-ghost" href="produtos/cadastro-fornecedores.html">Ficha</a>
+                        </div>
                     </article>
-
-                    <article class="eco-card muted">
-                        <header>
-                            <h3>PANDORA</h3>
-                            <span class="badge">Roadmap</span>
-                        </header>
-                        <p>Dados e oportunidades — exploração responsável de informação para antecipar cenários.</p>
+                    <article class="eco-card muted compact">
+                        <span class="linea">Ícaro</span>
+                        <h3>Propostas &amp; prazos</h3>
+                        <p>Linha do tempo, tarefas e versões de proposta.</p>
+                        <div class="eco-actions">
+                            <a class="btn btn-ghost" href="produtos/gestao-propostas-prazos.html">Ficha</a>
+                        </div>
+                    </article>
+                    <article class="eco-card muted compact">
+                        <span class="linea">Minerva</span>
+                        <h3>Precificação B2G</h3>
+                        <p>BDI, margem e cenários para decisão de preço.</p>
+                        <div class="eco-actions">
+                            <a class="btn btn-ghost" href="produtos/precificacao-b2g.html">Ficha</a>
+                        </div>
+                    </article>
+                    <article class="eco-card muted compact">
+                        <span class="linea">Minerva</span>
+                        <h3>Inteligência de concorrentes</h3>
+                        <p>Padrões públicos de resultados e leitura competitiva.</p>
+                        <div class="eco-actions">
+                            <a class="btn btn-ghost" href="produtos/inteligencia-concorrentes.html">Ficha</a>
+                        </div>
+                    </article>
+                    <article class="eco-card muted compact">
+                        <span class="linea">Ícaro</span>
+                        <h3>Contratos &amp; entregas</h3>
+                        <p>Pós-arrematação: medições, aditivos e SLA.</p>
+                        <div class="eco-actions">
+                            <a class="btn btn-ghost" href="produtos/contratos-entregas.html">Ficha</a>
+                        </div>
+                    </article>
+                    <article class="eco-card muted compact">
+                        <span class="linea">Minerva</span>
+                        <h3>Due diligence de órgãos</h3>
+                        <p>Risco, histórico e relatório executivo.</p>
+                        <div class="eco-actions">
+                            <a class="btn btn-ghost" href="produtos/due-diligence-orgaos.html">Ficha</a>
+                        </div>
+                    </article>
+                    <article class="eco-card muted compact">
+                        <span class="linea">Ícaro</span>
+                        <h3>Portal fornecedor (órgão)</h3>
+                        <p>Canal institucional com status e comunicação.</p>
+                        <div class="eco-actions">
+                            <a class="btn btn-ghost" href="produtos/portal-fornecedor-publico.html">Ficha</a>
+                        </div>
+                    </article>
+                    <article class="eco-card muted compact">
+                        <span class="linea">Ícaro</span>
+                        <h3>Academia B2G</h3>
+                        <p>Trilhas, simulados e certificação.</p>
+                        <div class="eco-actions">
+                            <a class="btn btn-ghost" href="produtos/academia-certificacao-b2g.html">Ficha</a>
+                        </div>
+                    </article>
+                    <article class="eco-card muted compact">
+                        <span class="linea">Pandora</span>
+                        <h3>Integração fiscal</h3>
+                        <p>NF-e e conciliação com contratos.</p>
+                        <div class="eco-actions">
+                            <a class="btn btn-ghost" href="produtos/integracao-fiscal.html">Ficha</a>
+                        </div>
+                    </article>
+                    <article class="eco-card muted compact">
+                        <span class="linea">Pandora</span>
+                        <h3>Observatório ESG</h3>
+                        <p>Critérios socioambientais em compras públicas.</p>
+                        <div class="eco-actions">
+                            <a class="btn btn-ghost" href="produtos/observatorio-esg-licitacoes.html">Ficha</a>
+                        </div>
                     </article>
                 </div>
             </div>
@@ -667,6 +789,7 @@
             <div class="foot-links">
                 <a href="index.html">Apresentacao Hermes</a>
                 <a href="vitrine.html">Demo interativa</a>
+                <a href="produtos/index.html">Portfólio de produtos</a>
                 <a href="https://github.com/SilvaJuniorIS/hermes-premium" target="_blank" rel="noopener">Repositório no GitHub</a>
             </div>
         </div>

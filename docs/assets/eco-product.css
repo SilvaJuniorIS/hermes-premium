@@ -1,0 +1,143 @@
+/* Fichas de produto AtlasNex — partilhado por docs/produtos/*.html */
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700&display=swap');
+
+:root {
+    --deep: #0B1320;
+    --tech: #13243D;
+    --gold: #D4A017;
+    --ice: #E6E8EB;
+    --silver: #A7A9AC;
+    --line: rgba(230, 232, 235, 0.12);
+    --radius: 14px;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+    margin: 0;
+    font-family: "Exo 2", system-ui, sans-serif;
+    background: var(--deep);
+    color: var(--ice);
+    line-height: 1.55;
+    font-weight: 400;
+}
+
+a { color: var(--gold); font-weight: 600; text-decoration: none; }
+a:hover { text-decoration: underline; }
+a:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+
+.wrap { max-width: 900px; margin: 0 auto; padding: 0 22px 48px; }
+
+.topbar {
+    padding: 16px 0;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 28px;
+}
+.topbar .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding-bottom: 0; }
+.back { font-size: 0.88rem; }
+
+.pillar {
+    display: inline-block;
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.hero {
+    padding-bottom: 8px;
+}
+.hero h1 {
+    margin: 0 0 12px;
+    font-size: clamp(1.5rem, 3.5vw, 2rem);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+.hero .lede {
+    margin: 0;
+    color: var(--silver);
+    font-size: 1.05rem;
+    max-width: 62ch;
+}
+
+section.sheet {
+    margin-top: 32px;
+    padding: 22px 22px 24px;
+    background: rgba(19, 36, 61, 0.55);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+}
+section.sheet h2 {
+    margin: 0 0 12px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--gold);
+}
+section.sheet p, section.sheet li {
+    margin: 0 0 10px;
+    color: var(--silver);
+    font-size: 0.93rem;
+}
+section.sheet ul { margin: 0; padding-left: 1.2rem; }
+section.sheet li { margin-bottom: 8px; }
+
+.mvp {
+    display: grid;
+    gap: 12px;
+    margin-top: 14px;
+}
+@media (min-width: 640px) {
+    .mvp { grid-template-columns: repeat(2, 1fr); }
+}
+.mvp span {
+    display: block;
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: rgba(212, 160, 23, 0.1);
+    border: 1px solid rgba(212, 160, 23, 0.25);
+    font-size: 0.82rem;
+    color: var(--ice);
+}
+
+.cta-row {
+    margin-top: 28px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+}
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 0.88rem;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+}
+.btn-gold {
+    background: linear-gradient(135deg, #e0b32a, var(--gold));
+    color: var(--deep);
+}
+.btn-gold:hover { filter: brightness(1.05); text-decoration: none; }
+.btn-ghost {
+    background: transparent;
+    color: var(--ice);
+    border: 1px solid rgba(230, 232, 235, 0.25);
+}
+.btn-ghost:hover { border-color: var(--gold); color: var(--gold); text-decoration: none; }
+
+footer.foot {
+    margin-top: 40px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+    font-size: 0.82rem;
+    color: var(--silver);
+    text-align: center;
+}

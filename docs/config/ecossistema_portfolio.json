@@ -1,0 +1,81 @@
+{
+  "holding": "AtlasNex",
+  "pilares": {
+    "icaro": "Inovação, expansão operacional e relação com o ecossistema",
+    "minerva": "Inteligência analítica, preço e leitura de ambiente",
+    "pandora": "Dados, cadastros, conformidade e oportunidades escondidas"
+  },
+  "produtos": [
+    {
+      "id": "cadastro-fornecedores",
+      "nome": "Cadastro & qualificação de fornecedores",
+      "pilar": "pandora",
+      "ficha": "produtos/cadastro-fornecedores.html",
+      "resumo": "Documentos, certidões, alertas de vencimento e checklist por edital."
+    },
+    {
+      "id": "gestao-propostas-prazos",
+      "nome": "Gestão de propostas e prazos",
+      "pilar": "icaro",
+      "ficha": "produtos/gestao-propostas-prazos.html",
+      "resumo": "Linha do tempo, tarefas, versões e lembretes de prazos críticos."
+    },
+    {
+      "id": "precificacao-b2g",
+      "nome": "Precificação e composição de custos",
+      "pilar": "minerva",
+      "ficha": "produtos/precificacao-b2g.html",
+      "resumo": "BDI, margem, cenários e sensibilidade para decisão de preço."
+    },
+    {
+      "id": "inteligencia-concorrentes",
+      "nome": "Inteligência de concorrentes (B2G)",
+      "pilar": "minerva",
+      "ficha": "produtos/inteligencia-concorrentes.html",
+      "resumo": "Histórico público de resultados, padrões por órgão e leitura competitiva."
+    },
+    {
+      "id": "contratos-entregas",
+      "nome": "Contratos e entregas pós-arrematação",
+      "pilar": "icaro",
+      "ficha": "produtos/contratos-entregas.html",
+      "resumo": "Medições, aditivos, SLA e alertas de renovação e risco."
+    },
+    {
+      "id": "due-diligence-orgaos",
+      "nome": "Due diligence de órgãos e compradores",
+      "pilar": "minerva",
+      "ficha": "produtos/due-diligence-orgaos.html",
+      "resumo": "Sinais de risco, histórico de certames e apoio à decisão de crédito."
+    },
+    {
+      "id": "portal-fornecedor-publico",
+      "nome": "Portal do fornecedor (órgão público)",
+      "pilar": "icaro",
+      "ficha": "produtos/portal-fornecedor-publico.html",
+      "resumo": "Canal único com fornecedor, transparência e status operacional."
+    },
+    {
+      "id": "academia-certificacao-b2g",
+      "nome": "Treinamento & certificação B2G",
+      "pilar": "icaro",
+      "ficha": "produtos/academia-certificacao-b2g.html",
+      "resumo": "Trilhas, atualização legal e simuladores para equipes."
+    },
+    {
+      "id": "integracao-fiscal",
+      "nome": "Integração fiscal-documental",
+      "pilar": "pandora",
+      "ficha": "produtos/integracao-fiscal.html",
+      "resumo": "NF-e, conciliação pedido-nota-pagamento em contratos administrativos."
+    },
+    {
+      "id": "observatorio-esg-licitacoes",
+      "nome": "Observatório ESG em compras públicas",
+      "pilar": "pandora",
+      "ficha": "produtos/observatorio-esg-licitacoes.html",
+      "resumo": "Critérios socioambientais em editais e maturidade de compras."
+    }
+  ],
+  "nota": "Estado roadmap — fichas estáticas em docs/produtos/. Este JSON serve de contrato para futuras APIs e MVPs."
+}
