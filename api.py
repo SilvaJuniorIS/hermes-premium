@@ -33,7 +33,7 @@ from src.hermes_db import (
     mark_user_login,
     update_licitacao_comercial,
 )
-from src.main import DEFAULT_CONFIG, run_pipeline
+from src.main import COLETA_GERAL, DEFAULT_CONFIG, run_pipeline, run_pipeline_coleta_geral
 from src.notifier import enviar_planilha_oportunidades
 
 
@@ -306,10 +306,20 @@ def _scheduler_loop() -> None:
                     perfil = schedule.get("perfil") or "limpeza_higiene"
                     config = {**DEFAULT_CONFIG, **(schedule.get("config") or {})}
                     try:
-                        result = run_pipeline(perfil, config)
-                        schedule["last_run_status"] = (
-                            f"finished: {result['stats'].get('salvas', 0)} registros"
-                        )
+                        if perfil == COLETA_GERAL:
+                            result = run_pipeline_coleta_geral(config)
+                            stats = result["stats"]
+                            ok = stats.get("perfis_ok", 0)
+                            total = stats.get("perfis_total", 0)
+                            schedule["last_run_status"] = (
+                                f"finished: {stats.get('salvas', 0)} registros "
+                                f"(coleta geral {ok}/{total} perfis)"
+                            )
+                        else:
+                            result = run_pipeline(perfil, config)
+                            schedule["last_run_status"] = (
+                                f"finished: {result['stats'].get('salvas', 0)} registros"
+                            )
                     except Exception as exc:  # pragma: no cover - defensive background loop
                         schedule["last_run_status"] = f"error: {exc}"
                     schedule["last_run_date"] = today
@@ -404,7 +414,10 @@ def logout(hermes_session: str | None = Cookie(default=None)) -> RedirectRespons
 @app.post("/run")
 def run(req: RunRequest, _: dict[str, Any] = Depends(_current_user)) -> dict[str, Any]:
     config = {**DEFAULT_CONFIG, **(req.config or {})}
-    result = run_pipeline(req.perfil, config)
+    if req.perfil == COLETA_GERAL:
+        result = run_pipeline_coleta_geral(config)
+    else:
+        result = run_pipeline(req.perfil, config)
     return {
         "status": result["status"],
         "run_id": result["run_id"],

@@ -295,7 +295,8 @@ Durante a reuniao:
 10. Exportar dados.
 11. Enviar a planilha por e-mail para demonstrar continuidade comercial.
 12. Mostrar historico de coletas.
-13. Mostrar agendamento como rotina automatizada.
+13. Mostrar a opcao Coleta geral no seletor de perfil (todos os perfis em sequencia).
+14. Mostrar agendamento como rotina automatizada.
 
 Depois da reuniao:
 

@@ -743,7 +743,7 @@
             </nav>
 
             <div class="side-note">
-                Painel local conectado ao banco SQLite, aos perfis configuraveis e a coleta no PNCP.
+                Painel local conectado ao banco SQLite, aos perfis configuraveis e a coleta no PNCP (por perfil ou coleta geral).
             </div>
 
             <form class="logout" method="post" action="/logout">
@@ -820,7 +820,7 @@
                     </div>
 
                     <div class="filters">
-                        <select id="perfil" aria-label="Perfil"></select>
+                        <select id="perfil" aria-label="Perfil ou coleta geral"></select>
                         <button class="primary" id="runButton" onclick="rodar()">Rodar coleta</button>
                         <button class="secondary" onclick="carregar()">Atualizar tabela</button>
                         <select id="filtroClasse" aria-label="Filtrar por classificacao">
@@ -961,7 +961,7 @@
                     <div>
                         <p class="eyebrow">Execuções</p>
                         <h2>Histórico de coletas</h2>
-                        <p>Acompanhe quando as coletas rodaram, qual perfil foi usado e quantos registros foram salvos.</p>
+                        <p>Acompanhe quando as coletas rodaram, qual perfil foi usado (ou cada execucao na coleta geral) e quantos registros foram salvos.</p>
                     </div>
                     <div class="actions">
                         <button class="secondary" onclick="carregarRuns()">Atualizar histórico</button>
@@ -994,7 +994,7 @@
                     <div>
                         <p class="eyebrow">Rotina diária</p>
                         <h2>Agendamento local</h2>
-                        <p>Configure uma coleta diária enquanto o Hermes estiver aberto neste computador ou servidor.</p>
+                        <p>Configure uma coleta diária enquanto o Hermes estiver aberto neste computador ou servidor. Escolha um perfil ou Coleta geral para executar todos os perfis em sequencia.</p>
                     </div>
                 </section>
 
@@ -1097,6 +1097,7 @@
             style: 'currency',
             currency: 'BRL'
         });
+        const COLETA_GERAL = '__coleta_geral__';
         let perfis = {};
         let perfilSelecionado = null;
         let perfilOriginalId = null;
@@ -1262,7 +1263,7 @@
             const termo = document.getElementById('filtroTexto').value.trim();
             const valorMin = document.getElementById('filtroValorMin').value;
             const valorMax = document.getElementById('filtroValorMax').value;
-            if (perfil) params.set('perfil', perfil);
+            if (perfil && perfil !== COLETA_GERAL) params.set('perfil', perfil);
             if (classe) params.set('classificacao', classe);
             if (prazo) params.set('prazo', prazo);
             if (statusComercial) params.set('status_comercial', statusComercial);
@@ -1465,13 +1466,19 @@
             const select = document.getElementById(selectId);
             if (!select) return;
             select.innerHTML = '';
+            if (selectId === 'schedulePerfil') {
+                const geral = document.createElement('option');
+                geral.value = COLETA_GERAL;
+                geral.textContent = 'Coleta geral (todos os perfis)';
+                select.appendChild(geral);
+            }
             Object.entries(perfis).forEach(([id, perfil]) => {
                 const option = document.createElement('option');
                 option.value = id;
                 option.textContent = perfil.nome_exibicao || id;
                 select.appendChild(option);
             });
-            if (selectedValue && perfis[selectedValue]) {
+            if (selectedValue === COLETA_GERAL || (selectedValue && perfis[selectedValue])) {
                 select.value = selectedValue;
             }
         }
@@ -1494,6 +1501,11 @@
             const current = select.value;
             select.innerHTML = '';
 
+            const optGeral = document.createElement('option');
+            optGeral.value = COLETA_GERAL;
+            optGeral.textContent = 'Coleta geral (todos os perfis)';
+            select.appendChild(optGeral);
+
             Object.entries(perfis).forEach(([id, perfil]) => {
                 const option = document.createElement('option');
                 option.value = id;
@@ -1501,8 +1513,12 @@
                 select.appendChild(option);
             });
 
-            if (current && perfis[current]) {
+            if (current === COLETA_GERAL || (current && perfis[current])) {
                 select.value = current;
+            } else {
+                const firstId = Object.keys(perfis)[0];
+                if (firstId) select.value = firstId;
+                else select.value = COLETA_GERAL;
             }
 
             updatePerfilAtual();
@@ -1807,6 +1823,15 @@
         async function rodar() {
             const button = document.getElementById('runButton');
             const perfil = document.getElementById('perfil').value;
+            if (
+                perfil === COLETA_GERAL &&
+                !confirm(
+                    'Coleta geral executa todos os perfis em sequencia e pode levar varios minutos. Deseja continuar?'
+                )
+            ) {
+                setStatus('Coleta geral cancelada');
+                return;
+            }
             button.disabled = true;
             setStatus('Coleta em andamento...');
             updatePerfilAtual();
@@ -1823,7 +1848,17 @@
                 }
 
                 const result = await res.json();
-                setStatus(`Coleta finalizada: ${result.stats.salvas} registros salvos`);
+                const st = result.stats || {};
+                if (st.modo === 'coleta_geral') {
+                    const ok = st.perfis_ok ?? 0;
+                    const tot = st.perfis_total ?? 0;
+                    const er = (st.erros || []).length;
+                    let msg = `Coleta geral: ${ok}/${tot} perfis, ${st.salvas ?? 0} registros salvos`;
+                    if (er) msg += ` (${er} perfil(is) com erro)`;
+                    setStatus(msg);
+                } else {
+                    setStatus(`Coleta finalizada: ${st.salvas} registros salvos`);
+                }
                 await carregar();
             } catch (err) {
                 setStatus(`Erro ao rodar coleta: ${err.message}`);

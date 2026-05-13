@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import json
+from pathlib import Path
 from typing import Any
 
 from src.coletor import build_config, coletar_licitacoes
@@ -21,6 +23,66 @@ DEFAULT_CONFIG: dict[str, Any] = {
     "max_total": 300,
     "delay": 0.8,
 }
+
+COLETA_GERAL = "__coleta_geral__"
+PERFIS_PATH = Path("config/perfis_negocio.json")
+
+
+def _list_perfil_ids() -> list[str]:
+    if not PERFIS_PATH.exists():
+        return []
+    try:
+        data = json.loads(PERFIS_PATH.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return []
+    return sorted(data.keys())
+
+
+def run_pipeline_coleta_geral(
+    config: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Executa `run_pipeline` para cada perfil cadastrado, em sequencia."""
+    init_db()
+    perfil_ids = _list_perfil_ids()
+    if not perfil_ids:
+        raise ValueError("Nenhum perfil cadastrado em config/perfis_negocio.json")
+
+    merged = {**DEFAULT_CONFIG, **(config or {})}
+    detalhes: list[dict[str, Any]] = []
+    erros: list[dict[str, Any]] = []
+    total_salvas = 0
+    total_coletadas = 0
+    last_run_id: int | None = None
+
+    for pid in perfil_ids:
+        try:
+            result = run_pipeline(pid, merged)
+            last_run_id = int(result["run_id"])
+            st = result.get("stats") or {}
+            detalhes.append({"perfil": pid, "run_id": result["run_id"], "stats": st})
+            total_salvas += int(st.get("salvas") or 0)
+            total_coletadas += int(st.get("coletadas") or 0)
+        except Exception as exc:
+            erros.append({"perfil": pid, "erro": str(exc)})
+
+    if not detalhes and erros:
+        raise RuntimeError(erros[0]["erro"]) from None
+
+    status = "finished" if not erros else "finished_with_errors"
+    return {
+        "run_id": last_run_id,
+        "status": status,
+        "stats": {
+            "modo": "coleta_geral",
+            "perfis_total": len(perfil_ids),
+            "perfis_ok": len(detalhes),
+            "salvas": total_salvas,
+            "coletadas": total_coletadas,
+            "detalhes": detalhes,
+            "erros": erros,
+        },
+        "licitacoes": load_recent_licitacoes(limit=100),
+    }
 
 
 def run_pipeline(

@@ -47,8 +47,9 @@ Antes da apresentacao, se a coleta real nao tiver oportunidades fortes, carregue
 7. Filtre por perfil, estado, classificacao, status comercial, favoritos e texto.
 8. Exporte CSV ou Excel para provar que o dado sai do Hermes para analise.
 9. Use `Enviar por e-mail` para solicitar o destinatario e enviar a planilha com texto explicativo sobre oportunidades e score.
-10. Abra historico para mostrar recorrencia operacional.
-11. Abra agendamento para demonstrar automacao diaria.
+10. Mostre o seletor de perfil com a opcao **Coleta geral** para rodar todos os perfis em sequencia (com confirmacao) quando precisar atualizar a base inteira.
+11. Abra historico para mostrar recorrencia operacional.
+12. Abra agendamento para demonstrar automacao diaria (tambem e possivel agendar Coleta geral).
 
 ## Priorizacao por prazo
 
