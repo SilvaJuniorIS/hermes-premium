@@ -14,7 +14,7 @@ from hmac import compare_digest
 from pathlib import Path
 from typing import Any
 
-from fastapi import Cookie, Depends, FastAPI, Form, HTTPException
+from fastapi import Cookie, Depends, FastAPI, Form, HTTPException, Request
 from fastapi.responses import HTMLResponse, RedirectResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from openpyxl import Workbook
@@ -45,8 +45,51 @@ SESSION_TOKENS: dict[str, int] = {}
 SCHEDULER_LOCK = threading.Lock()
 SCHEDULER_STARTED = False
 
+_LOGIN_FAILURES: dict[str, list[float]] = {}
+_LOGIN_FAIL_WINDOW_SEC = 300.0
+_LOGIN_MAX_FAILURES = 12
+
+
+def _client_ip(request: Request) -> str:
+    return (request.client.host if request.client else "") or "unknown"
+
+
+def _login_brute_locked(request: Request) -> bool:
+    key = _client_ip(request)
+    now = time.monotonic()
+    failures = _LOGIN_FAILURES.setdefault(key, [])
+    while failures and now - failures[0] > _LOGIN_FAIL_WINDOW_SEC:
+        failures.pop(0)
+    return len(failures) >= _LOGIN_MAX_FAILURES
+
+
+def _login_brute_record_failure(request: Request) -> None:
+    key = _client_ip(request)
+    now = time.monotonic()
+    failures = _LOGIN_FAILURES.setdefault(key, [])
+    failures.append(now)
+    while failures and now - failures[0] > _LOGIN_FAIL_WINDOW_SEC:
+        failures.pop(0)
+
+
+def _login_brute_clear(request: Request) -> None:
+    _LOGIN_FAILURES.pop(_client_ip(request), None)
+
 Path("docs/assets").mkdir(parents=True, exist_ok=True)
 app.mount("/assets", StaticFiles(directory="docs/assets"), name="assets")
+
+
+@app.middleware("http")
+async def security_headers_middleware(request: Request, call_next):
+    response = await call_next(request)
+    response.headers.setdefault("X-Content-Type-Options", "nosniff")
+    response.headers.setdefault("X-Frame-Options", "SAMEORIGIN")
+    response.headers.setdefault("Referrer-Policy", "strict-origin-when-cross-origin")
+    response.headers.setdefault(
+        "Permissions-Policy",
+        "camera=(), microphone=(), geolocation=()",
+    )
+    return response
 
 
 class RunRequest(BaseModel):
@@ -212,11 +255,17 @@ def _login_page(error: str = "") -> str:
             <input name="password" type="password" autocomplete="current-password" required>
         </label>
         <button type="submit">Entrar</button>
-        <p>Usuario inicial: admin. Senha inicial: admin123.</p>
+        {_login_dev_hint_html()}
     </form>
 </body>
 </html>
 """
+
+
+def _login_dev_hint_html() -> str:
+    if os.getenv("HERMES_DEV_LOGIN_HINT", "").lower() not in ("1", "true", "yes"):
+        return '<p>Entre com as credenciais fornecidas pelo administrador.</p>'
+    return "<p>Modo desenvolvimento: usuario inicial <strong>admin</strong>, senha inicial <strong>admin123</strong> (altere apos o primeiro acesso).</p>"
 
 
 def _current_user(hermes_session: str | None = Cookie(default=None)) -> dict[str, Any]:
@@ -379,17 +428,25 @@ def login_form() -> str:
 
 
 @app.post("/login")
-def login(username: str = Form(...), password: str = Form(...)) -> RedirectResponse:
+def login(request: Request, username: str = Form(...), password: str = Form(...)):
     init_db()
     ensure_admin_user(_hash_password)
+    if _login_brute_locked(request):
+        return HTMLResponse(
+            _login_page("Muitas tentativas falhas a partir deste endereco. Aguarde alguns minutos."),
+            status_code=429,
+        )
     user = get_user_by_username(username.strip())
     if not user or not _verify_password(password, user["password_hash"]):
+        _login_brute_record_failure(request)
         return HTMLResponse(_login_page("Usuario ou senha invalidos"), status_code=401)
 
+    _login_brute_clear(request)
     token = secrets.token_urlsafe(32)
     SESSION_TOKENS[token] = int(user["id"])
     mark_user_login(int(user["id"]))
 
+    cookie_secure = os.getenv("HERMES_COOKIE_SECURE", "").lower() in ("1", "true", "yes")
     response = RedirectResponse("/", status_code=303)
     response.set_cookie(
         SESSION_COOKIE,
@@ -397,6 +454,7 @@ def login(username: str = Form(...), password: str = Form(...)) -> RedirectRespo
         httponly=True,
         samesite="lax",
         max_age=60 * 60 * 8,
+        secure=cookie_secure,
     )
     return response
 

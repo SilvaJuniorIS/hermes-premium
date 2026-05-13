@@ -60,6 +60,13 @@ pip install -r requirements.txt
 
 ---
 
+### Configuração segura (API / e-mail)
+
+- Copie [`.env.example`](.env.example) para `.env` (o `.env` não deve ir para o Git).
+- Leia [docs/BLINDAGEM_E_COMERCIALIZACAO.md](docs/BLINDAGEM_E_COMERCIALIZACAO.md): variáveis de ambiente, endurecimento no código e lacunas para comercialização.
+
+---
+
 ## Como Executar
 
 ### 1. Ative o ambiente virtual

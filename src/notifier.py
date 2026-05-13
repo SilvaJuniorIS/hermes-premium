@@ -7,25 +7,23 @@ from email.mime.text import MIMEText
 import pywhatkit as kit
 
 
-SMTP_HOST = "smtp.gmail.com"
-SMTP_PORT = 465
-SMTP_USER = "israeldasilvajunior@gmail.com"
-SMTP_PASSWORD = "vjwx qhrd zxjz prva"
-DEFAULT_EMAIL_TO = "badwolfsp@hotmail.com"
-
-
 def _smtp_config() -> dict[str, str | int]:
+    """Credenciais apenas via variáveis de ambiente (ver .env.example). Nunca commitar segredos."""
     return {
-        "host": os.getenv("HERMES_SMTP_HOST", SMTP_HOST),
-        "port": int(os.getenv("HERMES_SMTP_PORT", str(SMTP_PORT))),
-        "user": os.getenv("HERMES_SMTP_USER", SMTP_USER),
-        "password": os.getenv("HERMES_SMTP_PASSWORD", SMTP_PASSWORD),
-        "from": os.getenv("HERMES_EMAIL_FROM", SMTP_USER),
+        "host": os.getenv("HERMES_SMTP_HOST", "smtp.gmail.com"),
+        "port": int(os.getenv("HERMES_SMTP_PORT", "465")),
+        "user": os.getenv("HERMES_SMTP_USER", ""),
+        "password": os.getenv("HERMES_SMTP_PASSWORD", ""),
+        "from": os.getenv("HERMES_EMAIL_FROM", os.getenv("HERMES_SMTP_USER", "")),
     }
 
 
 def _send_email_message(msg: EmailMessage | MIMEText) -> None:
     config = _smtp_config()
+    if not str(config["user"]).strip() or not str(config["password"]).strip():
+        raise RuntimeError(
+            "SMTP nao configurado: defina HERMES_SMTP_USER e HERMES_SMTP_PASSWORD no ambiente."
+        )
     with smtplib.SMTP_SSL(str(config["host"]), int(config["port"])) as server:
         server.login(str(config["user"]), str(config["password"]))
         server.send_message(msg)
@@ -116,7 +114,11 @@ Delta: {a['delta']}
     msg = MIMEText(corpo)
     msg["Subject"] = "HERMES - Oportunidades detectadas"
     msg["From"] = str(config["from"])
-    msg["To"] = DEFAULT_EMAIL_TO
+    alert_to = os.getenv("HERMES_ALERT_EMAIL_TO", "").strip()
+    if not alert_to:
+        print("HERMES_ALERT_EMAIL_TO nao definido; alerta por e-mail ignorado.")
+        return
+    msg["To"] = alert_to
 
     try:
         _send_email_message(msg)
@@ -140,8 +142,13 @@ Delta: {o['delta']}
 
     print("Abrindo WhatsApp Web...")
 
+    phone = os.getenv("HERMES_WHATSAPP_E164", "").strip()
+    if not phone:
+        print("HERMES_WHATSAPP_E164 nao definido; alerta WhatsApp ignorado.")
+        return
+
     kit.sendwhatmsg_instantly(
-        phone_no="+5511951411782",
+        phone_no=phone,
         message=mensagem,
         wait_time=15,
         tab_close=False,
