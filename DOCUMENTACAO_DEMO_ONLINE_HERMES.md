@@ -120,19 +120,16 @@ O GitHub Pages vai gerar uma URL publica em alguns minutos.
 
 ### 3.4. Link para o sistema real
 
-O botao **Abrir sistema (local)** na demonstracao interativa (`docs/vitrine.html`)
-usa `http://127.0.0.1:8000` por padrao.
+O botao **Acessar o Site** na demonstracao interativa (`docs/vitrine.html`) e na
+apresentacao (`docs/index.html`) aponta para o endpoint HTTPS do túnel Cloudflare
+configurado no projeto. **O link deixa de funcionar** quando o processo do túnel
+é encerrado; atualize os `href` ao gerar nova URL.
 
-Enquanto nao existir servidor definitivo em producao, ajuste o `href` nesse arquivo.
+Para ajuste dinamico a partir da AtlasNex, continue usando:
 
-Exemplo de placeholder antigo em documentacao:
-
-```html
-<a class="btn primary" href="https://app.hermespremium.com.br" target="_blank" rel="noopener">Acessar sistema</a>
+```text
+atlasnex.html?hermes_dashboard=https://seu-novo-subdominio.trycloudflare.com
 ```
-
-Para demonstracoes temporarias, tambem e possivel trocar esse link pela URL do
-tunel Cloudflare, mas apenas durante uma apresentacao controlada.
 
 ## 4. Iniciar a demo real local
 

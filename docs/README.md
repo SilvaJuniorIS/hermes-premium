@@ -28,9 +28,9 @@ atlasnex.html?hermes_dashboard=https://seu-subdominio.trycloudflare.com
 
 ## Link para o sistema real
 
-Na **vitrine interativa** (`vitrine.html`), o botao **Abrir sistema (local)** usa
-`http://127.0.0.1:8000` por padrao. Ajuste o `href` nesse arquivo quando houver
-URL definitiva do backend.
+Na **vitrine interativa** (`vitrine.html`), o botao **Acessar o Site** aponta para o
+ambiente publicado via Cloudflare Tunnel (URL atual no HTML). Quando o túnel mudar,
+atualize o `href` em `vitrine.html` e em `docs/index.html` (apresentacao).
 
 ## Logo Hermes
 
