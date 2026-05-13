@@ -388,7 +388,16 @@ def _start_scheduler_once() -> None:
 
 
 def _validate_production_environment() -> None:
-    """Passo 1 comercialização: falha cedo se produção estiver mal configurada."""
+    """Garante configuracao minima antes de servir clientes (Passo 1 comercializacao).
+
+    So corre quando HERMES_ENV=production. Caso contrario (vazio ou outro valor),
+    nao ha validacao — desenvolvimento local continua sem estes requisitos.
+
+    Em producao exige: HERMES_ADMIN_PASSWORD definido e diferente de admin123;
+    HERMES_COOKIE_SECURE ativo (use atras de HTTPS); HERMES_DEV_LOGIN_HINT desligado.
+
+    Teste local: ver docs/COMMERCIALIZACAO_CHECKLIST.md (Passo 1, subsecao de testes).
+    """
     env = os.getenv("HERMES_ENV", "").strip().lower()
     if env != "production":
         return

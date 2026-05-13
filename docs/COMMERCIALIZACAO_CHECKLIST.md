@@ -10,12 +10,53 @@ Use este ficheiro como **lista de trabalho**: marque `[x]` quando cada item esti
 
 *Parte deste passo está automatizada no código: com `HERMES_ENV=production`, a API **não arranca** se a configuração mínima de produção for inválida (`api.py`).*
 
+### Como testar a validação no ambiente local
+
+**Desenvolvimento normal (sem simular produção)**  
+Não defina `HERMES_ENV`, ou deixe o valor **vazio** / diferente de `production` (ex.: `development`). Nesse caso **nenhuma** regra extra de arranque é aplicada: o comportamento é o de sempre (senha inicial `admin123` se não houver `HERMES_ADMIN_PASSWORD`, dica de login se `HERMES_DEV_LOGIN_HINT=true`, etc.).
+
+**Simular produção (validar que o arranque exige configuração mínima)**  
+Defina **na mesma sessão de terminal** (antes de lançar o `uvicorn`) as variáveis abaixo. Os três critérios são verificados em conjunto: senha forte, cookie seguro e dica de dev desligada.
+
+| Variável | Valor de teste |
+|----------|----------------|
+| `HERMES_ENV` | `production` |
+| `HERMES_ADMIN_PASSWORD` | qualquer string **≠** `admin123` (ex.: `TesteSeguro_local_9`) |
+| `HERMES_COOKIE_SECURE` | `true` |
+| `HERMES_DEV_LOGIN_HINT` | omitir, `false`, ou `0` |
+
+1. **Teste positivo:** com todas as linhas da tabela definidas, execute `uvicorn api:app --reload` (ou o comando que usar). O processo deve **subir** sem `RuntimeError`.
+2. **Testes negativos (um de cada vez):** mantenha `HERMES_ENV=production` e altere **só uma** das outras condições — por exemplo remova `HERMES_ADMIN_PASSWORD`, volte a pôr `admin123`, defina `HERMES_COOKIE_SECURE=false`, ou `HERMES_DEV_LOGIN_HINT=true`. Em cada caso o arranque deve **falhar** com mensagem que lista o que falta (mensagem de `RuntimeError` no log).
+
+**Nota sobre cookie `Secure` e `http://localhost`**  
+Com `HERMES_COOKIE_SECURE=true`, o navegador **não envia** o cookie de sessão em ligações **HTTP** sem TLS. Ou seja: pode validar o **arranque** da API assim, mas o **login no dashboard** em `http://127.0.0.1` pode não manter sessão. Para testar login com perfil idêntico ao de produção, use HTTPS local (certificado de desenvolvimento, reverse proxy) ou um túnel HTTPS para a instância local.
+
+**PowerShell (exemplo de sessão única)**
+
+```powershell
+$env:HERMES_ENV = "production"
+$env:HERMES_ADMIN_PASSWORD = "TesteSeguro_local_9"
+$env:HERMES_COOKIE_SECURE = "true"
+Remove-Item Env:\HERMES_DEV_LOGIN_HINT -ErrorAction SilentlyContinue
+uvicorn api:app --host 127.0.0.1 --port 8000
+```
+
+**Bash (exemplo equivalente)**
+
+```bash
+export HERMES_ENV=production
+export HERMES_ADMIN_PASSWORD='TesteSeguro_local_9'
+export HERMES_COOKIE_SECURE=true
+unset HERMES_DEV_LOGIN_HINT
+uvicorn api:app --host 127.0.0.1 --port 8000
+```
+
 - [x] **(Código)** Validação no arranque quando `HERMES_ENV=production` (senha forte obrigatória, cookie seguro, sem dica de login de desenvolvimento).
 - [ ] **Revogar** no fornecedor (Google, etc.) qualquer palavra-passe de aplicação ou chave que tenha existido em commits antigos do repositório.
 - [ ] Copiar [`.env.example`](../.env.example) para `.env` na raiz do projeto e preencher apenas o necessário (nunca commitar `.env`).
 - [ ] Definir **`HERMES_ADMIN_PASSWORD`** com senha forte antes de expor o serviço à Internet.
 - [ ] Em servidor público com HTTPS: `HERMES_ENV=production`, `HERMES_COOKIE_SECURE=true`, **sem** `HERMES_DEV_LOGIN_HINT` (ou `false`).
-- [ ] Confirmar que o processo **sobe** com essas variáveis (`uvicorn api:app`) e que **falha de propósito** se remover a senha ou deixar `admin123` em produção (teste local de validação).
+- [ ] Executar os **testes positivo e negativos** descritos na secção “Como testar a validação no ambiente local” (confirmar subida e falhas esperadas).
 - [ ] Se usar e-mail: `HERMES_SMTP_*` e `HERMES_EMAIL_FROM` preenchidos; testar envio de planilha uma vez.
 - [ ] Documentar internamente **quem** tem acesso ao `.env` e ao servidor (lista mínima de pessoas).
 
