@@ -1,73 +1,59 @@
-# Dashboard demo do Hermes Premium
+# Site estatico do Hermes Premium (GitHub Pages)
 
-Esta pasta contem uma versao estatica do dashboard para publicacao no GitHub Pages.
+Esta pasta publica **paginas estaticas** no GitHub Pages. O sistema completo
+(FastAPI, SQLite, login, PNCP) roda em servidor separado ou localmente.
+
+## Estrutura das paginas
+
+| Arquivo | Funcao |
+|---------|--------|
+| `index.html` | **Apresentacao comercial** do Hermes: proposta de valor, funcionalidades, prova social modelo, oferta piloto e botoes para a demo. |
+| `vitrine.html` | **Demonstracao interativa** (layout tipo dashboard) com dados ficticios no navegador. |
+| `atlasnex.html` | Pagina da **AtlasNex** (holding): ecossistema e links para Hermes. |
+
+A URL raiz do Pages (`.../`) abre a **apresentacao**. A demo interativa fica em
+`.../vitrine.html`.
 
 ## AtlasNex (empresa-mae)
-
-A vitrine institucional da **AtlasNex** (holding do ecossistema) esta em:
 
 ```text
 docs/atlasnex.html
 ```
 
-No GitHub Pages, a URL tipica sera `.../atlasnex.html`. A pagina inclui a identidade visual premium (paleta, Exo 2, slogan) e links para a vitrine do Hermes e para o dashboard operacional (URL configuravel).
-
-Para apontar o botao do dashboard para um ambiente publico ou tunel, use query string:
+Para apontar o botao do dashboard Hermes para tunel ou ambiente publico:
 
 ```text
 atlasnex.html?hermes_dashboard=https://seu-subdominio.trycloudflare.com
 ```
 
-O script da pagina atualiza os links do dashboard automaticamente.
-
-O GitHub Pages publica apenas arquivos estaticos. O sistema real do Hermes
-usa FastAPI, SQLite, autenticacao por cookie, chamadas ao PNCP e rotinas Python,
-por isso deve rodar em um servidor separado ou em uma demo local com tunel.
-
-## Publicar no GitHub Pages
-
-1. Envie a pasta `docs/` para o repositorio no GitHub.
-2. No GitHub, acesse `Settings`.
-3. Entre em `Pages`.
-4. Em `Build and deployment`, escolha `Deploy from a branch`.
-5. Selecione a branch principal e a pasta `/docs`.
-6. Salve.
-
-O GitHub vai gerar uma URL publica para a demonstracao.
-
 ## Link para o sistema real
 
-Quando a versao real estiver hospedada, ajuste o botao principal em
-`docs/index.html`:
+Na **vitrine interativa** (`vitrine.html`), o botao **Abrir sistema (local)** usa
+`http://127.0.0.1:8000` por padrao. Ajuste o `href` nesse arquivo quando houver
+URL definitiva do backend.
 
-```html
-<a class="btn primary" href="https://app.seudominio.com" target="_blank" rel="noopener">Acessar sistema</a>
-```
+## Logo Hermes
 
-Troque `https://app.seudominio.com` pelo dominio definitivo do backend.
-
-## Logo Hermes (vitrine e dashboard)
-
-O Hermes usa o mesmo arquivo de marca em vitrine (`docs/index.html`) e no
-dashboard operacional (`dashboard.html`), servido em `/assets/...` pelo FastAPI:
+Arquivo usado na apresentacao, na vitrine e no dashboard operacional:
 
 ```text
 docs/assets/hermes-product-logo.png
 ```
 
-O arquivo legado `docs/assets/logo-hermes.png` pode permanecer em repositorios
-antigos; a vitrine atual aponta para `hermes-product-logo.png`.
+Servido em producao local como `/assets/hermes-product-logo.png` (pasta
+`docs/assets` montada na API).
 
-Se a imagem nao existir, a vitrine mostra um fallback escrito `SEU LOGO`.
+## Publicar no GitHub Pages
+
+1. Envie a pasta `docs/` para o repositorio no GitHub.
+2. **Settings** → **Pages** → **Deploy from a branch** → branch principal, pasta `/docs`.
 
 ## Publicar alteracoes
 
-Depois de ajustar a pagina ou trocar o logo:
-
 ```powershell
 git add docs
-git commit -m "Atualiza dashboard demo do Hermes"
+git commit -m "Atualiza site estatico do Hermes"
 git push
 ```
 
-O GitHub Pages publica novamente em alguns minutos.
+O GitHub Pages republica em alguns minutos.

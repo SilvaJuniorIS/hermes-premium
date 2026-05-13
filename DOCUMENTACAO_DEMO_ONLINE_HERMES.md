@@ -12,10 +12,11 @@ O Hermes Premium possui duas camadas diferentes:
 
 1. Vitrine publica estatica:
    - pasta `docs/`;
-   - arquivo principal `docs/index.html`;
-   - logo em `docs/assets/logo-hermes.png`;
+   - **apresentacao comercial** em `docs/index.html` (entrada do site);
+   - **demonstracao interativa** em `docs/vitrine.html` (dados ficticios);
+   - pagina da holding em `docs/atlasnex.html`;
+   - logo em `docs/assets/hermes-product-logo.png`;
    - publicacao via GitHub Pages;
-   - dados ficticios para demonstracao comercial.
 
 2. Sistema real:
    - FastAPI em `api.py`;
@@ -66,9 +67,10 @@ IDENTIDADE_MARCA_HERMES.md
 
 ## 2. Arquivos principais
 
-- `docs/index.html`: pagina estatica para GitHub Pages.
-- `docs/README.md`: instrucoes da vitrine estatica.
-- `docs/assets/logo-hermes.png`: logo exibido na vitrine.
+- `docs/index.html`: apresentacao comercial (GitHub Pages — URL raiz).
+- `docs/vitrine.html`: demonstracao interativa estatica (dados ficticios).
+- `docs/README.md`: instrucoes do site estatico.
+- `docs/assets/hermes-product-logo.png`: logo Hermes nas paginas estaticas.
 - `api.py`: backend FastAPI do Hermes real.
 - `dashboard.html`: dashboard operacional protegido por login.
 - `data/hermes.sqlite3`: banco local do sistema.
@@ -85,8 +87,9 @@ Verifique se existem:
 
 ```text
 docs/index.html
+docs/vitrine.html
 docs/README.md
-docs/assets/logo-hermes.png
+docs/assets/hermes-product-logo.png
 docs/.nojekyll
 ```
 
@@ -117,15 +120,12 @@ O GitHub Pages vai gerar uma URL publica em alguns minutos.
 
 ### 3.4. Link para o sistema real
 
-O botao principal da vitrine fica em `docs/index.html`.
+O botao **Abrir sistema (local)** na demonstracao interativa (`docs/vitrine.html`)
+usa `http://127.0.0.1:8000` por padrao.
 
-Enquanto nao existir servidor definitivo, o placeholder e:
+Enquanto nao existir servidor definitivo em producao, ajuste o `href` nesse arquivo.
 
-```html
-<a class="btn primary" href="https://app.seudominio.com" target="_blank" rel="noopener">Acessar sistema</a>
-```
-
-Quando houver dominio real, trocar para algo como:
+Exemplo de placeholder antigo em documentacao:
 
 ```html
 <a class="btn primary" href="https://app.hermespremium.com.br" target="_blank" rel="noopener">Acessar sistema</a>

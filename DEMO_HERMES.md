@@ -38,18 +38,19 @@ Antes da apresentacao, se a coleta real nao tiver oportunidades fortes, carregue
 .\venv\Scripts\python.exe scripts\seed_demo_data.py
 ```
 
-1. Abra a tela de oportunidades e mostre os indicadores do topo.
-2. Comece por uma oportunidade de alta prioridade e maior valor.
-3. Abra o detalhe e explique a acao recomendada, janela comercial e origem.
-4. Marque status comercial, favorito e anotacoes internas para mostrar acompanhamento.
-5. Mostre objeto, orgao, municipio, valor estimado, motivos do score e link da fonte.
-6. Mostre que o filtro padrao prioriza `Abertura futura` e que licitacoes vencidas ficam separadas.
-7. Filtre por perfil, estado, classificacao, status comercial, favoritos e texto.
-8. Exporte CSV ou Excel para provar que o dado sai do Hermes para analise.
-9. Use `Enviar por e-mail` para solicitar o destinatario e enviar a planilha com texto explicativo sobre oportunidades e score.
-10. Mostre o seletor de perfil com a opcao **Coleta geral** para rodar todos os perfis em sequencia (com confirmacao) quando precisar atualizar a base inteira.
-11. Abra historico para mostrar recorrencia operacional.
-12. Abra agendamento para demonstrar automacao diaria (tambem e possivel agendar Coleta geral).
+1. Abra a **apresentacao** (`index.html` no GitHub Pages) e, em seguida, a **vitrine interativa** (`vitrine.html`) para mostrar o layout com dados ficticios.
+2. Na vitrine, mostre a tela de oportunidades e os indicadores do topo.
+3. Comece por uma oportunidade de alta prioridade e maior valor.
+4. Abra o detalhe e explique a acao recomendada, janela comercial e origem.
+5. Marque status comercial, favorito e anotacoes internas para mostrar acompanhamento.
+6. Mostre objeto, orgao, municipio, valor estimado, motivos do score e link da fonte.
+7. Mostre que o filtro padrao prioriza `Abertura futura` e que licitacoes vencidas ficam separadas.
+8. Filtre por perfil, estado, classificacao, status comercial, favoritos e texto.
+9. Exporte CSV ou Excel para provar que o dado sai do Hermes para analise.
+10. Use `Enviar por e-mail` para solicitar o destinatario e enviar a planilha com texto explicativo sobre oportunidades e score.
+11. Mostre o seletor de perfil com a opcao **Coleta geral** para rodar todos os perfis em sequencia (com confirmacao) quando precisar atualizar a base inteira.
+12. Abra historico para mostrar recorrencia operacional.
+13. Abra agendamento para demonstrar automacao diaria (tambem e possivel agendar Coleta geral).
 
 ## Priorizacao por prazo
 

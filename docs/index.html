@@ -3,841 +3,480 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>HERMES - Inteligencia em Licitacoes Publicas</title>
+    <meta name="description" content="HERMES — plataforma de inteligência para licitações públicas. Triagem, score, acompanhamento comercial e exportação. Parte do ecossistema AtlasNex.">
+    <title>HERMES — Inteligência em licitações públicas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            color-scheme: light;
             --bg: #f5f7fa;
             --surface: #ffffff;
-            --surface-2: #edf2f7;
             --ink: #0a2342;
             --muted: #5d6b7a;
+            --brand: #0a2342;
+            --brand-2: #102f55;
+            --accent: #f7931e;
+            --accent-soft: #fff1df;
             --line: #d7dee8;
-            --brand-blue: #0a2342;
-            --brand-blue-2: #102f55;
-            --brand-orange: #f7931e;
-            --brand-orange-soft: #fff1df;
-            --graphite: #2d3748;
-            --green: #18875f;
-            --green-soft: #e4f5ee;
-            --blue: #0a2342;
-            --blue-soft: #e7eef7;
-            --amber: #9b6a12;
-            --amber-soft: #fff3d6;
-            --red: #b42318;
-            --red-soft: #fde8e5;
-            --violet: #5b4bb2;
-            --shadow: 0 14px 36px rgba(10, 35, 66, 0.10);
+            --shadow: 0 14px 40px rgba(10, 35, 66, 0.12);
+            --radius: 14px;
         }
 
-        * {
-            box-sizing: border-box;
-        }
-
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
         body {
             margin: 0;
+            font-family: Inter, system-ui, sans-serif;
             background: var(--bg);
             color: var(--ink);
-            font-family: Inter, Roboto, Arial, Helvetica, sans-serif;
+            line-height: 1.55;
         }
 
-        button,
-        input,
-        select {
-            font: inherit;
-        }
+        a { color: var(--accent); font-weight: 600; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 
-        .app {
-            min-height: 100vh;
-            display: grid;
-            grid-template-columns: 250px minmax(0, 1fr);
-        }
+        .wrap { max-width: 1080px; margin: 0 auto; padding: 0 22px; }
 
-        aside {
-            background: var(--brand-blue);
+        header.hero {
+            background: linear-gradient(165deg, var(--brand) 0%, var(--brand-2) 55%, #163a66 100%);
             color: #f7fafc;
-            padding: 22px 18px;
-            display: flex;
-            flex-direction: column;
-            gap: 22px;
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            min-height: 54px;
-        }
-
-        .logo-mark {
-            width: 66px;
-            height: 54px;
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 8px;
-            display: grid;
-            place-items: center;
+            padding: 48px 0 56px;
+            position: relative;
             overflow: hidden;
-            background: #07182d;
-            flex: 0 0 auto;
         }
 
-        .logo-img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            padding: 4px;
+        header.hero::after {
+            content: "";
+            position: absolute;
+            right: -20%;
+            top: -30%;
+            width: 55%;
+            height: 140%;
+            background: radial-gradient(circle, rgba(247, 147, 30, 0.18) 0%, transparent 65%);
+            pointer-events: none;
         }
 
-        .logo-fallback {
-            display: none;
-            color: rgba(255, 255, 255, 0.72);
+        .hero-inner { position: relative; z-index: 1; display: grid; gap: 28px; align-items: center; }
+        @media (min-width: 860px) {
+            .hero-inner { grid-template-columns: 1.15fr 0.85fr; gap: 40px; }
+        }
+
+        .hero-badge {
+            display: inline-block;
             font-size: 11px;
-            text-align: center;
-            line-height: 1.2;
-        }
-
-        .brand h1 {
-            margin: 0;
-            font-size: 19px;
-            line-height: 1.1;
-            font-family: Poppins, Montserrat, Inter, Arial, sans-serif;
-        }
-
-        .brand h1 .accent {
-            color: var(--brand-orange);
-        }
-
-        .brand span {
-            display: block;
-            margin-top: 4px;
-            color: #9fb0bf;
-            font-size: 12px;
-        }
-
-        nav {
-            display: grid;
-            gap: 7px;
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            min-height: 38px;
-            padding: 0 10px;
-            border-radius: 7px;
-            color: #c7d2da;
-            font-size: 14px;
-        }
-
-        .nav-item.active {
-            background: var(--brand-orange);
-            color: #ffffff;
-            font-weight: 700;
-        }
-
-        .nav-icon {
-            width: 18px;
-            text-align: center;
-        }
-
-        .demo-note {
-            margin-top: auto;
-            border: 1px solid rgba(255, 255, 255, 0.14);
-            border-radius: 8px;
-            padding: 12px;
-            color: #c7d2da;
-            font-size: 12px;
-            line-height: 1.45;
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        main {
-            min-width: 0;
-            padding: 22px;
-        }
-
-        .topbar {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            gap: 18px;
-            margin-bottom: 18px;
-        }
-
-        .eyebrow {
-            margin: 0 0 5px;
-            color: var(--brand-orange);
-            font-size: 12px;
-            font-weight: 800;
+            letter-spacing: 0.14em;
             text-transform: uppercase;
-        }
-
-        .topbar h2 {
-            margin: 0;
-            font-size: 28px;
-            line-height: 1.15;
-            font-family: Poppins, Montserrat, Inter, Arial, sans-serif;
-        }
-
-        .topbar p {
-            margin: 7px 0 0;
-            max-width: 760px;
-            color: var(--muted);
-            line-height: 1.45;
-        }
-
-        .actions {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            justify-content: flex-end;
-        }
-
-        .btn {
-            height: 38px;
-            border: 1px solid var(--line);
-            border-radius: 7px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0 12px;
-            background: var(--surface);
-            color: var(--ink);
-            cursor: pointer;
-            white-space: nowrap;
-            text-decoration: none;
-            font-weight: 700;
-        }
-
-        .btn.primary {
-            border-color: #d97706;
-            background: var(--brand-orange);
-            color: #ffffff;
-            font-weight: 700;
-        }
-
-        .status-strip {
-            display: grid;
-            grid-template-columns: 1.3fr 1fr 1fr;
-            gap: 12px;
+            color: rgba(247, 250, 252, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 6px 12px;
+            border-radius: 999px;
             margin-bottom: 14px;
         }
 
-        .status-box,
-        .metric,
-        .panel,
-        .item-card {
-            border: 1px solid var(--line);
-            border-radius: 8px;
+        .hero h1 {
+            font-family: Poppins, sans-serif;
+            font-size: clamp(1.75rem, 4vw, 2.35rem);
+            font-weight: 700;
+            line-height: 1.15;
+            margin: 0 0 12px;
+        }
+
+        .hero h1 span { color: var(--accent); }
+
+        .hero-lede {
+            margin: 0 0 22px;
+            font-size: 1.05rem;
+            color: rgba(247, 250, 252, 0.88);
+            max-width: 52ch;
+        }
+
+        .hero-ctas { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 22px;
+            border-radius: 10px;
+            font-family: Poppins, sans-serif;
+            font-weight: 600;
+            font-size: 0.95rem;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .btn:hover { transform: translateY(-1px); text-decoration: none; }
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+            box-shadow: 0 10px 28px rgba(247, 147, 30, 0.35);
+        }
+        .btn-primary:hover { box-shadow: 0 14px 36px rgba(247, 147, 30, 0.45); }
+
+        .btn-ghost {
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+        }
+        .btn-ghost:hover { background: rgba(255, 255, 255, 0.14); }
+
+        .hero-note {
+            margin-top: 14px;
+            font-size: 0.82rem;
+            color: rgba(247, 250, 252, 0.65);
+            max-width: 48ch;
+        }
+
+        .hero-card {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: var(--radius);
+            padding: 22px;
+            backdrop-filter: blur(8px);
+        }
+
+        .hero-card h2 {
+            font-family: Poppins, sans-serif;
+            font-size: 1rem;
+            margin: 0 0 12px;
+            color: var(--accent);
+        }
+
+        .hero-card ul { margin: 0; padding-left: 18px; color: rgba(247, 250, 252, 0.9); font-size: 0.92rem; }
+        .hero-card li { margin-bottom: 8px; }
+
+        .logo-hero {
+            width: 88px;
+            height: 88px;
+            object-fit: contain;
+            border-radius: 12px;
+            background: rgba(7, 24, 45, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 8px;
+            margin-bottom: 16px;
+        }
+
+        section.block { padding: 52px 0; }
+        section.block.alt { background: var(--surface); border-block: 1px solid var(--line); }
+
+        .eyebrow {
+            font-size: 11px;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--accent);
+            font-weight: 700;
+            margin: 0 0 8px;
+        }
+
+        h2.section-title {
+            font-family: Poppins, sans-serif;
+            font-size: clamp(1.35rem, 2.5vw, 1.75rem);
+            margin: 0 0 10px;
+        }
+
+        .section-lede { margin: 0 0 26px; color: var(--muted); max-width: 65ch; }
+
+        .grid-3 {
+            display: grid;
+            gap: 18px;
+        }
+        @media (min-width: 720px) {
+            .grid-3 { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        .card {
             background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            padding: 22px;
             box-shadow: var(--shadow);
         }
 
-        .status-box {
-            min-height: 86px;
-            padding: 14px;
+        .card h3 {
+            font-family: Poppins, sans-serif;
+            font-size: 1.05rem;
+            margin: 0 0 8px;
+        }
+
+        .card p { margin: 0; color: var(--muted); font-size: 0.93rem; }
+
+        .features {
             display: grid;
-            align-content: center;
-            gap: 6px;
+            gap: 16px;
+        }
+        @media (min-width: 640px) {
+            .features { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (min-width: 900px) {
+            .features { grid-template-columns: repeat(3, 1fr); }
         }
 
-        .status-box span,
-        .metric span,
-        .panel-title span {
-            color: var(--muted);
-            font-size: 12px;
-            text-transform: uppercase;
-            font-weight: 700;
-        }
-
-        .status-box strong {
-            font-size: 19px;
-        }
-
-        .status-box p {
-            margin: 0;
-            color: var(--muted);
-            font-size: 13px;
-            line-height: 1.35;
-        }
-
-        .metrics {
-            display: grid;
-            grid-template-columns: repeat(4, minmax(0, 1fr));
-            gap: 12px;
-            margin-bottom: 14px;
-        }
-
-        .metric {
-            min-height: 112px;
-            padding: 14px;
-        }
-
-        .metric strong {
-            display: block;
-            margin-top: 8px;
-            font-size: 27px;
-        }
-
-        .metric small {
-            display: block;
-            margin-top: 8px;
-            color: var(--muted);
-            line-height: 1.35;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: minmax(0, 1.45fr) minmax(300px, 0.85fr);
-            gap: 14px;
-            align-items: start;
-        }
-
-        .panel {
-            overflow: hidden;
-        }
-
-        .panel-title {
-            min-height: 58px;
-            padding: 14px 16px;
-            border-bottom: 1px solid var(--line);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-        }
-
-        .panel-title h3 {
-            margin: 3px 0 0;
-            font-size: 18px;
-        }
-
-        .filters {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            padding: 12px 16px;
-            border-bottom: 1px solid var(--line);
-            background: #fbfcfd;
-        }
-
-        .filter {
-            min-height: 34px;
-            border: 1px solid var(--line);
-            border-radius: 7px;
+        .feat {
             background: var(--surface);
-            color: var(--muted);
-            padding: 7px 10px;
-            font-size: 13px;
-            white-space: nowrap;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 18px 18px 18px 20px;
+            border-left: 4px solid var(--accent);
         }
 
-        .table-wrap {
-            overflow: auto;
+        .feat strong { display: block; font-size: 0.95rem; margin-bottom: 6px; }
+
+        .social {
+            background: linear-gradient(135deg, var(--accent-soft) 0%, #fff 40%);
+            border: 1px solid rgba(247, 147, 30, 0.35);
+            border-radius: var(--radius);
+            padding: 28px;
+            position: relative;
         }
 
-        table {
-            width: 100%;
-            min-width: 860px;
-            border-collapse: collapse;
+        .social .quote {
+            font-size: 1.1rem;
+            font-style: italic;
+            color: var(--brand);
+            margin: 0 0 18px;
+            line-height: 1.5;
         }
 
-        th,
-        td {
+        .social .author { font-weight: 700; color: var(--ink); }
+        .social .role { font-size: 0.88rem; color: var(--muted); margin-top: 4px; }
+
+        .disclaimer {
+            margin-top: 18px;
             padding: 12px 14px;
-            border-bottom: 1px solid var(--line);
-            text-align: left;
-            vertical-align: top;
-            font-size: 14px;
-        }
-
-        th {
-            color: var(--muted);
-            background: #f7fafb;
-            font-size: 12px;
-            text-transform: uppercase;
-        }
-
-        .object {
-            max-width: 430px;
-            line-height: 1.35;
-        }
-
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 78px;
-            height: 25px;
-            border-radius: 999px;
-            padding: 0 9px;
-            font-size: 12px;
-            font-weight: 800;
-        }
-
-        .alta {
-            background: var(--brand-orange-soft);
-            color: #a94f00;
-        }
-
-        .media {
-            background: var(--blue-soft);
-            color: var(--brand-blue);
-        }
-
-        .monitorar {
-            background: var(--amber-soft);
-            color: var(--amber);
-        }
-
-        .side-stack {
-            display: grid;
-            gap: 14px;
-        }
-
-        .workflow {
-            padding: 15px 16px 16px;
-        }
-
-        .step {
-            display: grid;
-            grid-template-columns: 34px 1fr;
-            gap: 10px;
-            padding: 10px 0;
-            border-bottom: 1px solid var(--line);
-        }
-
-        .step:last-child {
-            border-bottom: 0;
-        }
-
-        .step-number {
-            width: 30px;
-            height: 30px;
+            background: rgba(10, 35, 66, 0.06);
             border-radius: 8px;
+            font-size: 0.8rem;
+            color: var(--muted);
+            border: 1px dashed var(--line);
+        }
+
+        .offer {
             display: grid;
-            place-items: center;
-            background: var(--surface-2);
-            color: var(--green);
-            font-weight: 800;
+            gap: 22px;
+            align-items: stretch;
+        }
+        @media (min-width: 800px) {
+            .offer { grid-template-columns: 1fr 1fr; }
         }
 
-        .step strong {
-            display: block;
-            margin-bottom: 3px;
+        .offer-box {
+            background: var(--brand);
+            color: #f7fafc;
+            border-radius: var(--radius);
+            padding: 28px;
+            box-shadow: var(--shadow);
         }
 
-        .step p {
-            margin: 0;
-            color: var(--muted);
-            font-size: 13px;
-            line-height: 1.35;
+        .offer-box h3 {
+            font-family: Poppins, sans-serif;
+            margin: 0 0 8px;
+            font-size: 1.35rem;
         }
 
-        .bars {
-            padding: 14px 16px 18px;
-            display: grid;
-            gap: 12px;
+        .offer-box .tag { color: var(--accent); font-weight: 700; font-size: 0.85rem; letter-spacing: 0.06em; }
+
+        .offer-box ul { margin: 16px 0 0; padding-left: 20px; color: rgba(247, 250, 252, 0.9); }
+        .offer-box li { margin-bottom: 10px; }
+
+        .offer-aside {
+            border: 2px solid var(--accent);
+            border-radius: var(--radius);
+            padding: 24px;
+            background: var(--surface);
         }
 
-        .bar-row {
-            display: grid;
-            gap: 6px;
-        }
+        .offer-aside h4 { margin: 0 0 10px; font-family: Poppins, sans-serif; font-size: 1.1rem; }
+        .offer-aside p { margin: 0; color: var(--muted); font-size: 0.95rem; }
 
-        .bar-row header {
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
-            color: var(--muted);
-            font-size: 13px;
-        }
-
-        .track {
-            height: 10px;
-            border-radius: 999px;
-            background: #e8eef2;
-            overflow: hidden;
-        }
-
-        .fill {
-            height: 100%;
-            border-radius: inherit;
-            background: var(--green);
-        }
-
-        .fill.blue {
-            background: var(--blue);
-        }
-
-        .fill.amber {
-            background: #d5911f;
-        }
-
-        .roadmap {
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 12px;
-            margin-top: 14px;
-        }
-
-        .item-card {
-            padding: 14px;
-        }
-
-        .item-card h3 {
-            margin: 0 0 7px;
-            font-size: 16px;
-        }
-
-        .item-card p {
-            margin: 0;
-            color: var(--muted);
-            line-height: 1.4;
-            font-size: 13px;
-        }
-
-        .tag {
-            display: inline-flex;
-            align-items: center;
-            min-height: 24px;
-            border-radius: 999px;
-            padding: 0 8px;
-            margin-bottom: 9px;
-            background: var(--surface-2);
-            color: var(--muted);
-            font-size: 12px;
-            font-weight: 800;
-        }
-
-        footer {
-            padding: 18px 0 2px;
-            color: var(--muted);
-            font-size: 12px;
-            line-height: 1.4;
-        }
-
-        .ecosystem-atlasnex {
-            margin: 14px 0 0;
-            font-size: 11px;
-            line-height: 1.35;
-            color: rgba(247, 250, 252, 0.72);
-        }
-
-        .ecosystem-atlasnex a {
-            color: var(--brand-orange);
+        .price-line {
+            margin-top: 18px;
+            font-size: 1.5rem;
             font-weight: 700;
-            text-decoration: none;
+            color: var(--brand);
+            font-family: Poppins, sans-serif;
         }
 
-        .ecosystem-atlasnex a:hover {
-            text-decoration: underline;
+        .price-sub { font-size: 0.85rem; color: var(--muted); font-weight: 500; margin-top: 6px; }
+
+        footer.site {
+            padding: 36px 0 44px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 0.88rem;
+            border-top: 1px solid var(--line);
         }
 
-        @media (max-width: 1040px) {
-            .app {
-                grid-template-columns: 1fr;
-            }
-
-            aside {
-                position: static;
-            }
-
-            nav {
-                grid-template-columns: repeat(3, minmax(0, 1fr));
-            }
-
-            .grid,
-            .status-strip,
-            .roadmap {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 760px) {
-            main {
-                padding: 16px;
-            }
-
-            .topbar {
-                display: grid;
-            }
-
-            .actions {
-                justify-content: start;
-            }
-
-            .metrics {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
-
-            nav {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .metrics {
-                grid-template-columns: 1fr;
-            }
-
-            .brand {
-                align-items: flex-start;
-            }
-        }
+        .foot-links { margin-top: 14px; display: flex; flex-wrap: wrap; justify-content: center; gap: 14px 22px; }
     </style>
 </head>
 <body>
-    <div class="app">
-        <aside>
-            <div class="brand">
-                <div class="logo-mark">
-                    <img class="logo-img" src="assets/hermes-product-logo.png" alt="Logo Hermes" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                    <span class="logo-fallback">SEU<br>LOGO</span>
+    <header class="hero" id="top">
+        <div class="wrap hero-inner">
+            <div>
+                <span class="hero-badge">AtlasNex · ecossistema</span>
+                <img class="logo-hero" src="assets/hermes-product-logo.png" alt="Logotipo Hermes" width="88" height="88">
+                <h1>HER<span>MES</span><br>Inteligência em licitações públicas</h1>
+                <p class="hero-lede">
+                    Transforme dados públicos em decisões comerciais: priorização por score, janela comercial,
+                    acompanhamento de funil, exportação e envio de oportunidades — com coleta PNCP por perfil ou em coleta geral.
+                </p>
+                <div class="hero-ctas">
+                    <a class="btn btn-primary" href="vitrine.html">Ver demonstração interativa</a>
+                    <a class="btn btn-ghost" href="atlasnex.html">Conhecer a AtlasNex</a>
                 </div>
-                <div>
-                    <h1>HER<span class="accent">MES</span></h1>
-                    <span>Inteligencia em Licitacoes Publicas</span>
-                </div>
+                <p class="hero-note">
+                    A demonstração usa dados fictícios no navegador. O sistema completo roda com FastAPI, SQLite e login — ideal para piloto controlado na sua infraestrutura.
+                </p>
             </div>
-
-            <nav aria-label="Secoes da demonstracao">
-                <div class="nav-item active"><span class="nav-icon">▣</span> Visao geral</div>
-                <div class="nav-item"><span class="nav-icon">⌕</span> Oportunidades</div>
-                <div class="nav-item"><span class="nav-icon">◎</span> Perfis de busca</div>
-                <div class="nav-item"><span class="nav-icon">⇄</span> Coletas PNCP</div>
-                <div class="nav-item"><span class="nav-icon">▤</span> Relatorios</div>
-            </nav>
-
-            <div class="demo-note">
-                Dados que viram oportunidades. Demonstracao estatica com dados ficticios; a versao operacional usa API, SQLite, login e coleta no PNCP.
+            <div class="hero-card">
+                <h2>No dia a dia, o Hermes entrega</h2>
+                <ul>
+                    <li>Visão única de oportunidades priorizadas (aberturas futuras em destaque).</li>
+                    <li>Perfis de negócio ajustáveis e coleta alinhada ao seu portfólio.</li>
+                    <li>Status comercial, favoritos e anotações persistidos no banco.</li>
+                    <li>Exportação CSV/Excel e envio de planilha por e-mail com contexto de filtros.</li>
+                </ul>
             </div>
-            <p class="ecosystem-atlasnex">
-                <a href="atlasnex.html">AtlasNex</a> — ecossistema de inteligencia aplicada.
+        </div>
+    </header>
+
+    <section class="block" id="produto">
+        <div class="wrap">
+            <p class="eyebrow">O produto</p>
+            <h2 class="section-title">Plataforma de inteligência, não apenas um buscador</h2>
+            <p class="section-lede">
+                O Hermes foi desenhado para equipes que precisam <strong>decidir onde investir tempo</strong> em licitações:
+                menos ruído, mais clareza sobre valor, prazo e aderência ao seu negócio.
             </p>
-        </aside>
+            <div class="grid-3">
+                <article class="card">
+                    <h3>Monitoramento orientado a ação</h3>
+                    <p>Indicadores, filtros por classificação, prazo de abertura, status comercial e favoritos — tudo para sustentar a triagem diária.</p>
+                </article>
+                <article class="card">
+                    <h3>Coleta e contexto</h3>
+                    <p>Integração com o ecossistema de dados públicos (PNCP), múltiplos perfis e opção de coleta geral quando for preciso atualizar tudo de uma vez.</p>
+                </article>
+                <article class="card">
+                    <h3>Rastreabilidade comercial</h3>
+                    <p>Histórico de coletas, agendamento local e campos comerciais nas oportunidades para acompanhar o funil sem planilhas paralelas soltas.</p>
+                </article>
+            </div>
+        </div>
+    </section>
 
-        <main>
-            <section class="topbar">
-                <div>
-                    <p class="eyebrow">Assistente estrategico</p>
-                    <h2>HERMES transforma dados publicos em oportunidades estrategicas</h2>
+    <section class="block alt" id="para-quem">
+        <div class="wrap">
+            <p class="eyebrow">Para quem é</p>
+            <h2 class="section-title">Compras, vendas e gestão que vivem licitação</h2>
+            <p class="section-lede">
+                Indústrias, distribuidores, prestadores de serviço e áreas públicas que licitam com frequência — especialmente quem já sentiu o custo de
+                perder prazo ou dispersar esforço em editais pouco aderentes.
+            </p>
+            <div class="features">
+                <div class="feat"><strong>Diretoria e comercial</strong> visão consolidada do pipeline de oportunidades e prioridades.</div>
+                <div class="feat"><strong>Compras e suprimentos</strong> leitura rápida de objeto, valor, UF e janela comercial.</div>
+                <div class="feat"><strong>Consultorias e B2G</strong> base única para acompanhar vários perfis de interesse.</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="block" id="funcionalidades">
+        <div class="wrap">
+            <p class="eyebrow">Funcionalidades em destaque</p>
+            <h2 class="section-title">O que você encontra na versão operacional</h2>
+            <p class="section-lede">Lista objetiva do que já sustenta demonstrações e pilotos — sujeito a evolução contínua do roadmap.</p>
+            <div class="features">
+                <div class="feat"><strong>Score e classificação</strong> regras configuráveis por perfil para destacar o que importa.</div>
+                <div class="feat"><strong>Filtro “Abertura futura”</strong> foco no que ainda dá tempo de estudar e propor.</div>
+                <div class="feat"><strong>Detalhe da oportunidade</strong> motivos do score, ação sugerida e link à fonte.</div>
+                <div class="feat"><strong>Coleta geral</strong> atualização sequencial de todos os perfis quando necessário.</div>
+                <div class="feat"><strong>Exportação e e-mail</strong> planilha com filtros atuais e texto explicativo para o destinatário.</div>
+                <div class="feat"><strong>Agendamento local</strong> rotina diária enquanto o servidor Hermes estiver em execução.</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="block alt" id="prova-social">
+        <div class="wrap">
+            <p class="eyebrow">Prova social (modelo)</p>
+            <h2 class="section-title">Como soa um case de sucesso — exemplo para layout</h2>
+            <p class="section-lede">Use este bloco como referência de tom até haver autorização para publicar depoimentos reais com logo e cargo.</p>
+            <div class="social">
+                <p class="quote">
+                    “Reduzimos o tempo da triagem inicial e passamos a enxergar, no mesmo painel, o que era prioridade comercial
+                    versus o que era só ruído. A sensação é de controle: a equipe sabe por onde começar o dia.”
+                </p>
+                <div class="author">Marina Alves — modelo ilustrativo</div>
+                <div class="role">Diretora de vendas institucionais · empresa fictícia para layout</div>
+                <div class="disclaimer">
+                    <strong>Importante:</strong> este depoimento é <strong>texto modelo</strong> para apresentação comercial e demonstração da vitrine.
+                    Não representa declaração real de cliente nem resultados auditados. Substitua por cases reais quando disponíveis.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="block" id="oferta">
+        <div class="wrap">
+            <p class="eyebrow">Oferta clara</p>
+            <h2 class="section-title">Piloto Hermes — proposta modelo</h2>
+            <p class="section-lede">
+                Estruture conversas comerciais com um pacote legível. Ajuste valores, prazos e escopo conforme sua política comercial.
+            </p>
+            <div class="offer">
+                <div class="offer-box">
+                    <div class="tag">PACOTE SUGERIDO</div>
+                    <h3>Piloto 30 dias</h3>
+                    <ul>
+                        <li>Implantação do Hermes na sua infraestrutura (servidor ou ambiente acordado).</li>
+                        <li>Configuração de até <strong>5 perfis de negócio</strong> com palavras-chave e faixas de valor.</li>
+                        <li>Workshop de 2 horas com sua equipe (comercial + compras): fluxo de triagem e exportação.</li>
+                        <li>Relatório de uso ao final do piloto com recomendações objetivas.</li>
+                    </ul>
+                </div>
+                <div class="offer-aside">
+                    <h4>Investimento e próximo passo</h4>
                     <p>
-                        Plataforma de inteligencia em licitacoes publicas com monitoramento, priorizacao por score, janela comercial, acompanhamento e exportacao para decisao rapida e segura.
+                        Valores e condições são definidos em proposta formal. O piloto pressupõe responsável técnico do lado cliente
+                        para credenciais, rede e política de dados.
+                    </p>
+                    <div class="price-line">Sob consulta</div>
+                    <div class="price-sub">Envie briefing de volume (UF, categorias, equipe) para dimensionar.</div>
+                    <p style="margin-top:22px">
+                        <a class="btn btn-primary" href="vitrine.html" style="display:inline-flex;color:#fff">Explorar a demo interativa</a>
                     </p>
                 </div>
-                <div class="actions">
-                    <a class="btn" href="#fluxo">Ver fluxo</a>
-                    <a class="btn primary" href="https://app.seudominio.com" target="_blank" rel="noopener">Acessar sistema</a>
-                </div>
-            </section>
+            </div>
+        </div>
+    </section>
 
-            <section class="status-strip" aria-label="Status do sistema">
-                <div class="status-box">
-                    <span>Status atual</span>
-                    <strong>Assistente operacional</strong>
-                    <p>FastAPI, dashboard, SQLite, autenticacao e rotinas de coleta para demonstracoes controladas.</p>
-                </div>
-                <div class="status-box">
-                    <span>Fonte de dados</span>
-                    <strong>PNCP</strong>
-                    <p>Consulta automatizada por UF, periodo, pagina e perfil de interesse.</p>
-                </div>
-                <div class="status-box">
-                    <span>Proxima etapa</span>
-                    <strong>Publicacao assistida</strong>
-                    <p>Hospedagem, logs operacionais, contas de usuario e rotina agendada.</p>
-                </div>
-            </section>
+    <section class="block alt" style="text-align:center;padding:40px 0 52px">
+        <div class="wrap">
+            <h2 class="section-title" style="margin-bottom:14px">Pronto para ver o Hermes em ação?</h2>
+            <p class="section-lede" style="margin-left:auto;margin-right:auto">
+                Abra a vitrine interativa com dados fictícios ou avance para conversa comercial com a AtlasNex.
+            </p>
+            <div class="hero-ctas" style="justify-content:center">
+                <a class="btn btn-primary" href="vitrine.html">Abrir vitrine interativa</a>
+                <a class="btn btn-ghost" href="atlasnex.html" style="background:var(--brand);color:#fff;border-color:rgba(255,255,255,0.2)">AtlasNex — holding</a>
+            </div>
+        </div>
+    </section>
 
-            <section class="metrics" aria-label="Metricas ficticias">
-                <article class="metric">
-                    <span>Oportunidades filtradas</span>
-                    <strong>128</strong>
-                    <small>Dados ficticios para demonstracao comercial.</small>
-                </article>
-                <article class="metric">
-                    <span>Alta prioridade</span>
-                    <strong>24</strong>
-                    <small>Itens com melhor aderencia ao perfil selecionado.</small>
-                </article>
-                <article class="metric">
-                    <span>Valor potencial</span>
-                    <strong>R$ 8,7 mi</strong>
-                    <small>Soma estimada das oportunidades monitoradas.</small>
-                </article>
-                <article class="metric">
-                    <span>Perfis configurados</span>
-                    <strong>6</strong>
-                    <small>Exemplos: limpeza, TI, medicamentos, moveis e materiais.</small>
-                </article>
-            </section>
-
-            <section class="grid">
-                <article class="panel">
-                    <div class="panel-title">
-                        <div>
-                            <span>Ranking de oportunidades</span>
-                            <h3>Licitacoes ficticias priorizadas</h3>
-                        </div>
-                        <span class="badge alta">DEMO</span>
-                    </div>
-
-                    <div class="filters" aria-label="Filtros demonstrativos">
-                        <div class="filter">Perfil: limpeza_higiene</div>
-                        <div class="filter">UF: SP, RJ, MG</div>
-                        <div class="filter">Periodo: proximos 60 dias</div>
-                        <div class="filter">Abertura futura + score</div>
-                    </div>
-
-                    <div class="table-wrap">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Score</th>
-                                    <th>Classificacao</th>
-                                    <th>Objeto</th>
-                                    <th>UF</th>
-                                    <th>Valor estimado</th>
-                                    <th>Acao sugerida</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><strong>92</strong></td>
-                                    <td><span class="badge alta">ALTA</span></td>
-                                    <td class="object">Contratacao de servicos continuados de limpeza, asseio e conservacao predial para unidade publica.</td>
-                                    <td>SP</td>
-                                    <td>R$ 860.000</td>
-                                    <td>Avaliar edital</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>84</strong></td>
-                                    <td><span class="badge alta">ALTA</span></td>
-                                    <td class="object">Registro de precos para aquisicao de materiais de higiene, copa e limpeza institucional.</td>
-                                    <td>MG</td>
-                                    <td>R$ 420.000</td>
-                                    <td>Preparar proposta</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>71</strong></td>
-                                    <td><span class="badge media">MEDIA</span></td>
-                                    <td class="object">Fornecimento parcelado de saneantes, descartaveis e equipamentos de apoio operacional.</td>
-                                    <td>RJ</td>
-                                    <td>R$ 215.000</td>
-                                    <td>Monitorar prazo</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>58</strong></td>
-                                    <td><span class="badge media">MEDIA</span></td>
-                                    <td class="object">Contratacao de empresa especializada em manutencao predial com fornecimento de insumos.</td>
-                                    <td>SP</td>
-                                    <td>R$ 148.000</td>
-                                    <td>Verificar aderencia</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>39</strong></td>
-                                    <td><span class="badge monitorar">BAIXA</span></td>
-                                    <td class="object">Compra eventual de materiais diversos para almoxarifado municipal.</td>
-                                    <td>MG</td>
-                                    <td>R$ 54.000</td>
-                                    <td>Baixa prioridade</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </article>
-
-                <div class="side-stack">
-                    <article class="panel" id="fluxo">
-                        <div class="panel-title">
-                            <div>
-                                <span>Como o sistema trabalha</span>
-                                <h3>Fluxo operacional</h3>
-                            </div>
-                        </div>
-                        <div class="workflow">
-                            <div class="step">
-                                <div class="step-number">1</div>
-                                <div>
-                                    <strong>Coleta no PNCP</strong>
-                                    <p>Busca por estado, periodo e paginacao; por perfil de interesse ou em coleta geral (todos os perfis em sequencia).</p>
-                                </div>
-                            </div>
-                            <div class="step">
-                                <div class="step-number">2</div>
-                                <div>
-                                    <strong>Filtro de relevancia</strong>
-                                    <p>Aplica palavras-chave, termos positivos, termos negativos e faixas de valor.</p>
-                                </div>
-                            </div>
-                            <div class="step">
-                                <div class="step-number">3</div>
-                                <div>
-                                    <strong>Score estrategico</strong>
-                                    <p>Classifica oportunidades por aderencia, valor e urgencia comercial.</p>
-                                </div>
-                            </div>
-                            <div class="step">
-                                <div class="step-number">4</div>
-                                <div>
-                                    <strong>Registro e relatorio</strong>
-                                    <p>Salva no banco local, exibe no dashboard e permite acompanhamento posterior.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </article>
-
-                    <article class="panel">
-                        <div class="panel-title">
-                            <div>
-                                <span>Distribuicao ficticia</span>
-                                <h3>Prioridade por perfil</h3>
-                            </div>
-                        </div>
-                        <div class="bars">
-                            <div class="bar-row">
-                                <header><strong>Limpeza e higiene</strong><span>78%</span></header>
-                                <div class="track"><div class="fill" style="width: 78%"></div></div>
-                            </div>
-                            <div class="bar-row">
-                                <header><strong>TI e eletronicos</strong><span>64%</span></header>
-                                <div class="track"><div class="fill blue" style="width: 64%"></div></div>
-                            </div>
-                            <div class="bar-row">
-                                <header><strong>Moveis corporativos</strong><span>51%</span></header>
-                                <div class="track"><div class="fill amber" style="width: 51%"></div></div>
-                            </div>
-                        </div>
-                    </article>
-                </div>
-            </section>
-
-            <section class="roadmap" aria-label="Estado atual do projeto">
-                <article class="item-card">
-                    <span class="tag">Ja implementado</span>
-                    <h3>Base funcional local</h3>
-                    <p>API, autenticacao, banco SQLite, coleta PNCP por perfil ou coleta geral, perfis editaveis, ranking e pacote portavel.</p>
-                </article>
-                <article class="item-card">
-                    <span class="tag">Em evolucao</span>
-                    <h3>Operacao continua</h3>
-                    <p>Agendamento, historico, acompanhamento comercial, eventos e refinamento dos scores.</p>
-                </article>
-                <article class="item-card">
-                    <span class="tag">Proximo nivel</span>
-                    <h3>Versao online</h3>
-                    <p>Hospedagem segura, usuarios por cliente, notificacoes, backups e painel administrativo.</p>
-                </article>
-            </section>
-
-            <footer>
-                HERMES - Inteligencia em Licitacoes Publicas. Demonstracao estatica com dados ficticios para explicar o funcionamento do sistema.
-                <br><a href="atlasnex.html" style="color: var(--brand-orange); font-weight: 700; text-decoration: none;">AtlasNex</a>
-                <span style="font-weight: 600"> — empresa-mae do ecossistema.</span>
-            </footer>
-        </main>
-    </div>
+    <footer class="site">
+        <div class="wrap">
+            <p><strong>HERMES</strong> · Inteligência em licitações públicas · Parte do ecossistema <a href="atlasnex.html">AtlasNex</a></p>
+            <div class="foot-links">
+                <a href="vitrine.html">Vitrine interativa</a>
+                <a href="atlasnex.html">AtlasNex</a>
+                <a href="https://github.com/SilvaJuniorIS/hermes-premium" target="_blank" rel="noopener">Repositório no GitHub</a>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>
