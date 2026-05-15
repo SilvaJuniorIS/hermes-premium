@@ -1,5 +1,6 @@
 import json
 import os
+import re
 import sqlite3
 from contextlib import contextmanager
 from datetime import datetime
@@ -530,6 +531,10 @@ def load_recent_licitacoes(
 
 def _format_licitacao_row(row: sqlite3.Row) -> dict[str, Any]:
     data = dict(row)
+    data["link_origem"] = (
+        "" if data.get("source") == "demo" else _valid_http_url(data.get("link"))
+    )
+    data["link_pncp"] = _build_pncp_app_url(data.get("pncp_id"), data.get("source"))
     motivos = data.get("score_motivos")
     if isinstance(motivos, str) and motivos.strip():
         try:
@@ -539,6 +544,27 @@ def _format_licitacao_row(row: sqlite3.Row) -> dict[str, Any]:
     else:
         data["score_motivos"] = _fallback_score_motivos(data)
     return data
+
+
+def _valid_http_url(value: Any) -> str:
+    text = str(value or "").strip()
+    if text.lower().startswith(("http://", "https://")):
+        return text
+    return ""
+
+
+def _build_pncp_app_url(pncp_id: Any, source: Any = None) -> str:
+    if str(source or "").strip().lower() == "demo":
+        return ""
+
+    text = str(pncp_id or "").strip()
+    match = re.fullmatch(r"(\d{14})-\d+-(\d+)/(\d{4})", text)
+    if not match:
+        return ""
+
+    cnpj, sequencial, ano = match.groups()
+    sequencial_int = str(int(sequencial))
+    return f"https://pncp.gov.br/app/editais/{cnpj}/{ano}/{sequencial_int}"
 
 
 def _fallback_score_motivos(data: dict[str, Any]) -> list[str]:

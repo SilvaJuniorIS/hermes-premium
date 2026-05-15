@@ -553,13 +553,13 @@ def _build_licitacoes_workbook(rows: list[dict[str, Any]]) -> Workbook:
     ws = wb.active
     ws.title = "Oportunidades"
     ws.append(["HERMES - Inteligencia em Licitacoes Publicas"])
-    ws.merge_cells(start_row=1, start_column=1, end_row=1, end_column=21)
+    ws.merge_cells(start_row=1, start_column=1, end_row=1, end_column=22)
     title_cell = ws.cell(1, 1)
     title_cell.font = Font(bold=True, color="F7931E", size=15)
     title_cell.fill = PatternFill("solid", fgColor="0A2342")
     title_cell.alignment = Alignment(horizontal="center")
     ws.append(["Dados publicos transformados em oportunidades estrategicas"])
-    ws.merge_cells(start_row=2, start_column=1, end_row=2, end_column=21)
+    ws.merge_cells(start_row=2, start_column=1, end_row=2, end_column=22)
     subtitle_cell = ws.cell(2, 1)
     subtitle_cell.font = Font(color="2D3748", italic=True)
     subtitle_cell.alignment = Alignment(horizontal="center")
@@ -583,7 +583,8 @@ def _build_licitacoes_workbook(rows: list[dict[str, Any]]) -> Workbook:
         "anotacoes",
         "primeiro_registro",
         "ultima_leitura",
-        "link",
+        "link_pncp",
+        "link_origem",
         "pncp_id",
     ]
     ws.append(headers)
@@ -616,7 +617,8 @@ def _build_licitacoes_workbook(rows: list[dict[str, Any]]) -> Workbook:
                 item.get("anotacoes"),
                 item.get("first_seen_at"),
                 item.get("last_seen_at"),
-                item.get("link"),
+                item.get("link_pncp"),
+                item.get("link_origem"),
                 item.get("pncp_id"),
             ]
         )

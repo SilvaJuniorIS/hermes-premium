@@ -46,6 +46,11 @@
             text-decoration: none;
         }
 
+        .muted {
+            color: var(--muted);
+            font-weight: 600;
+        }
+
         button,
         input,
         select,
@@ -1192,6 +1197,42 @@
             return (Array.isArray(item.score_motivos) ? item.score_motivos : []).join(' | ');
         }
 
+        function isHttpUrl(value) {
+            return /^https?:\/\//i.test(String(value || '').trim());
+        }
+
+        function pncpAppLink(item) {
+            if (item.link_pncp) return item.link_pncp;
+            if (item.source === 'demo') return '';
+            const match = String(item.pncp_id || '').match(/^(\d{14})-\d+-(\d+)\/(\d{4})$/);
+            if (!match) return '';
+            const [, cnpj, sequencial, ano] = match;
+            return `https://pncp.gov.br/app/editais/${cnpj}/${ano}/${Number(sequencial)}`;
+        }
+
+        function origemLink(item) {
+            if (item.link_origem && isHttpUrl(item.link_origem)) return item.link_origem;
+            if (item.source === 'demo') return '';
+            if (isHttpUrl(item.link)) return item.link;
+            return '';
+        }
+
+        function fonteLinksHtml(item) {
+            if (item.source === 'demo') {
+                return '<span class="muted">Demo</span>';
+            }
+            const links = [];
+            const pncp = pncpAppLink(item);
+            const origem = origemLink(item);
+            if (pncp) {
+                links.push(`<a href="${escapeHtml(pncp)}" target="_blank" rel="noopener">PNCP</a>`);
+            }
+            if (origem) {
+                links.push(`<a href="${escapeHtml(origem)}" target="_blank" rel="noopener">Origem</a>`);
+            }
+            return links.length ? links.join(' · ') : '<span class="muted">Sem link</span>';
+        }
+
         function statusComercialLabel(value) {
             const labels = {
                 novo: 'Novo',
@@ -1311,8 +1352,6 @@
                 const score = Number(item.score || 0);
                 const classe = item.classificacao || 'BAIXA';
                 const statusComercial = item.status_comercial || 'novo';
-                const fonte = item.link || (item.pncp_id ? `https://pncp.gov.br/app/editais?q=${encodeURIComponent(item.pncp_id)}` : '');
-
                 maiorValor = Math.max(maiorValor, valor);
                 if (classe === 'ALTA') altas += 1;
                 if (aberturaFutura(item.data_abertura)) futuras += 1;
@@ -1328,7 +1367,7 @@
                     <td>${item.favorito ? '[fav] ' : ''}${escapeHtml(statusComercialLabel(statusComercial))}</td>
                     <td>${escapeHtml(item.oportunidade || '-')}</td>
                     <td>${escapeHtml(fmtDateTime(item.data_abertura))}<br><small>${escapeHtml(janelaComercial(item.data_abertura))}</small></td>
-                    <td>${fonte ? `<a href="${escapeHtml(fonte)}" target="_blank" rel="noopener">Abrir</a>` : '-'}</td>
+                    <td>${fonteLinksHtml(item)}</td>
                     <td><button class="secondary" type="button" onclick="abrirDetalhe('${escapeHtml(item.pncp_id || '')}')">Detalhe</button></td>
                 `;
                 tabela.appendChild(row);
@@ -1370,7 +1409,9 @@
                 'anotacoes',
                 'primeiro_registro',
                 'ultima_leitura',
-                'link'
+                'link_pncp',
+                'link_origem',
+                'pncp_id'
             ];
             const rows = data.map(item => [
                 acaoRecomendada(item),
@@ -1391,7 +1432,9 @@
                 item.anotacoes,
                 item.first_seen_at,
                 item.last_seen_at,
-                item.link
+                pncpAppLink(item),
+                origemLink(item),
+                item.pncp_id
             ]);
             const csv = [headers, ...rows]
                 .map(row => row.map(csvCell).join(';'))
@@ -1678,7 +1721,8 @@
                 return;
             }
             const item = await res.json();
-            const fonte = item.link || (item.pncp_id ? `https://pncp.gov.br/app/editais?q=${encodeURIComponent(item.pncp_id)}` : '#');
+            const pncp = pncpAppLink(item);
+            const origem = origemLink(item);
             document.getElementById('detailTitle').textContent = item.orgao || item.pncp_id || 'Licitação';
             document.getElementById('detailScore').textContent = Number(item.score || 0).toFixed(0);
             document.getElementById('detailClasse').textContent = item.classificacao || '-';
@@ -1712,7 +1756,9 @@
             if (!motivos.length) {
                 lista.innerHTML = '<li>Score calculado pelas regras atuais do perfil.</li>';
             }
-            document.getElementById('detailLink').href = fonte;
+            const detailLink = document.getElementById('detailLink');
+            detailLink.href = pncp || origem || '#';
+            detailLink.textContent = pncp ? 'Abrir PNCP' : (origem ? 'Abrir origem externa' : 'Sem link disponivel');
             document.getElementById('detailDialog').showModal();
             setStatus('Detalhe carregado');
         }
