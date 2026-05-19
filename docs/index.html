@@ -39,6 +39,86 @@
 
         .wrap { max-width: 1080px; margin: 0 auto; padding: 0 22px; }
 
+        .top-strip {
+            background: #07182d;
+            color: rgba(245, 247, 250, 0.82);
+            font-size: 0.82rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .top-strip .wrap {
+            min-height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .site-nav {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            background: rgba(245, 247, 250, 0.96);
+            border-bottom: 1px solid var(--line);
+            backdrop-filter: blur(10px);
+        }
+
+        .site-nav .wrap {
+            min-height: 68px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+        }
+
+        .nav-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--brand);
+            font-family: Poppins, sans-serif;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .nav-brand img {
+            width: 38px;
+            height: 38px;
+            object-fit: contain;
+            border-radius: 8px;
+            background: #07182d;
+            padding: 4px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            flex-wrap: wrap;
+            font-size: 0.9rem;
+        }
+
+        .nav-links a {
+            color: var(--brand);
+            font-weight: 700;
+        }
+
+        .nav-links .nav-cta {
+            min-height: 38px;
+            display: inline-flex;
+            align-items: center;
+            padding: 0 14px;
+            border-radius: 8px;
+            background: var(--accent);
+            color: #fff;
+        }
+
+        @media (max-width: 780px) {
+            .site-nav .wrap { align-items: flex-start; flex-direction: column; padding-block: 12px; }
+            .nav-links { gap: 12px; }
+        }
+
         header.hero {
             background: linear-gradient(165deg, var(--brand) 0%, var(--brand-2) 55%, #163a66 100%);
             color: #f7fafc;
@@ -583,9 +663,213 @@
             clip: rect(0, 0, 0, 0);
             border: 0;
         }
+
+        .benchmark-note {
+            border: 1px solid #f2c58e;
+            border-radius: 8px;
+            background: #fff8ed;
+            padding: 14px 16px;
+            color: #6b450e;
+            font-size: 0.92rem;
+            margin-top: 20px;
+        }
+
+        .workflow {
+            display: grid;
+            gap: 14px;
+        }
+
+        @media (min-width: 820px) {
+            .workflow { grid-template-columns: repeat(4, 1fr); }
+        }
+
+        .workflow-step {
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--surface);
+            padding: 18px;
+        }
+
+        .workflow-step span {
+            display: inline-grid;
+            place-items: center;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--brand);
+            color: #fff;
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+
+        .workflow-step h3 {
+            margin: 0 0 8px;
+            font-family: Poppins, sans-serif;
+            font-size: 1rem;
+        }
+
+        .workflow-step p { margin: 0; color: var(--muted); font-size: 0.92rem; }
+
+        .opportunity-lab {
+            display: grid;
+            gap: 16px;
+        }
+
+        @media (min-width: 900px) {
+            .opportunity-lab { grid-template-columns: 1.05fr 0.95fr; align-items: start; }
+        }
+
+        .opportunity-panel,
+        .detail-panel {
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--surface);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .panel-top {
+            min-height: 54px;
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--line);
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .panel-top strong { font-family: Poppins, sans-serif; }
+        .panel-top small { color: var(--muted); }
+
+        .filter-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--line);
+            background: #fbfcfd;
+        }
+
+        .filter-chip {
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 7px 10px;
+            color: var(--brand);
+            background: #fff;
+            font-size: 0.82rem;
+            font-weight: 700;
+        }
+
+        .opportunity-list { display: grid; }
+
+        .opportunity-item {
+            display: grid;
+            gap: 10px;
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .opportunity-item:last-child { border-bottom: 0; }
+
+        .opportunity-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            color: var(--muted);
+            font-size: 0.82rem;
+        }
+
+        .score-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 58px;
+            min-height: 28px;
+            border-radius: 999px;
+            background: var(--accent-soft);
+            color: #a94f00;
+            font-weight: 800;
+            font-size: 0.82rem;
+        }
+
+        .detail-panel { padding-bottom: 8px; }
+
+        .detail-hero {
+            padding: 18px;
+            background: #0a2342;
+            color: #fff;
+        }
+
+        .detail-hero h3 {
+            margin: 8px 0 8px;
+            font-family: Poppins, sans-serif;
+            font-size: 1.15rem;
+        }
+
+        .detail-hero p { margin: 0; color: rgba(245, 247, 250, 0.82); }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            padding: 14px;
+        }
+
+        .detail-metric {
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 12px;
+            background: #fbfcfd;
+        }
+
+        .detail-metric span {
+            display: block;
+            color: var(--muted);
+            font-size: 0.74rem;
+            text-transform: uppercase;
+            font-weight: 800;
+        }
+
+        .detail-metric strong {
+            display: block;
+            margin-top: 5px;
+            color: var(--brand);
+        }
+
+        .source-row {
+            margin: 0 14px 12px;
+            padding: 12px;
+            border-radius: 8px;
+            background: var(--accent-soft);
+            color: #6b450e;
+            font-size: 0.9rem;
+        }
     </style>
 </head>
 <body>
+    <div class="top-strip">
+        <div class="wrap">
+            <span>Monitoramento PNCP, triagem comercial e detalhe rastreavel da oportunidade.</span>
+            <span>Demo controlada Â· dados publicos Â· produto AtlasNex</span>
+        </div>
+    </div>
+
+    <nav class="site-nav" aria-label="Navegacao principal">
+        <div class="wrap">
+            <a class="nav-brand" href="#top">
+                <img src="assets/hermes-product-logo.png" alt="" width="38" height="38">
+                <span>HER<span style="color:var(--accent)">MES</span></span>
+            </a>
+            <div class="nav-links">
+                <a href="#produto">Produto</a>
+                <a href="#fluxo">Fluxo</a>
+                <a href="#oportunidades">Oportunidades</a>
+                <a href="#oferta">Piloto</a>
+                <a class="nav-cta" href="vitrine.html">Ver demo</a>
+            </div>
+        </div>
+    </nav>
+
     <header class="hero" id="top">
         <div class="wrap hero-inner">
             <div>
@@ -617,6 +901,142 @@
             </div>
         </div>
     </header>
+
+    <section class="block alt" id="fluxo">
+        <div class="wrap">
+            <p class="eyebrow">Benchmark transformado em produto</p>
+            <h2 class="section-title">Do portal de busca ao cockpit comercial</h2>
+            <p class="section-lede">
+                Portais tradicionais ajudam a localizar processos. O Hermes vai alem: organiza o trabalho de venda,
+                explica a prioridade e preserva o caminho ate a fonte publica.
+            </p>
+            <div class="workflow" aria-label="Fluxo resumido do Hermes">
+                <article class="workflow-step">
+                    <span>1</span>
+                    <h3>Capturar</h3>
+                    <p>Coleta oportunidades por perfis comerciais, UFs, termos positivos, negativos e faixas de valor.</p>
+                </article>
+                <article class="workflow-step">
+                    <span>2</span>
+                    <h3>Priorizar</h3>
+                    <p>Ordena por score, abertura futura, aderencia ao objeto e potencial economico.</p>
+                </article>
+                <article class="workflow-step">
+                    <span>3</span>
+                    <h3>Explicar</h3>
+                    <p>Mostra motivo do score, acao sugerida, fonte PNCP e origem externa quando disponivel.</p>
+                </article>
+                <article class="workflow-step">
+                    <span>4</span>
+                    <h3>Vender</h3>
+                    <p>Permite favorito, status comercial, anotacoes, Excel, CSV e envio por e-mail.</p>
+                </article>
+            </div>
+            <div class="benchmark-note">
+                Referencia analisada: paginas publicas de listagem e detalhe do mercado B2G. O Hermes nao replica layout,
+                textos, marca, codigo ou identidade visual de terceiros; usa apenas padroes de navegacao como benchmark para criar uma experiencia propria.
+            </div>
+        </div>
+    </section>
+
+    <section class="block" id="oportunidades">
+        <div class="wrap">
+            <p class="eyebrow">Experiencia publica superior</p>
+            <h2 class="section-title">Uma vitrine que mostra valor antes do login</h2>
+            <p class="section-lede">
+                Em vez de esconder todo o produto dentro de um iframe, a pagina publica pode demonstrar o raciocinio do Hermes:
+                filtro, prioridade, detalhe e rastreabilidade. Abaixo e um mockup editorial com dados ficticios.
+            </p>
+
+            <div class="opportunity-lab">
+                <div class="opportunity-panel">
+                    <div class="panel-top">
+                        <div>
+                            <strong>Oportunidades em destaque</strong><br>
+                            <small>Previa demonstrativa para apresentacao comercial</small>
+                        </div>
+                        <span class="score-pill">PNCP</span>
+                    </div>
+                    <div class="filter-row" aria-label="Filtros demonstrativos">
+                        <span class="filter-chip">Abertura futura</span>
+                        <span class="filter-chip">Score alto</span>
+                        <span class="filter-chip">SP + MG + PR</span>
+                        <span class="filter-chip">Valor acima de R$ 100 mil</span>
+                    </div>
+                    <div class="opportunity-list">
+                        <article class="opportunity-item">
+                            <div class="opportunity-meta">
+                                <span class="score-pill">93</span>
+                                <span>ALTA prioridade</span>
+                                <span>Abre em 12 dias</span>
+                            </div>
+                            <strong>Materiais de limpeza, higiene e descartaveis para unidades de saude</strong>
+                            <div class="opportunity-meta">
+                                <span>Campinas / SP</span>
+                                <span>R$ 487.500</span>
+                                <span>Perfil: limpeza e higiene</span>
+                            </div>
+                        </article>
+                        <article class="opportunity-item">
+                            <div class="opportunity-meta">
+                                <span class="score-pill">91</span>
+                                <span>ALTA prioridade</span>
+                                <span>Abre em 18 dias</span>
+                            </div>
+                            <strong>Mobiliario escolar para modernizacao de escolas municipais</strong>
+                            <div class="opportunity-meta">
+                                <span>Uberlandia / MG</span>
+                                <span>R$ 820.000</span>
+                                <span>Perfil: moveis corporativos</span>
+                            </div>
+                        </article>
+                        <article class="opportunity-item">
+                            <div class="opportunity-meta">
+                                <span class="score-pill">89</span>
+                                <span>ALTA prioridade</span>
+                                <span>Abre em 9 dias</span>
+                            </div>
+                            <strong>Notebooks, monitores, nobreaks e perifericos para parque tecnologico</strong>
+                            <div class="opportunity-meta">
+                                <span>Londrina / PR</span>
+                                <span>R$ 1.260.000</span>
+                                <span>Perfil: informatica e TI</span>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+
+                <aside class="detail-panel" aria-label="Detalhe demonstrativo da oportunidade">
+                    <div class="detail-hero">
+                        <span class="score-pill">Score 93</span>
+                        <h3>Detalhe que sustenta decisao comercial</h3>
+                        <p>O Hermes transforma a licitacao em uma ficha de acao: o que e, quanto vale, quando abre e por que merece prioridade.</p>
+                    </div>
+                    <div class="detail-grid">
+                        <div class="detail-metric">
+                            <span>Objeto</span>
+                            <strong>Limpeza e higiene</strong>
+                        </div>
+                        <div class="detail-metric">
+                            <span>Valor estimado</span>
+                            <strong>R$ 487.500</strong>
+                        </div>
+                        <div class="detail-metric">
+                            <span>Janela comercial</span>
+                            <strong>12 dias</strong>
+                        </div>
+                        <div class="detail-metric">
+                            <span>Acao sugerida</span>
+                            <strong>Priorizar proposta</strong>
+                        </div>
+                    </div>
+                    <div class="source-row">
+                        Fonte exibida de forma separada: link oficial PNCP para rastreabilidade e link de origem externa apenas quando a URL for valida.
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </section>
 
     <section class="dossier-section" id="dossier" aria-labelledby="dossier-title">
         <div class="wrap">

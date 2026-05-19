@@ -675,6 +675,89 @@
             font-size: 18px;
         }
 
+        .decision-brief {
+            margin: 0 18px 18px;
+            border: 1px solid #f2c58e;
+            border-radius: 8px;
+            background: #fff8ed;
+            padding: 14px;
+        }
+
+        .decision-brief span,
+        .decision-list span {
+            display: block;
+            color: var(--muted);
+            font-size: 12px;
+            text-transform: uppercase;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .decision-brief strong {
+            display: block;
+            color: var(--brand-blue);
+            font-size: 17px;
+            line-height: 1.35;
+        }
+
+        .decision-brief p {
+            margin: 8px 0 0;
+            color: #6b450e;
+        }
+
+        .decision-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+            padding: 0 18px 18px;
+        }
+
+        .decision-list {
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: #fbfcfd;
+            padding: 12px;
+        }
+
+        .decision-list ul {
+            margin: 0;
+            padding-left: 18px;
+        }
+
+        .decision-list li {
+            margin-bottom: 6px;
+        }
+
+        .source-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 0 18px 18px;
+        }
+
+        .source-actions a {
+            min-height: 36px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--line);
+            border-radius: 7px;
+            padding: 0 12px;
+            background: var(--surface);
+        }
+
+        .source-actions a.primary-link {
+            border-color: #d97706;
+            background: var(--brand-orange);
+            color: #fff;
+        }
+
+        .source-actions a.disabled-link {
+            pointer-events: none;
+            color: var(--muted);
+            background: var(--surface-2);
+        }
+
         @media (max-width: 1040px) {
             .app {
                 grid-template-columns: 1fr;
@@ -687,7 +770,8 @@
             .status-strip,
             .demo-guide,
             .profile-layout,
-            .detail-grid {
+            .detail-grid,
+            .decision-grid {
                 grid-template-columns: 1fr;
             }
         }
@@ -1053,6 +1137,29 @@
             <div class="insight-card"><span>Janela comercial</span><strong id="detailPrazo">-</strong></div>
             <div class="insight-card"><span>Origem</span><strong id="detailOrigem">-</strong></div>
         </div>
+        <div class="decision-brief">
+            <span>Resumo executivo</span>
+            <strong id="detailResumo">-</strong>
+            <p id="detailTese">-</p>
+        </div>
+        <div class="decision-grid">
+            <div class="decision-list">
+                <span>Proximos passos</span>
+                <ul id="detailProximosPassos"></ul>
+            </div>
+            <div class="decision-list">
+                <span>Sinais de risco</span>
+                <ul id="detailRiscos"></ul>
+            </div>
+            <div class="decision-list">
+                <span>Checklist documental</span>
+                <ul id="detailChecklist"></ul>
+            </div>
+            <div class="decision-list">
+                <span>Fontes e rastreabilidade</span>
+                <ul id="detailFontes"></ul>
+            </div>
+        </div>
         <section>
             <h4>Objeto</h4>
             <p id="detailObjeto">-</p>
@@ -1092,8 +1199,9 @@
                 </div>
             </form>
         </section>
-        <div class="form-actions">
-            <a id="detailLink" href="#" target="_blank" rel="noopener">Abrir fonte</a>
+        <div class="source-actions">
+            <a id="detailPncpLink" class="primary-link" href="#" target="_blank" rel="noopener">Abrir PNCP</a>
+            <a id="detailOriginLink" href="#" target="_blank" rel="noopener">Abrir origem externa</a>
         </div>
     </dialog>
 
@@ -1191,6 +1299,102 @@
             if (score >= 75) return 'Avaliar proposta nesta semana';
             if (score >= 50) return 'Monitorar e validar aderencia';
             return 'Manter no radar';
+        }
+
+        function resumoExecutivo(item) {
+            const classe = item.classificacao || 'BAIXA';
+            const orgao = item.orgao || 'orgao informado';
+            const local = [item.municipio, item.estado].filter(Boolean).join(' / ') || 'local nao informado';
+            const valor = fmtMoney.format(Number(item.valor_estimado_num || 0));
+            const prazo = janelaComercial(item.data_abertura).toLowerCase();
+            return `${classe}: ${orgao}, ${local}, ${valor}, ${prazo}.`;
+        }
+
+        function teseComercial(item) {
+            const score = Number(item.score || 0);
+            const keyword = item.keyword ? ` O termo-chave "${item.keyword}" reforca aderencia ao perfil.` : '';
+            if (score >= 85) {
+                return `Oportunidade forte para abordagem imediata: valor, prazo e aderencia justificam analise prioritaria.${keyword}`;
+            }
+            if (score >= 75) {
+                return `Boa oportunidade para avaliacao nesta semana, com validacao de edital e capacidade operacional.${keyword}`;
+            }
+            if (score >= 50) {
+                return `Oportunidade de monitoramento: vale confirmar aderencia antes de investir tempo comercial relevante.${keyword}`;
+            }
+            return `Registro mantido no radar, mas com prioridade baixa ate haver sinal comercial mais forte.${keyword}`;
+        }
+
+        function proximosPassos(item) {
+            const score = Number(item.score || 0);
+            const passos = [];
+            if (score >= 75) {
+                passos.push('Baixar ou abrir o edital na fonte oficial.');
+                passos.push('Validar requisitos tecnicos, documentos e capacidade de atendimento.');
+                passos.push('Cotar itens principais e estimar margem antes da abertura.');
+                passos.push('Definir responsavel comercial e prazo interno de resposta.');
+            } else {
+                passos.push('Confirmar se o objeto realmente se encaixa no perfil comercial.');
+                passos.push('Monitorar prazo de abertura e possiveis atualizacoes.');
+                passos.push('Registrar decisao: acompanhar, descartar ou evoluir para analise.');
+            }
+            return passos;
+        }
+
+        function sinaisDeRisco(item) {
+            const riscos = [];
+            const dias = diasAteAbertura(item.data_abertura);
+            const valor = Number(item.valor_estimado_num || 0);
+            if (dias === null) riscos.push('Data de abertura nao informada ou invalida.');
+            else if (dias < 0) riscos.push('Abertura ja passou; avaliar apenas para historico ou recorrencia.');
+            else if (dias <= 3) riscos.push('Prazo muito curto para estudar edital e montar proposta.');
+            if (!valor) riscos.push('Valor estimado nao informado; exige validacao manual.');
+            if (!pncpAppLink(item)) riscos.push('Link PNCP nao calculavel pelo identificador atual.');
+            if (!origemLink(item)) riscos.push('Origem externa nao informada ou instavel; usar PNCP como referencia principal.');
+            if (!riscos.length) riscos.push('Sem risco critico automatico identificado nesta triagem.');
+            return riscos;
+        }
+
+        function checklistDocumental(item) {
+            const objeto = String(item.objeto || '').toLowerCase();
+            const checklist = [
+                'Confirmar edital, anexos, termo de referencia e criterio de julgamento.',
+                'Validar habilitacao juridica, fiscal, trabalhista e economico-financeira.',
+                'Conferir atestados de capacidade tecnica e exigencias especificas.',
+                'Registrar duvidas para pedido de esclarecimento dentro do prazo.'
+            ];
+            if (/servi|manutenc|limpeza|terceir/.test(objeto)) {
+                checklist.push('Checar planilha de custos, encargos, equipe minima e local de execucao.');
+            }
+            if (/notebook|computador|software|sistema|tecnolog|ti|monitor/.test(objeto)) {
+                checklist.push('Validar especificacoes tecnicas, garantia, suporte e compatibilidade dos equipamentos.');
+            }
+            if (/medic|hospital|saude|higiene|saneante/.test(objeto)) {
+                checklist.push('Conferir registros, licencas, validade, laudos e exigencias sanitarias.');
+            }
+            return checklist;
+        }
+
+        function fontesRastreabilidade(item) {
+            const pncp = pncpAppLink(item);
+            const origem = origemLink(item);
+            const fontes = [];
+            fontes.push(item.pncp_id ? `Identificador PNCP: ${item.pncp_id}` : 'Identificador PNCP nao informado.');
+            fontes.push(pncp ? 'Link PNCP disponivel para rastreabilidade oficial.' : 'Link PNCP nao disponivel para este registro.');
+            fontes.push(origem ? 'Origem externa valida informada pelo orgao.' : 'Origem externa ausente ou nao validada.');
+            if (item.first_seen_at) fontes.push(`Primeiro registro no Hermes: ${fmtDateTime(item.first_seen_at)}.`);
+            if (item.last_seen_at) fontes.push(`Ultima leitura: ${fmtDateTime(item.last_seen_at)}.`);
+            return fontes;
+        }
+
+        function renderList(elementId, values) {
+            const list = document.getElementById(elementId);
+            list.innerHTML = '';
+            values.forEach(value => {
+                const li = document.createElement('li');
+                li.textContent = value;
+                list.appendChild(li);
+            });
         }
 
         function motivosTexto(item) {
@@ -1731,6 +1935,12 @@
             document.getElementById('detailAcao').textContent = acaoRecomendada(item);
             document.getElementById('detailPrazo').textContent = janelaComercial(item.data_abertura);
             document.getElementById('detailOrigem').textContent = item.source === 'demo' ? 'Base demonstrativa' : 'PNCP';
+            document.getElementById('detailResumo').textContent = resumoExecutivo(item);
+            document.getElementById('detailTese').textContent = teseComercial(item);
+            renderList('detailProximosPassos', proximosPassos(item));
+            renderList('detailRiscos', sinaisDeRisco(item));
+            renderList('detailChecklist', checklistDocumental(item));
+            renderList('detailFontes', fontesRastreabilidade(item));
             document.getElementById('detailPncpId').value = item.pncp_id || '';
             document.getElementById('detailStatusComercial').value = item.status_comercial || 'novo';
             document.getElementById('detailFavorito').checked = Boolean(item.favorito);
@@ -1756,9 +1966,15 @@
             if (!motivos.length) {
                 lista.innerHTML = '<li>Score calculado pelas regras atuais do perfil.</li>';
             }
-            const detailLink = document.getElementById('detailLink');
-            detailLink.href = pncp || origem || '#';
-            detailLink.textContent = pncp ? 'Abrir PNCP' : (origem ? 'Abrir origem externa' : 'Sem link disponivel');
+            const pncpLink = document.getElementById('detailPncpLink');
+            pncpLink.href = pncp || '#';
+            pncpLink.className = pncp ? 'primary-link' : 'disabled-link';
+            pncpLink.textContent = pncp ? 'Abrir PNCP' : 'PNCP indisponivel';
+
+            const originLink = document.getElementById('detailOriginLink');
+            originLink.href = origem || '#';
+            originLink.className = origem ? '' : 'disabled-link';
+            originLink.textContent = origem ? 'Abrir origem externa' : 'Origem externa indisponivel';
             document.getElementById('detailDialog').showModal();
             setStatus('Detalhe carregado');
         }
