@@ -149,5 +149,192 @@
   <h2>Conclusão</h2>
   <p>Seu maior ativo não é o próximo software. É a visão de construir um ecossistema proprietário que gere caixa, valor e legado.</p>
 </footer>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:Arial,sans-serif;background:#f4f7fb;color:#1a1a1a;line-height:1.7}
+    header{background:linear-gradient(135deg,#071a33,#163a66);color:#fff;padding:80px 20px;text-align:center}
+    header h1{font-size:3.2rem;margin-bottom:20px}
+    header p{max-width:1000px;margin:auto;font-size:1.25rem}
+    .container{max-width:1280px;margin:auto;padding:40px 20px}
+    .card{background:#fff;border-radius:18px;padding:40px;margin-bottom:35px;box-shadow:0 10px 35px rgba(0,0,0,.08)}
+    h2{color:#0a2342;border-left:6px solid #1e90ff;padding-left:16px;margin-bottom:25px}
+    h3{color:#163a66;margin:25px 0 12px}
+    h4{color:#1e90ff;margin:16px 0 8px}
+    p{margin-bottom:12px}
+    ul{padding-left:22px;margin-bottom:15px}
+    li{margin-bottom:6px}
+    .highlight{background:#fff8cc;border-left:6px solid #f5b700;padding:20px;border-radius:10px;margin:20px 0}
+    .product{background:#eef5ff;padding:28px;border-radius:16px;margin-bottom:24px;border-top:5px solid #1e90ff}
+    table{width:100%;border-collapse:collapse;margin-top:20px}
+    th,td{padding:14px;border:1px solid #ddd;text-align:left;vertical-align:top}
+    th{background:#163a66;color:#fff}
+    tr:nth-child(even){background:#f8fafc}
+  </style>
+</head>
+<body>
+<header>
+  <h1>Masterclass Estratégica: Detalhamento dos Produtos</h1>
+  <p>Funções, arquitetura, roadmap técnico e funcionalidades centrais dos produtos mais promissores para expansão do seu ecossistema GovTech.</p>
+</header>
+
+<div class="container">
+
+<div class="card">
+<h2>1. FiscalBot — Fiscalização Inteligente de Contratos Públicos</h2>
+<div class="product">
+<h3>Problema que resolve</h3>
+<p>Prefeituras perdem prazos, deixam contratos vencerem, esquecem reajustes e falham na fiscalização documental.</p>
+
+<h3>Principais funcionalidades</h3>
+<ul>
+<li>Dashboard de contratos ativos</li>
+<li>Alertas automáticos de vigência</li>
+<li>Controle de reajuste anual</li>
+<li>Gestão de aditivos</li>
+<li>Monitor de SLA do fornecedor</li>
+<li>Checklist documental</li>
+<li>Registro de ocorrências</li>
+<li>Painel de multas e penalidades</li>
+</ul>
+
+<h3>Módulos do sistema</h3>
+<ul>
+<li>Módulo Contratos</li>
+<li>Módulo Alertas</li>
+<li>Módulo Fiscalização</li>
+<li>Módulo Relatórios</li>
+<li>Módulo Auditoria</li>
+</ul>
+
+<h3>Passos de desenvolvimento</h3>
+<ol>
+<li>Modelagem do banco de contratos</li>
+<li>CRUD completo de contratos</li>
+<li>Motor de regras de vencimento</li>
+<li>Sistema de notificações (email/WhatsApp)</li>
+<li>Painel gerencial</li>
+<li>Logs e trilha de auditoria</li>
+</ol>
+
+<h3>Stack sugerida</h3>
+<p>FastAPI + PostgreSQL + Celery + Redis + React</p>
+</div>
+</div>
+
+<div class="card">
+<h2>2. Argos — Leitor Inteligente de Editais</h2>
+<div class="product">
+<h3>Problema que resolve</h3>
+<p>Empresas gastam horas lendo editais e perdem oportunidades por erro humano.</p>
+
+<h3>Principais funcionalidades</h3>
+<ul>
+<li>Upload de PDF</li>
+<li>Extração automática de texto</li>
+<li>Resumo executivo do edital</li>
+<li>Extração de documentos exigidos</li>
+<li>Extração de datas críticas</li>
+<li>Score de oportunidade</li>
+<li>Checklist de habilitação</li>
+<li>Comparador entre editais</li>
+</ul>
+
+<h3>Pipeline técnico</h3>
+<ul>
+<li>OCR com Tesseract/PyMuPDF</li>
+<li>NLP com spaCy</li>
+<li>LLM para interpretação</li>
+<li>Motor de scoring</li>
+</ul>
+
+<h3>Passos de desenvolvimento</h3>
+<ol>
+<li>Upload e parsing de documentos</li>
+<li>Engine de extração</li>
+<li>Prompt templates para resumo</li>
+<li>Módulo scoring</li>
+<li>Dashboard histórico</li>
+</ol>
+</div>
+</div>
+
+<div class="card">
+<h2>3. LicitaBI — Inteligência de Mercado em Licitações</h2>
+<div class="product">
+<h3>Problema que resolve</h3>
+<p>Falta inteligência de mercado para precificação e estratégia comercial.</p>
+
+<h3>Principais funcionalidades</h3>
+<ul>
+<li>Base histórica PNCP</li>
+<li>Mapeamento de órgãos compradores</li>
+<li>Ranking de fornecedores</li>
+<li>Análise de preços praticados</li>
+<li>Radar de oportunidades</li>
+<li>Heatmaps regionais</li>
+<li>Benchmark competitivo</li>
+</ul>
+
+<h3>Passos de desenvolvimento</h3>
+<ol>
+<li>ETL PNCP</li>
+<li>Data warehouse</li>
+<li>Modelos analíticos</li>
+<li>Dashboards interativos</li>
+<li>Exportação relatórios</li>
+</ol>
+
+<h3>Diferencial</h3>
+<p>Produto enterprise com alto ticket e grande valor percebido.</p>
+</div>
+</div>
+
+<div class="card">
+<h2>4. Oráculo 14.133 — Assistente Jurídico</h2>
+<div class="product">
+<h3>Problema que resolve</h3>
+<p>Jurídico e compras públicas gastam muito tempo consultando legislação.</p>
+
+<h3>Funcionalidades</h3>
+<ul>
+<li>Busca semântica na Lei 14.133</li>
+<li>Geração de pareceres</li>
+<li>Criação de minutas</li>
+<li>Resposta a impugnações</li>
+<li>Base jurisprudencial</li>
+<li>Chat jurídico contextual</li>
+</ul>
+
+<h3>Arquitetura</h3>
+<ul>
+<li>RAG com base vetorial</li>
+<li>Embedding da legislação</li>
+<li>LLM especializada</li>
+</ul>
+
+<h3>Passos de desenvolvimento</h3>
+<ol>
+<li>Indexação da legislação</li>
+<li>Base vetorial</li>
+<li>Chat interface</li>
+<li>Templates jurídicos</li>
+</ol>
+</div>
+</div>
+
+<div class="card">
+<h2>5. Comparativo de Prioridade</h2>
+<table>
+<tr><th>Produto</th><th>Tempo MVP</th><th>Dificuldade</th><th>Receita inicial</th><th>Escala</th></tr>
+<tr><td>Argos</td><td>45-60 dias</td><td>Baixa</td><td>Rápida</td><td>Alta</td></tr>
+<tr><td>FiscalBot</td><td>90 dias</td><td>Média</td><td>Média</td><td>Muito alta</td></tr>
+<tr><td>Oráculo</td><td>60-75 dias</td><td>Média</td><td>Boa</td><td>Alta</td></tr>
+<tr><td>LicitaBI</td><td>120 dias</td><td>Alta</td><td>Lenta</td><td>Muito alta</td></tr>
+</table>
+<div class="highlight"><b>Recomendação:</b> iniciar com Argos para caixa rápido → reinvestir em FiscalBot → consolidar com LicitaBI.</div>
+</div>
+
+</div>
 </body>
 </html>
