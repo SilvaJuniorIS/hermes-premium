@@ -8,3 +8,7 @@ selenium
 beautifulsoup4
 openai
 httpx
+flask
+gunicorn
+openai
+python-dotenv
